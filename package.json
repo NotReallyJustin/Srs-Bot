@@ -1,0 +1,11 @@
+{
+  "name": "srs",
+  "version": "0.0.1",
+  "description": "Srs Bot",
+  "main": "bot.js",
+  "author": "Justin",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.5.1"
+  }
+}
