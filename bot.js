@@ -32,7 +32,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		"You have yeed your last haw",
 		"There are 10 reasons Europe emerged from the dark ages; using AMOLED is not one of them",
 		"Smh I would insult your intelligence, but that would mean you had some to begin with",
-		"illegal illegal illegal", //msg.channel.send(`${illegal}`);
+		`${illegal} ${illegal} ${illegal}`, //msg.channel.send(`${illegal}`);
 		"I suggest you use to right to remain silent",
 		"Smh take your dark mode into minecraft",
 		"Ding Dong your brainlet opinion is wrong",
