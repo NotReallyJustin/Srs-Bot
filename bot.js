@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const prefix = botSettings.prefix;
 
 const bot = new Discord.Client();
-// We just defined alot of stuff
+// Big thanks to Steven and Iscii for being gods and making sure I don't brainlet the code :P
 bot.login(botSettings.token);
 
 bot.on("ready", () => {
@@ -28,7 +28,7 @@ bot.on("message", async message => { //Enter portion of text code//
 	 for your 1580", message);
 	if(message.content === "I have nothing to do") Yeet("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
 		\nSmh stop eating on your keeb and make me on 24/7", message);
-	if(message.content === "Ew light mode") {
+	if(message.content.toUpperCase === "EW LIGHT MODE") {
 		let RNG = Math.floor(Math.random() * 15);
 		if(RNG == "0") {
 			Yeet("Smh at least he can read in the sun", message);
