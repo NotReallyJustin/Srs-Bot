@@ -21,6 +21,24 @@ function Yeet(text, message) {
 }
 
 bot.on("message", async message => { //Enter portion of text code//
+	const illegal = message.guild.emojis.find(e => emoji.name === "illegal");
+	const yeetMsgs = [
+		"Smh at least he can read in the sun",
+		"no u",
+		"Smh how can you meme on eye strain when you're reading in the dark",
+		"It's let there be light, not let there be heathens",
+		"You dare oppose me with that dark mode",
+		"Smh how are you going to say that and then call Justin the brainlet",
+		"You have yeed your last haw",
+		"There are 10 reasons Europe emerged from the dark ages; using AMOLED is not one of them",
+		"Smh I would insult your intelligence, but that would mean you had some to begin with",
+		"illegal illegal illegal", //msg.channel.send(`${illegal}`);
+		"I suggest you use to right to remain silent",
+		"Smh take your dark mode into minecraft",
+		"Ding Dong your brainlet opinion is wrong",
+		"Are you an alkali Earth Metal? Because your so salty Daniel would mute you for toxidity",
+		"smh every say we stray further away from god"
+	]
 	if(message.author.bot) return;
 	if(message.channel.type === "dm") return message.channel.sendMessage("Smh I'm not a dm bot");
 	// Enter easter egg portion
@@ -30,51 +48,11 @@ bot.on("message", async message => { //Enter portion of text code//
 		\nSmh stop eating on your keeb and make me on 24/7", message);
 	if(message.content.toUpperCase === "EW LIGHT MODE") {
 		let RNG = Math.floor(Math.random() * 15);
-		if(RNG == "0") {
-			Yeet("Smh at least he can read in the sun", message);
-		};		
-		if(RNG == "1") {
-			Yeet("no u", message)
-		};
-		if(RNG == "2") {
-			Yeet("Smh how can you meme on eye strain when you're reading in the dark", message)
-		};
-		if(RNG == "3") {
-			Yeet("It's let there be light, not let there be heathens", message)
-		};
-		if(RNG == "4") {
-			Yeet("You dare oppose me with that dark mode", message)
-		};
-		if(RNG == "5") {
-			Yeet("Smh how are you going to say that and then call Justin the brainlet", message)
-		};
-		if(RNG == "6") {
-			Yeet("You have yeed your last haw", message)
-		};	
-		if(RNG == "7") {
-			Yeet("There are 10 reasons Europe emerged from the dark ages; using AMOLED is not one of them", message)
-		};
-		if(RNG == "8") {
-			Yeet("Smh I would insult your intelligence, but that would mean you had some to begin with", message)
-		};
-		if(RNG == "9") {
-			Yeet(":illegal: :illegal: :illegal:", message)
-		};
-		if(RNG == "10") {
-			Yeet("I suggest you use to right to remain silent", message)
-		};
-		if(RNG == "11") {
-			Yeet("Smh take your dark mode into minecraft", message)
-		};
-		if(RNG == "12") {
-			Yeet("Ding Dong your brainlet opinion is wrong", message)
-		};
-		if(RNG == "13") {
-			Yeet("Are you an alkali Earth Metal? Because your so salty Daniel would mute you for toxidity", message)
-		};
-		if(RNG == "14") {
-			Yeet("smh every say we stray further away from god", message)
-		};
+		for(var i = 0; i < yeetMsgs.length; i++){
+			if(RNG == i){
+				Yeet(yeetMsgs[i], message);
+			}
+		}
 	};
 	if(message.content === "Light theme best theme") Yeet("Correct!", message);
 
