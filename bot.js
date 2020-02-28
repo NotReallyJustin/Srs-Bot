@@ -46,14 +46,14 @@ bot.on("message", async message => { //Enter portion of text code//
 	 for your 1580", message);
 	if(message.content === "I have nothing to do") Yeet("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
 		\nSmh stop eating on your keeb and make me on 24/7", message);
-	if(message.content.toUpperCase === "EW LIGHT MODE") {
+	if(message.content.toUpperCase === "EW LIGHT MODE") { //so many smhs e.e
 		let RNG = Math.floor(Math.random() * 15);
 		for(var i = 0; i < yeetMsgs.length; i++){
 			if(RNG == i){
 				Yeet(yeetMsgs[i], message);
 			}
 		}
-	};
+	}
 	if(message.content === "Light theme best theme") Yeet("Correct!", message);
 
 //entering srs prefix code section
