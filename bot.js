@@ -4,6 +4,7 @@ const prefix = botSettings.prefix;
 
 const bot = new Discord.Client();
 // Big thanks to Steven and Iscii for being gods and making sure I don't brainlet the code :P
+
 bot.login(botSettings.token);
 
 bot.on("ready", () => {
@@ -18,63 +19,43 @@ bot.on("ready", () => {
 
 function Yeet(text, message) {
 	return message.channel.sendMessage(text);
-}
+};
+//defines yeet
+
+function Roll(outcomes) {
+	RNG = Math.floor(Math.random() * outcomes);
+	console.log(RNG)
+};
+
+function NRG(RNGValue, text, message) {
+	if(RNG == RNGValue) javaderp.Yeet(text, message);
+};
 
 bot.on("message", async message => { //Enter portion of text code//
 	if(message.author.bot) return;
 	if(message.channel.type === "dm") return message.channel.sendMessage("Smh I'm not a dm bot");
-	// Enter easter egg portion
-	if(message.content === "My trig grade is ruined!") Yeet("Smh be quiet and study\
+	// Enter easter egg portion//
+	if(message.content.toUpperCase() === "My trig grade is ruined!") Yeet("Smh be quiet and study\
 	 for your 1580", message);
-	if(message.content === "I have nothing to do") Yeet("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
+	if(message.content.toUpperCase() === "I have nothing to do") Yeet("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
 		\nSmh stop eating on your keeb and make me on 24/7", message);
-	if(message.content.toUpperCase === "EW LIGHT MODE") {
-		let RNG = Math.floor(Math.random() * 15);
-		if(RNG == "0") {
-			Yeet("Smh at least he can read in the sun", message);
-		};		
-		if(RNG == "1") {
-			Yeet("no u", message)
-		};
-		if(RNG == "2") {
-			Yeet("Smh how can you meme on eye strain when you're reading in the dark", message)
-		};
-		if(RNG == "3") {
-			Yeet("It's let there be light, not let there be heathens", message)
-		};
-		if(RNG == "4") {
-			Yeet("You dare oppose me with that dark mode", message)
-		};
-		if(RNG == "5") {
-			Yeet("Smh how are you going to say that and then call Justin the brainlet", message)
-		};
-		if(RNG == "6") {
-			Yeet("You have yeed your last haw", message)
-		};	
-		if(RNG == "7") {
-			Yeet("There are 10 reasons Europe emerged from the dark ages; using AMOLED is not one of them", message)
-		};
-		if(RNG == "8") {
-			Yeet("Smh I would insult your intelligence, but that would mean you had some to begin with", message)
-		};
-		if(RNG == "9") {
-			Yeet(":illegal: :illegal: :illegal:", message)
-		};
-		if(RNG == "10") {
-			Yeet("I suggest you use to right to remain silent", message)
-		};
-		if(RNG == "11") {
-			Yeet("Smh take your dark mode into minecraft", message)
-		};
-		if(RNG == "12") {
-			Yeet("Ding Dong your brainlet opinion is wrong", message)
-		};
-		if(RNG == "13") {
-			Yeet("Are you an alkali Earth Metal? Because your so salty Daniel would mute you for toxidity", message)
-		};
-		if(RNG == "14") {
-			Yeet("smh every say we stray further away from god", message)
-		};
+	if(message.content.toUpperCase() === "EW LIGHT MODE") {
+		Roll(15);
+		NRG("0", "Smh at least he can read in the sun", message);
+		NRG("1", "no u", message);
+		NRG("2", "Smh how can you meme on eye strain when you're reading in the dark", message);
+		NRG("3", "It's let there be light, not let there be heathens", message);
+		NRG("4", "You dare oppose me with that dark mode", message);
+		NRG("5", "Smh how are you going to say that and then call Justin the brainlet", message);
+		NRG("6", "You have yeed your last haw", message);
+		NRG("7", "There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them", message);
+		NRG("8", "Smh I would insult your intelligence, but that would mean you had some to begin with", message);
+		NRG("9", ":illegal: :illegal: :illegal:", message);
+		NRG("10", "I suggest you use your right to remain silent", message);
+		NRG("11", "Congratulations! Your message is more hated than Space Jams!", message);
+		NRG("12", "Ding Dong your brainlet opinion is wrong", message);
+		NRG("13", "Are you an alkali Earth Metal? Because you're so salty Daniel would mute you for toxidity", message);
+		NRG("14", "smh every say we stray further away from God", message);
 	};
 	if(message.content === "Light theme best theme") Yeet("Correct!", message);
 
@@ -85,14 +66,23 @@ bot.on("message", async message => { //Enter portion of text code//
 	// Slices message by word!
 
 	function beforeArgs(suffix, txt) {
-	if(args[0] === suffix) Yeet(txt, message)
+		if(args[0] === suffix) Yeet(txt, message)
 	};
 
+	function cmdDetect(suffix) {
+		return(args[0] == suffix);
+		};
+		
 	if(!command === prefix) {console.log(message.content);
 	//if the thing isn't srs, the command would report invalid
 	} else 
 		// This is where Srs says stuff but
-		beforeArgs("invite", "Smh didn't buy your broke college alum a plane ticket");
+		if (cmdDetect("invite")) {
+			Roll(3);
+			NRG("0", "Smh didn't buy your broke college student a plane ticket", message);
+			NRG("1", "Smh I'm not going to your meetups", message);
+			NRG("2", "Smh you don't even have my invite code", message); 
+		};
 		beforeArgs("rob", "Here take my college debt");
 		beforeArgs("help", "Help me help you smh");
 		beforeArgs("joke", "Smh you're a joke");
