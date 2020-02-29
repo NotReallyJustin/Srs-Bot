@@ -48,11 +48,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		\nSmh stop eating on your keeb and make me on 24/7", message);
 	if(message.content.toUpperCase === "EW LIGHT MODE") { //so many smhs e.e
 		let RNG = Math.floor(Math.random() * 15);
-		for(var i = 0; i < yeetMsgs.length; i++){
-			if(RNG == i){
-				Yeet(yeetMsgs[i], message);
-			}
-		}
+		Yeet(yeetMsgs[RNG], message);
 	}
 	if(message.content === "Light theme best theme") Yeet("Correct!", message);
 
