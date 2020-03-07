@@ -21,7 +21,7 @@ function Yeet(text, message) {
 }
 
 bot.on("message", async message => { //Enter portion of text code//
-	const illegal = message.guild.emojis.find(e => emoji.name === "illegal");
+	const illegal = message.guild.emojis.find(e => e.name == "illegal");
 	const yeetMsgs = [
 		"Smh at least he can read in the sun",
 		"no u",
