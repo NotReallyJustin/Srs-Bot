@@ -8,7 +8,7 @@ const bot = new Discord.Client();
 bot.login(botSettings.token);
 
 bot.on("ready", () => {
-	console.log("Printer On!");
+	console.log("I'm clearly confused");
 
 	bot.generateInvite(["ADMINISTRATOR"]).then(link => {
 		console.log(link);
@@ -28,16 +28,18 @@ function Roll(outcomes) {
 };
 
 function NRG(RNGValue, text, message) {
-	if(RNG == RNGValue) javaderp.Yeet(text, message);
+	if(RNG == RNGValue) Yeet(text, message);
 };
 
 bot.on("message", async message => { //Enter portion of text code//
+	//emotes owo
+	const illegal = message.guild.emojis.find(emoji => emoji.name === "illegal"); //iscii code
 	if(message.author.bot) return;
 	if(message.channel.type === "dm") return message.channel.sendMessage("Smh I'm not a dm bot");
 	// Enter easter egg portion//
-	if(message.content.toUpperCase() === "My trig grade is ruined!") Yeet("Smh be quiet and study\
+	if(message.content.toUpperCase() === "MY TRIG GRADE IS RUINED!") Yeet("Smh be quiet and study\
 	 for your 1580", message);
-	if(message.content.toUpperCase() === "I have nothing to do") Yeet("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
+	if(message.content.toUpperCase() === "I HAVE NOTHING TO DO") Yeet("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
 		\nSmh stop eating on your keeb and make me on 24/7", message);
 	if(message.content.toUpperCase() === "EW LIGHT MODE") {
 		Roll(15);
@@ -50,7 +52,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		NRG("6", "You have yeed your last haw", message);
 		NRG("7", "There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them", message);
 		NRG("8", "Smh I would insult your intelligence, but that would mean you had some to begin with", message);
-		NRG("9", ":illegal: :illegal: :illegal:", message);
+		NRG("9", `${illegal} ${illegal} ${illegal}`, message);
 		NRG("10", "I suggest you use your right to remain silent", message);
 		NRG("11", "Congratulations! Your message is more hated than Space Jams!", message);
 		NRG("12", "Ding Dong your brainlet opinion is wrong", message);
@@ -62,7 +64,7 @@ bot.on("message", async message => { //Enter portion of text code//
 //entering srs prefix code section
 	let messageArray = message.content.split(" ");
 	let command = messageArray[0];
-	let args = messageArray.slice(1);
+	let args = messageArray.slice(1); 
 	// Slices message by word!
 
 	function beforeArgs(suffix, txt) {
@@ -70,7 +72,8 @@ bot.on("message", async message => { //Enter portion of text code//
 	};
 
 	function cmdDetect(suffix) {
-		return(args[0] == suffix);
+		return(args[0].toLowerCase() == suffix); 
+		//Dev note: message defines the thing as in the certain channel, content just listens to the words
 		};
 		
 	if(!command === prefix) {console.log(message.content);
@@ -78,10 +81,11 @@ bot.on("message", async message => { //Enter portion of text code//
 	} else 
 		// This is where Srs says stuff but
 		if (cmdDetect("invite")) {
-			Roll(3);
+			Roll(4);
 			NRG("0", "Smh didn't buy your broke college student a plane ticket", message);
 			NRG("1", "Smh I'm not going to your meetups", message);
 			NRG("2", "Smh you don't even have my invite code", message); 
+			NRG("3", "What!? Did Justin opensourced my token again?", message);
 		};
 		beforeArgs("rob", "Here take my college debt");
 		beforeArgs("help", "Help me help you smh");
@@ -94,6 +98,18 @@ bot.on("message", async message => { //Enter portion of text code//
 		beforeArgs("feed", "Smh I'm not eating on my keeb");
 		beforeArgs("description", "Your broke college student, on a mission to save the world from shitty moderation bots and the axis of darkness");
 		beforeArgs("help", "Smh does I look like work in customer support");
-		beforeArgs("updatelist", "Justin currently abandoned the bot in search of coding an unpaywall");
-
+		beforeArgs("updatelist", "Justin's too busy polishing up his blockfile to update anything lmao");
+		if (cmdDetect("philip")) {
+			Roll (5);
+			NRG("0", "THIS IS UNFAIR!", message);
+			NRG("1", "Oh come on! Where is the manager?", message);
+			NRG("2", "Wait, is this even Srs bot anymore?", message);
+			NRG("3", "Let's get just this done aight?", message);
+			NRG("4", "That's it. We're screwed ._.", message);
+		};
+	//Srs Weather
+	if (cmdDetect("weather")) {
+		const NYC = await fetch('https://api.weather.gov/gridpoints/OKX/33,37/forecast').then(API => response.json); // => is a fancy way for return
+		Yeet(NYC.periods.detailedForecast, message);
+	};
 });
