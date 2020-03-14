@@ -1,6 +1,8 @@
 const botSettings = require("./botsettings.json");
 const Discord = require("discord.js");
 const prefix = botSettings.prefix;
+const fetch = require("node-fetch");
+const weather = require("weather-js");
 
 const bot = new Discord.Client();
 // Big thanks to Steven and Iscii for being gods and making sure I don't brainlet the code :P
@@ -18,7 +20,7 @@ bot.on("ready", () => {
 });
 
 function Yeet(text, message) {
-	return message.channel.sendMessage(text);
+	return message.channel.send(text);
 };
 //defines yeet
 
@@ -60,6 +62,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		NRG("14", "smh every say we stray further away from God", message);
 	};
 	if(message.content === "Light theme best theme") Yeet("Correct!", message);
+	if(message.content.toLowerCase() === "why are you using light mode") Yeet("Smh so he can actually see", message);
 
 //entering srs prefix code section
 	let messageArray = message.content.split(" ");
@@ -98,7 +101,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		beforeArgs("feed", "Smh I'm not eating on my keeb");
 		beforeArgs("description", "Your broke college student, on a mission to save the world from shitty moderation bots and the axis of darkness");
 		beforeArgs("help", "Smh does I look like work in customer support");
-		beforeArgs("updatelist", "Justin's too busy polishing up his blockfile to update anything lmao");
+		beforeArgs("updatelist", "Justin is crying over fetch API promise nonsense");
 		if (cmdDetect("philip")) {
 			Roll (5);
 			NRG("0", "THIS IS UNFAIR!", message);
@@ -108,8 +111,29 @@ bot.on("message", async message => { //Enter portion of text code//
 			NRG("4", "That's it. We're screwed ._.", message);
 		};
 	//Srs Weather
-	if (cmdDetect("weather")) {
-		const NYC = await fetch('https://api.weather.gov/gridpoints/OKX/33,37/forecast').then(API => response.json); // => is a fancy way for return
-		Yeet(NYC.periods.detailedForecast, message);
+	if (cmdDetect("weather")) { //Dev Note: Fetch, thenResponse, thenResult
+		weather.find({search: 'New York, NY', degreeType: 'F'}, function(err, result) {
+ 	if(err) console.log("You made an oof you brainlet");
+  let Fakenyc = (JSON.stringify(result, null, 0)); 
+  	let nyc = JSON.parse(Fakenyc);
+  		let fusion = nyc[0].forecast[1].low
+  		let vaporization = nyc[0].forecast[1].high
+  		let DihydrogenMonoxide = nyc[0].forecast[1].precip
+  		message.channel.send("wtf it's " + fusion + " lowest and " + vaporization + " high and " + DihydrogenMonoxide + "% chance to get wet");
+  		function vestirse(temp1, temp2, txt, message) {
+			if (fusion > temp1 & fusion < temp2) {
+				Yeet(txt, message);
+			};
+		};
+		vestirse(-50, 0, "where is climate change when you need it?", message);
+		vestirse(-1, 20, "scarves ONLY", message);
+		vestirse(19, 40, "smh wear that thick navy blue thing", message);
+		vestirse(39, 50, "short sleeve and think jacket time", message);
+		vestirse(49, 60, "wtf it's actually T-shirt time?", message);
+		vestirse(59, 75, "quick do what JoKang is doing", message);
+		vestirse(74, 85, "smh go buy a hat or smth", message);
+		vestirse(84, 100, "You want to go out? Don't", message);
+		vestirse(99, 1000, "wtf move to Canada", message);
+		});
 	};
 });
