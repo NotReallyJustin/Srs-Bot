@@ -25,44 +25,51 @@ function Yeet(text, message) {
 //defines yeet
 
 function Roll(outcomes) {
-	RNG = Math.floor(Math.random() * outcomes);
-	console.log(RNG)
+	return Math.floor(Math.random() * outcomes);
 };
 
-function NRG(RNGValue, text, message) {
-	if(RNG == RNGValue) Yeet(text, message);
+function Yurr(list, message) {
+	if (typeof(list) !== "object") {
+		console.log("smh give me a list you dummy"); //Idea from Wuzics//
+	} else {
+		var length = list.length
+		let rolly = Roll(length);
+		Yeet(list[rolly], message);
+	};
 };
 
 bot.on("message", async message => { //Enter portion of text code//
 	//emotes owo
 	const illegal = message.guild.emojis.find(emoji => emoji.name === "illegal"); //iscii code
-	if(message.author.bot) return;
-	if(message.channel.type === "dm") return message.channel.sendMessage("Smh I'm not a dm bot");
+	if (message.author.bot) return;
+	if (message.channel.type === "dm") return message.channel.sendMessage("Smh I'm not a dm bot");
 	// Enter easter egg portion//
-	if(message.content.toUpperCase() === "MY TRIG GRADE IS RUINED!") Yeet("Smh be quiet and study\
+	if (message.content.toUpperCase() === "MY TRIG GRADE IS RUINED!") Yeet("Smh be quiet and study\
 	 for your 1580", message);
-	if(message.content.toUpperCase() === "I HAVE NOTHING TO DO") Yeet("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
-		\nSmh stop eating on your keeb and make me on 24/7", message);
-	if(message.content.toUpperCase() === "EW LIGHT MODE") {
-		Roll(15);
-		NRG("0", "Smh at least he can read in the sun", message);
-		NRG("1", "no u", message);
-		NRG("2", "Smh how can you meme on eye strain when you're reading in the dark", message);
-		NRG("3", "It's let there be light, not let there be heathens", message);
-		NRG("4", "You dare oppose me with that dark mode", message);
-		NRG("5", "Smh how are you going to say that and then call Justin the brainlet", message);
-		NRG("6", "You have yeed your last haw", message);
-		NRG("7", "There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them", message);
-		NRG("8", "Smh I would insult your intelligence, but that would mean you had some to begin with", message);
-		NRG("9", `${illegal} ${illegal} ${illegal}`, message);
-		NRG("10", "I suggest you use your right to remain silent", message);
-		NRG("11", "Congratulations! Your message is more hated than Space Jams!", message);
-		NRG("12", "Ding Dong your brainlet opinion is wrong", message);
-		NRG("13", "Are you an alkali Earth Metal? Because you're so salty Daniel would mute you for toxidity", message);
-		NRG("14", "smh every say we stray further away from God", message);
+	if (message.content.toUpperCase() === "I HAVE NOTHING TO DO") Yeet("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
+		\nSmh stop being lazy and update me", message);
+	if (message.content.toUpperCase() === "EW LIGHT MODE") {
+		let lightMode = [
+			"Smh at least he can read in the sun",
+			"no u",
+			"Smh how can you meme on eye strain when you're reading in the dark",
+			"It's let there be light, not let there be heathens",
+			"You dare oppose me with that dark mode",
+			"smh how are you going to say that and then call Justin the brainlet",
+			"You have yeed your last haw",
+			"There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them",
+			"smh I would insult your intelligence, but that would mean you had some to begin with",
+			`${illegal} ${illegal} ${illegal}`,
+			"I suggest you use your right to remain silent",
+			"Congratulations! Your message is more hated than Space Jams!",
+			"Ding Dong your brainlet opinion is wrong",
+			"smh how can you be more wrong than people who try to meme on Justin's variables",
+			"Go turn yourself into a Javaderp function",
+			"Go commit the NRG command"];
+		Yurr(lightMode, message);
 	};
-	if(message.content === "Light theme best theme") Yeet("Correct!", message);
-	if(message.content.toLowerCase() === "why are you using light mode") Yeet("Smh so he can actually see", message);
+	if (message.content === "Light theme best theme") Yeet("Correct!", message);
+	if (message.content.toLowerCase() === "why are you using light mode") Yeet("Smh so he can actually see", message);
 
 //entering srs prefix code section
 	let messageArray = message.content.split(" ");
@@ -79,17 +86,30 @@ bot.on("message", async message => { //Enter portion of text code//
 		//Dev note: message defines the thing as in the certain channel, content just listens to the words
 		};
 		
-	if(!command === prefix) {console.log(message.content);
+	if (!command === prefix) {console.log(message.content);
 	//if the thing isn't srs, the command would report invalid
 	} else 
 		// This is where Srs says stuff but
 		if (cmdDetect("invite")) {
-			Roll(4);
-			NRG("0", "Smh didn't buy your broke college student a plane ticket", message);
-			NRG("1", "Smh I'm not going to your meetups", message);
-			NRG("2", "Smh you don't even have my invite code", message); 
-			NRG("3", "What!? Did Justin opensourced my token again?", message);
+			let americanAirlines = [
+				"smh didn't buy your broke college student a plane ticket",
+				"smh I'm not going to your meetups",
+				"smh you don't even have my invite code",
+				"invite me when Justin runs me in the cloud",
+				"I'm too busy enjoying the fancy sublime text colors",
+				"What!? Did Justin opensource my token again?",
+				"Did Justin pull a Github.opensource.IPAddress?"
+			];
+			Yurr(americanAirlines, message);
 		};
+		if (cmdDetect("cat")) {
+			let ActuallyKnowsHowToCode = [
+				"yes 1520 gang",
+				"isn't that the kid that helped get me on full time?",
+				"Oh the APCPS major kid",
+				"SHHHH I'm buying milk for the cat"];
+			Yurr(ActuallyKnowsHowToCode, message);
+		}
 		beforeArgs("rob", "Here take my college debt");
 		beforeArgs("help", "Help me help you smh");
 		beforeArgs("joke", "Smh you're a joke");
@@ -101,14 +121,17 @@ bot.on("message", async message => { //Enter portion of text code//
 		beforeArgs("feed", "Smh I'm not eating on my keeb");
 		beforeArgs("description", "Your broke college student, on a mission to save the world from shitty moderation bots and the axis of darkness");
 		beforeArgs("help", "Smh does I look like work in customer support");
-		beforeArgs("updatelist", "Justin is crying over fetch API promise nonsense");
+		beforeArgs("updatelist", "Justin is currently... oh wait, he doesn't know what to do for update 1.2.0");
 		if (cmdDetect("philip")) {
-			Roll (5);
-			NRG("0", "THIS IS UNFAIR!", message);
-			NRG("1", "Oh come on! Where is the manager?", message);
-			NRG("2", "Wait, is this even Srs bot anymore?", message);
-			NRG("3", "Let's get just this done aight?", message);
-			NRG("4", "That's it. We're screwed ._.", message);
+			let chad = [
+				"THIS IN UNFAIR!",
+				"Oh come on! Where is the manager?",
+				"Wait, is this even Srs bot anymore?",
+				"Let's just get this done, aight?",
+				"LETS DO THIS",
+				"That's it. We're screwed ._."
+			];
+			Yurr(chad, message);
 		};
 	//Srs Weather
 	if (cmdDetect("weather")) { //Dev Note: Fetch, thenResponse, thenResult
