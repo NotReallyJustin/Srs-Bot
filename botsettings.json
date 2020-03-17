@@ -1,4 +1,4 @@
 {
-	"token": "<private>",
+	"token": "process.env.BOT_TOKEN",
 	"prefix": "srs"
 }
