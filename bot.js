@@ -10,7 +10,7 @@ const bot = new Discord.Client();
 bot.login(botSettings.token);
 
 bot.on("ready", () => {
-	console.log("I'm clearly confused");
+	console.log("Where did JavaDerp go?");
 
 	bot.generateInvite(["ADMINISTRATOR"]).then(link => {
 		console.log(link);
@@ -19,22 +19,22 @@ bot.on("ready", () => {
 	});
 });
 
-function Yeet(text, message) {
+function message(text, message) {
 	return message.channel.send(text);
 };
 //defines yeet
 
-function Roll(outcomes) {
+function randomGenerate(outcomes) {
 	return Math.floor(Math.random() * outcomes);
 };
 
-function Yurr(list, message) {
+function selectiveMessaging(list, message) {
 	if (typeof(list) !== "object") {
 		console.log("smh give me a list you dummy"); //Idea from Wuzics//
 	} else {
 		var length = list.length
-		let rolly = Roll(length);
-		Yeet(list[rolly], message);
+		let number = Roll(length);
+		message(list[number], message);
 	};
 };
 
@@ -44,9 +44,9 @@ bot.on("message", async message => { //Enter portion of text code//
 	if (message.author.bot) return;
 	if (message.channel.type === "dm") return message.channel.sendMessage("Smh I'm not a dm bot");
 	// Enter easter egg portion//
-	if (message.content.toUpperCase() === "MY TRIG GRADE IS RUINED!") Yeet("Smh be quiet and study\
+	if (message.content.toUpperCase() === "MY TRIG GRADE IS RUINED!") message("Smh be quiet and study\
 	 for your 1580", message);
-	if (message.content.toUpperCase() === "I HAVE NOTHING TO DO") Yeet("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
+	if (message.content.toUpperCase() === "I HAVE NOTHING TO DO") message("Smh then post on instagram\nStop eating egg pudding or you'll be fat\
 		\nSmh stop being lazy and update me", message);
 	if (message.content.toUpperCase() === "EW LIGHT MODE") {
 		let lightMode = [
@@ -66,10 +66,10 @@ bot.on("message", async message => { //Enter portion of text code//
 			"smh how can you be more wrong than people who try to meme on Justin's variables",
 			"Go turn yourself into a Javaderp function",
 			"Go commit the NRG command"];
-		Yurr(lightMode, message);
+		selectiveMessaging(lightMode, message);
 	};
-	if (message.content === "Light theme best theme") Yeet("Correct!", message);
-	if (message.content.toLowerCase() === "why are you using light mode") Yeet("Smh so he can actually see", message);
+	if (message.content === "Light theme best theme") message("Correct!", message);
+	if (message.content.toLowerCase() === "why are you using light mode") message("Smh so he can actually see", message);
 
 //entering srs prefix code section
 	let messageArray = message.content.split(" ");
@@ -78,7 +78,7 @@ bot.on("message", async message => { //Enter portion of text code//
 	// Slices message by word!
 
 	function beforeArgs(suffix, txt) {
-		if(args[0] === suffix) Yeet(txt, message)
+		if(args[0] === suffix) message(txt, message)
 	};
 
 	function cmdDetect(suffix) {
@@ -91,7 +91,7 @@ bot.on("message", async message => { //Enter portion of text code//
 	} else 
 		// This is where Srs says stuff but
 		if (cmdDetect("invite")) {
-			let americanAirlines = [
+			let Response = [
 				"smh didn't buy your broke college student a plane ticket",
 				"smh I'm not going to your meetups",
 				"smh you don't even have my invite code",
@@ -100,15 +100,15 @@ bot.on("message", async message => { //Enter portion of text code//
 				"What!? Did Justin opensource my token again?",
 				"Did Justin pull a Github.opensource.IPAddress?"
 			];
-			Yurr(americanAirlines, message);
+			selectiveMessaging(Response, message);
 		};
 		if (cmdDetect("cat")) {
-			let ActuallyKnowsHowToCode = [
+			let CatResponse = [
 				"yes 1520 gang",
 				"isn't that the kid that helped get me on full time?",
 				"Oh the APCPS major kid",
 				"SHHHH I'm buying milk for the cat"];
-			Yurr(ActuallyKnowsHowToCode, message);
+			selectiveMessaging(CatResponse, message);
 		}
 		beforeArgs("rob", "Here take my college debt");
 		beforeArgs("help", "Help me help you smh");
@@ -122,8 +122,8 @@ bot.on("message", async message => { //Enter portion of text code//
 		beforeArgs("description", "Your broke college student, on a mission to save the world from shitty moderation bots and the axis of darkness");
 		beforeArgs("help", "Smh does I look like work in customer support");
 		beforeArgs("updatelist", "Justin is currently... oh wait, he doesn't know what to do for update 1.2.0");
-		if (cmdDetect("philip")) {
-			let chad = [
+		if (cmdDetect("Karen")) {
+			let Response = [
 				"THIS IN UNFAIR!",
 				"Oh come on! Where is the manager?",
 				"Wait, is this even Srs bot anymore?",
@@ -131,7 +131,7 @@ bot.on("message", async message => { //Enter portion of text code//
 				"LETS DO THIS",
 				"That's it. We're screwed ._."
 			];
-			Yurr(chad, message);
+			selectiveMessaging(Response, message);
 		};
 	//Srs Weather
 	if (cmdDetect("weather")) { //Dev Note: Fetch, thenResponse, thenResult
@@ -145,7 +145,7 @@ bot.on("message", async message => { //Enter portion of text code//
   		message.channel.send("wtf it's " + fusion + " lowest and " + vaporization + " high and " + DihydrogenMonoxide + "% chance to get wet");
   		function vestirse(temp1, temp2, txt, message) {
 			if (fusion > temp1 & fusion < temp2) {
-				Yeet(txt, message);
+				message(txt, message);
 			};
 		};
 		vestirse(-50, 0, "where is climate change when you need it?", message);
