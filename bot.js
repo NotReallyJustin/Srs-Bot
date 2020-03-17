@@ -7,7 +7,7 @@ const weather = require("weather-js");
 const bot = new Discord.Client();
 // Big thanks to Steven and Iscii for being gods and making sure I don't brainlet the code :P
 
-bot.login(process.env.BOT_TOKEN);
+bot.login(botSettings.token);
 
 bot.on("ready", () => {
 	console.log("I'm clearly confused");
