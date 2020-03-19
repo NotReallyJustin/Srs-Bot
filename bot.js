@@ -1,13 +1,11 @@
-const botSettings = require("./botsettings.json");
 const Discord = require("discord.js");
-const prefix = botSettings.prefix;
-const fetch = require("node-fetch");
+const prefix = "srs";
 const weather = require("weather-js");
 
 const bot = new Discord.Client();
 // Big thanks to Steven and Iscii for being gods and making sure I don't brainlet the code :P
 
-bot.login(botSettings.token);
+bot.login(process.env.BOT_TOKEN);
 
 bot.on("ready", () => {
 	console.log("I'm clearly confused");
@@ -42,7 +40,7 @@ bot.on("message", async message => { //Enter portion of text code//
 	//emotes owo
 	const illegal = message.guild.emojis.find(emoji => emoji.name === "illegal"); //iscii code
 	if (message.author.bot) return;
-	if (message.channel.type === "dm") return message.channel.sendMessage("Smh I'm not a dm bot");
+	if (message.channel.type === "dm") return message.channel.send("Smh I'm not a dm bot");
 	// Enter easter egg portion//
 	if (message.content.toUpperCase() === "MY TRIG GRADE IS RUINED!") Yeet("Smh be quiet and study\
 	 for your 1580", message);
@@ -64,12 +62,36 @@ bot.on("message", async message => { //Enter portion of text code//
 			"Congratulations! Your message is more hated than Space Jams!",
 			"Ding Dong your brainlet opinion is wrong",
 			"smh how can you be more wrong than people who try to meme on Justin's variables",
-			"Go turn yourself into a Javaderp function",
+			"Go turn yourself into a JavaDerp function",
 			"Go commit the NRG command"];
 		Yurr(lightMode, message);
 	};
-	if (message.content === "Light theme best theme") Yeet("Correct!", message);
+	if (message.content.toLowerCase() === "pls pet play") {
+		let petRock = [
+			"OMG Stop playing with your pet",
+			"*Duck Hunting Noises*",
+			"smh go get yourself a seal instead of playing with pets",
+			"Your pet is always depressed, you can't do anything about it",
+			"what are pets even good for?",
+			"Here, abuse Cat instead of feeding that rock"
+		];
+		Yurr(petRock, message);
+	};
+	if (message.content.toLowerCase() === "light theme best theme") Yeet("Correct!", message);
 	if (message.content.toLowerCase() === "why are you using light mode") Yeet("Smh so he can actually see", message);
+	if (message.content.toLowerCase() === "pls rich") {
+		let objection = [
+			"i see you",
+			"how does it feel to be a thief?",
+			"smh highway robbery",
+			"smh stop doing criminal",
+			`${illegal} ${illegal} ${illegal}`,
+			"smh don't rob me",
+			"when you get rich, can you pay some of my student debt?",
+			"I know you want to rob owO"
+		];
+		Yurr(objection, message);
+	};
 
 //entering srs prefix code section
 	let messageArray = message.content.split(" ");
@@ -86,7 +108,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		//Dev note: message defines the thing as in the certain channel, content just listens to the words
 		};
 		
-	if (!command === prefix) {console.log(message.content);
+	if (command !== prefix) {return;
 	//if the thing isn't srs, the command would report invalid
 	} else 
 		// This is where Srs says stuff but
@@ -98,7 +120,7 @@ bot.on("message", async message => { //Enter portion of text code//
 				"invite me when Justin runs me in the cloud",
 				"I'm too busy enjoying the fancy sublime text colors",
 				"What!? Did Justin opensource my token again?",
-				"Did Justin pull a Github.opensource.IPAddress?"
+				"Did Justin pull a Github.opensource.IPaddress?"
 			];
 			Yurr(americanAirlines, message);
 		};
@@ -122,6 +144,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		beforeArgs("description", "Your broke college student, on a mission to save the world from shitty moderation bots and the axis of darkness");
 		beforeArgs("help", "Smh does I look like work in customer support");
 		beforeArgs("updatelist", "Justin is currently... oh wait, he doesn't know what to do for update 1.2.0");
+		beforeArgs("commands", "https://github.com/ComradeDiamond/Srs-Bot/wiki");
 		if (cmdDetect("philip")) {
 			let chad = [
 				"THIS IN UNFAIR!",
@@ -137,7 +160,7 @@ bot.on("message", async message => { //Enter portion of text code//
 	if (cmdDetect("weather")) { //Dev Note: Fetch, thenResponse, thenResult
 		weather.find({search: 'New York, NY', degreeType: 'F'}, function(err, result) {
  	if(err) console.log("You made an oof you brainlet");
-  let Fakenyc = (JSON.stringify(result, null, 0)); 
+  	let Fakenyc = (JSON.stringify(result, null, 0)); 
   	let nyc = JSON.parse(Fakenyc);
   		let fusion = nyc[0].forecast[1].low
   		let vaporization = nyc[0].forecast[1].high
@@ -158,5 +181,36 @@ bot.on("message", async message => { //Enter portion of text code//
 		vestirse(84, 100, "You want to go out? Don't", message);
 		vestirse(99, 1000, "wtf move to Canada", message);
 		});
+	};
+	if (cmdDetect("advice")) {
+		if (messageArray.length = 2) {Yeet("smh what am I supposed to give you advice on?"); 
+			}else {let eightWheel = [
+		"smh try again I'm tired",
+		"yes",
+		"hell no",
+		"probably",
+		"i think yea",
+		"i think no"
+		];
+		Yurr(eightWheel, message);
+		};
+	};
+	if (cmdDetect("rate")) {
+		if (messageArray.length = 2) {Yeet("smh give me something to rate", message);
+		} else if (message.content.toLowerCase() === "srs rate light mode" || message.content.toLowerCase() === "srs rate light theme") {
+			Yeet("10/10", message);
+		} else if (message.content.toLowerCase() === "srs rate dark mode" || message.content.toLowerCase() === "srs rate amoled" || message.content.toLowerCase() === "srs rate dark theme") {
+			let darkMode = [
+				"Is there a number less than negative infinity?",
+				"-50000 / 10",
+				"The number would be so negative that it makes Alaska seem like a joke",
+				"what are the jokes of infecting greenland? Yea, that number",
+				"smh take whatever number you're thinking of, multiply it my -1"
+			];
+			Yurr(darkMode, message)
+		} else {
+			var dankMemez = Roll(11);
+			message.channel.send("I give " + dankMemez + "/10");
+		};
 	};
 });
