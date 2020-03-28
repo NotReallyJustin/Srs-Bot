@@ -17,10 +17,10 @@ bot.on("ready", () => {
 	});
 });
 
+//definition section//
 function Yeet(text, message) {
 	return message.channel.send(text);
 };
-//defines yeet
 
 function Roll(outcomes) {
 	return Math.floor(Math.random() * outcomes);
@@ -33,6 +33,13 @@ function Yurr(list, message) {
 		var length = list.length
 		let rolly = Roll(length);
 		Yeet(list[rolly], message);
+	};
+};
+
+function Substring(array, infosys) {
+	if (typeof(array) !== "object") {return
+	} else {let DontExposeMeh = array.map(something => something.toLowerCase()); //Plugs everything in array into function(something) and runs it
+	return DontExposeMeh.includes(infosys);
 	};
 };
 
@@ -68,12 +75,13 @@ bot.on("message", async message => { //Enter portion of text code//
 	};
 	if (message.content.toLowerCase() === "pls pet play") {
 		let petRock = [
-			"OMG Stop playing with your pet",
+			":pandaBan:",
 			"*Duck Hunting Noises*",
-			"smh go get yourself a seal instead of playing with pets",
-			"Your pet is always depressed, you can't do anything about it",
-			"what are pets even good for?",
-			"Here, abuse Cat instead of feeding that rock"
+			"OMG STOP PLAYING WITH THAT ROCK",
+			"if you keep playing with that pet you'll give it infection",
+			"SOCIAL DISTANCING",
+			"SOCIAL DISTANCING WITH THAT THING",
+			"pls meme"
 		];
 		Yurr(petRock, message);
 	};
@@ -183,29 +191,48 @@ bot.on("message", async message => { //Enter portion of text code//
 		});
 	};
 	if (cmdDetect("advice")) {
-		if (messageArray.length = 2) {Yeet("smh what am I supposed to give you advice on?"); 
-			}else {let eightWheel = [
-		"smh try again I'm tired",
-		"yes",
-		"hell no",
-		"probably",
-		"i think yea",
-		"i think no"
-		];
-		Yurr(eightWheel, message);
+		if (messageArray.length == "2") {Yeet("smh what am I supposed to give you advice on?"); 
+		} else if ((Substring(args, "light") & Substring(args, "mode")) | (Substring(args, "dark") & Substring(args, "mode"))) {
+			let seeNoEvil = [
+			"Aight mate you know light mode is good",
+			"Smh I'm not meming on light theme",
+			"Justin patched the bug! What are you going to do now?",
+			"See no evil"
+			];
+			Yurr(seeNoEvil, message);
+		} else if ((Substring(args, "light") & Substring(args, "theme")) | (Substring(args, "dark") & Substring(args, "theme"))) {
+			let feelNoEvil = [
+			"smh Light theme best theme",
+			"Rule #1, is that you gotta have fun. And heathen when you're done, dark mode's gotta be the first to run",
+			"reference error: Srs.Betray(Justin) does not exist",
+			"Internal error: You should know light mode > dark mode",
+			"smh Light Mode good"
+			];
+			Yurr(feelNoEvil, message);
+		} else {let eightWheel = [
+			"smh try again I'm tired",
+			"yes",
+			"hell no",
+			"probably",
+			"i think yea",
+			"i think no"
+			];
+			Yurr(eightWheel, message);
 		};
 	};
 	if (cmdDetect("rate")) {
-		if (messageArray.length = 2) {Yeet("smh give me something to rate", message);
-		} else if (message.content.toLowerCase() === "srs rate light mode" || message.content.toLowerCase() === "srs rate light theme") {
-			Yeet("10/10", message);
-		} else if (message.content.toLowerCase() === "srs rate dark mode" || message.content.toLowerCase() === "srs rate amoled" || message.content.toLowerCase() === "srs rate dark theme") {
+		if (messageArray.length == "2") {Yeet("smh give me something to rate", message);
+		} else if (Substring(args, "light")) {
+			Yeet("I give 10/10", message);
+		} else if (Substring(args, "dark")) {
 			let darkMode = [
 				"Is there a number less than negative infinity?",
 				"-50000 / 10",
 				"The number would be so negative that it makes Alaska seem like a joke",
 				"what are the jokes of infecting greenland? Yea, that number",
-				"smh take whatever number you're thinking of, multiply it my -1"
+				"smh take whatever number you're thinking of, take the absolute value, then multiply it by -1",
+				"less than the chances of Justin joining LAS... oh wait",
+				"less than the chances of Justin going to Finance Major next y... oh wait"
 			];
 			Yurr(darkMode, message)
 		} else {
