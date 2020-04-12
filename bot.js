@@ -45,7 +45,7 @@ function Substring(array, infosys) {
 
 bot.on("message", async message => { //Enter portion of text code//
 	//emotes owo
-	const illegal = message.guild.emojis.find(emoji => emoji.name === "illegal"); //iscii code
+	//const illegal = message.guild.emojis.find(emoji => emoji.name === "illegal"); //iscii code
 	if (message.author.bot) return;
 	if (message.channel.type === "dm") return message.channel.send("Smh I'm not a dm bot");
 	// Enter easter egg portion//
@@ -102,9 +102,9 @@ bot.on("message", async message => { //Enter portion of text code//
 	};
 
 //entering srs prefix code section
-	let messageArray = message.content.split(" ");
-	let command = messageArray[0];
-	let args = messageArray.slice(1); 
+	messageArray = message.content.split(" ");
+	command = messageArray[0];
+	args = messageArray.slice(1); 
 	// Slices message by word!
 
 	function beforeArgs(suffix, txt) {
@@ -239,5 +239,35 @@ bot.on("message", async message => { //Enter portion of text code//
 			var dankMemez = Roll(11);
 			message.channel.send("I give " + dankMemez + "/10");
 		};
+	};
+	if (cmdDetect('dm')) {
+		if (isNaN(args[1])) {
+			Yeet("Give me a user ID smh, I need to DM them secretly", message);
+		}
+		else if (messageArray.length == 3) {
+			Yeet("smh what am I supposed to say", message);
+		}
+		else
+		{
+			let newArgs = messageArray.slice(3);
+			newArgs = newArgs.toString();
+			newArgs = newArgs.replace(/,/g, " ");
+			let userId = args[1].toString();
+			message.guild.fetchMember(userId).then((user) => { //user=> is function(user)
+				user.send(newArgs);
+			}); //Need smth like if UserId does not exist on guild
+			Yeet("If all goes well, message is sent!", message);
+		}
+	}
+	//Moderation
+	function ban(ID, Reason) { //If the executor has ban perms and the offender doesn't, ban the user and send them a DM.
+		if (guild.me.permissions.has(Permissions.FLAGS.BAN_MEMBERS) && !guild.ID.permissions.has(Permission.FLAGS.BAN_MEMBERS)) {
+			guild.members.ban(ID, {reason: Reason});
+			DMChannel(ID, ).channel.send("You have been banned! Ban reason:" + Reason);
+		}
+		else 
+		{
+			Yeet("You don't have ban permissions lol", message);
+		}
 	};
 });
