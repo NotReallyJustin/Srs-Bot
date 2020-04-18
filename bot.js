@@ -43,11 +43,50 @@ function Substring(array, infosys) {
 	};
 };
 
+function shame(plyerTheKnight, message) { //Only people who played fight club would know
+	let response = [
+		"How dare you exploit the substring function",
+		"Liked how Justin patched the bug?",
+		"Get rekt by data analytics",
+		"So I think a brainlet did data analytics, and now I can't meme on light mode anymore",
+		"shameLightMode.exe not found",
+		"You may have the Github code and Cat, but I have data analytics",
+		"Get yourself into the hall of shame of exploiting ``Substring()``",
+		"The substring command has an parameter called infosys... that sounds like what Justin used to meme on you all",
+		"Really? Exploiting the code?",
+		"Messing with the substring command... daring today, are we?",
+		"Go commit the NRG command",
+		"smh substring exploiter",
+		"Hey substring exploiter, meet my friend big data",
+		"It's actually not that hard to analyze data... especially with heathens like you",
+		"Srs bot lesson 1: always make functions... you'll thank yourself when you take literally 3 minutes to stop substring exploiters",
+		"Always pretend that the user is Justin and will brainlet anddo something very justin moment... wait, is that talking about you?",
+		"This is Just In! Substring exploiters get dunked on with a pun!",
+		"Go commit setTimeOut 100ms in a while loop",
+		"smh substring exploiter go commit setTimeOut 100ms in a while loop",
+		"Go commit setTimeOut 100ms in a while loop",
+		"Smh I'm not memeing on light mode",
+		"Go kermit futaba and palpitate",
+		"I'll make you see the light eventually",
+		`/warn trying to make me meme on light mode`,
+		"smh I would insult your intelligence, but that meant you had some to begin with",
+		"You have yeed your last haw",
+		"calling you a brainlet would assume you have a brain to know Justin would go data analytics on ya",
+		"not memeing on light mode- THAT'S HOW THE MAFIA WORKS",
+		"The person above me is now the daily special at Shop Lift Up"
+	]; //Now that I think of it, if Cat tries to infiltrate this code, the new variable names would give it all away
+	Yurr(response, message);
+	if (plyerTheKnight) {
+		Yeet("Light theme best theme", message);
+	}else {
+		Yeet("I give dark mode 0/10", message);
+	}
+}
+
 bot.on("message", async message => { //Enter portion of text code//
 	//emotes owo
-	//const illegal = message.guild.emojis.find(emoji => emoji.name === "illegal"); //iscii code
+	//const illegal = message.guild.emojis.find(emoji => emoji.name == "illegal"); //iscii code
 	if (message.author.bot) return;
-	if (message.channel.type === "dm") return message.channel.send("Smh I'm not a dm bot");
 	// Enter easter egg portion//
 	if (message.content.toUpperCase() === "MY TRIG GRADE IS RUINED!") Yeet("Smh be quiet and study\
 	 for your 1580", message);
@@ -64,7 +103,7 @@ bot.on("message", async message => { //Enter portion of text code//
 			"You have yeed your last haw",
 			"There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them",
 			"smh I would insult your intelligence, but that would mean you had some to begin with",
-			`${illegal} ${illegal} ${illegal}`,
+			//`${illegal} ${illegal} ${illegal}`,
 			"I suggest you use your right to remain silent",
 			"Congratulations! Your message is more hated than Space Jams!",
 			"Ding Dong your brainlet opinion is wrong",
@@ -73,33 +112,8 @@ bot.on("message", async message => { //Enter portion of text code//
 			"Go commit the NRG command"];
 		Yurr(lightMode, message);
 	};
-	if (message.content.toLowerCase() === "pls pet play") {
-		let petRock = [
-			":pandaBan:",
-			"*Duck Hunting Noises*",
-			"OMG STOP PLAYING WITH THAT ROCK",
-			"if you keep playing with that pet you'll give it infection",
-			"SOCIAL DISTANCING",
-			"SOCIAL DISTANCING WITH THAT THING",
-			"pls meme"
-		];
-		Yurr(petRock, message);
-	};
 	if (message.content.toLowerCase() === "light theme best theme") Yeet("Correct!", message);
 	if (message.content.toLowerCase() === "why are you using light mode") Yeet("Smh so he can actually see", message);
-	if (message.content.toLowerCase() === "pls rich") {
-		let objection = [
-			"i see you",
-			"how does it feel to be a thief?",
-			"smh highway robbery",
-			"smh stop doing criminal",
-			`${illegal} ${illegal} ${illegal}`,
-			"smh don't rob me",
-			"when you get rich, can you pay some of my student debt?",
-			"I know you want to rob owO"
-		];
-		Yurr(objection, message);
-	};
 
 //entering srs prefix code section
 	messageArray = message.content.split(" ");
@@ -151,7 +165,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		beforeArgs("feed", "Smh I'm not eating on my keeb");
 		beforeArgs("description", "Your broke college student, on a mission to save the world from shitty moderation bots and the axis of darkness");
 		beforeArgs("help", "Smh does I look like work in customer support");
-		beforeArgs("updatelist", "Justin is currently... oh wait, he doesn't know what to do for update 1.2.0");
+		beforeArgs("updatelist", "Justin is finishing up web dev!");
 		beforeArgs("commands", "https://github.com/ComradeDiamond/Srs-Bot/wiki");
 		if (cmdDetect("philip")) {
 			let chad = [
@@ -223,8 +237,24 @@ bot.on("message", async message => { //Enter portion of text code//
 	if (cmdDetect("rate")) {
 		if (messageArray.length == "2") {Yeet("smh give me something to rate", message);
 		} else if (Substring(args, "light")) {
+			if ((!Substring(args, "discord")) && messageArray.length > 4) {
+				shame(true, message);
+				return;
+			}
+			if (messageArray.length > 5) {
+				shame(true, message);
+				return;
+			}
 			Yeet("I give 10/10", message);
 		} else if (Substring(args, "dark")) {
+			if ((Substring(args, "discord")) && messageArray.length > 4) {
+				shame(false, message);
+				return;
+			}
+			if (messageArray.length > 5) {
+				shame(false, message);
+				return;
+			}
 			let darkMode = [
 				"Is there a number less than negative infinity?",
 				"-50000 / 10",
@@ -249,25 +279,55 @@ bot.on("message", async message => { //Enter portion of text code//
 		}
 		else
 		{
+			let author = message.author;
 			let newArgs = messageArray.slice(3);
 			newArgs = newArgs.toString();
 			newArgs = newArgs.replace(/,/g, " ");
+			if (author != '@JC23') {
+				newArgs = newArgs + `(${author})` //Well if there is no tag, then you know who it's from
+			}else {
+				let randomList = [
+					"Egg Pudding",
+					"Valdictorian",
+					"Seal Team 6",
+					"United States Navy Seals",
+					"PlyerTheDefender",
+					"Srs Bot Owner"
+				];
+				newArgs += `(${randomList[Roll(6)]})`
+			}
+
 			let userId = args[1].toString();
 			message.guild.fetchMember(userId).then((user) => { //user=> is function(user)
 				user.send(newArgs);
 			}); //Need smth like if UserId does not exist on guild
 			Yeet("If all goes well, message is sent!", message);
 		}
-	}
+	};
 	//Moderation
 	function ban(ID, Reason) { //If the executor has ban perms and the offender doesn't, ban the user and send them a DM.
-		if (guild.me.permissions.has(Permissions.FLAGS.BAN_MEMBERS) && !guild.ID.permissions.has(Permission.FLAGS.BAN_MEMBERS)) {
-			guild.members.ban(ID, {reason: Reason});
-			DMChannel(ID, ).channel.send("You have been banned! Ban reason:" + Reason);
-		}
-		else 
-		{
-			Yeet("You don't have ban permissions lol", message);
-		}
+		message.guild.fetchMember(ID).then((user) => {
+			if (message.member.hasPermission(`BAN_MEMBERS`) && !user.hasPermission(`BAN_MEMBERS`)) { //If user has ban perms
+				user.send("You have been banned! Ban reason: " + Reason);
+				user.ban({reason: Reason});
+				Yeet("Done! Now gimme a cookie", message);
+			}else {
+				Yeet("You don't have ban permissions lol", message);
+			}
+		});
 	};
+	if (cmdDetect("ban")) {
+		if (messageArray.length == "2") {
+			Yeet("Give me someone to ban", message);
+			return;
+		} else if (messageArray.length == "3") {
+			Yeet("Give me a ban reason smh", message);
+			return;
+		}
+		let banUser = args[1].toString();
+		let reason = messageArray.slice(3);
+		reason = reason.toString(); //Could use come concats here, but to string is easier to understand
+		reason = reason.replace(/,/g, " ");
+		ban(banUser, reason);
+	}
 });
