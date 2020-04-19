@@ -217,7 +217,7 @@ bot.on("message", async message => { //Enter portion of text code//
 	};
 	if (cmdDetect("advice")) {
 		if (messageArray.length == "2") {Yeet("smh what am I supposed to give you advice on?"); 
-		} else if (regEx(/[^\w\s\d,.;!:?]/ig, args)) {
+		} else if (regEx(/[^\w\d, .;!:?]/ig, args)) {
 			shame(true, message);
 			return;
 		}
@@ -251,11 +251,11 @@ bot.on("message", async message => { //Enter portion of text code//
 	};
 	if (cmdDetect("rate")) {
 		if (messageArray.length == "2") {Yeet("smh give me something to rate", message);
-		} else if (regEx(/[^\w\s\d,.;!:?]/ig, args)) {
+		} else if (regEx(/[^\w\d,.; '!:?]/ig, args)) {
 			shame(true, message); //Maybe I'll come up with smth creative
 			return;
-		} else if (regEx(/light/ig, args)) {
-			if ((!regEx(/[discord|discord's|youtube|chrome]/ig, args)) && messageArray.length > 4) {
+		} else if (regEx(/\blight\b/ig, args)) {
+			if ((!regEx(/\bdiscord\b|\bdiscord's\b|\byoutube\b|\bchrome\b/ig, args)) && messageArray.length > 4) {
 				shame(true, message);
 				return;
 			}
@@ -264,8 +264,8 @@ bot.on("message", async message => { //Enter portion of text code//
 				return;
 			}
 			Yeet("I give 10/10", message);
-		} else if (regEx(/dark/ig, args)) {
-			if ((!regEx(/[discord|discord's|youtube|chrome]/ig, args)) && messageArray.length > 4) {
+		} else if (regEx(/\bdark\b/ig, args)) {
+			if ((!regEx(/\bdiscord\b|\bdiscord's\b|\byoutube\b|\bchrome\b/ig, args)) && messageArray.length > 4) {
 				shame(false, message);
 				return;
 			}
