@@ -36,16 +36,20 @@ function Yurr(list, message) {
 	};
 };
 
-function Substring(array, infosys) {
+/*function Substring(array, infosys) {
 	if (typeof(array) !== "object") {return
 	} else {let DontExposeMeh = array.map(something => something.toLowerCase()); //Plugs everything in array into function(something) and runs it
 	return DontExposeMeh.includes(infosys);
 	};
-};
+}; */
+
+function regEx(searchQuery, searchObject) {
+	return searchQuery.test(searchObject);
+}
 
 function shame(plyerTheKnight, message) { //Only people who played fight club would know
 	let response = [
-		"How dare you exploit the substring function",
+		"I don't see any substring function for you to exploit there buddy",
 		"Liked how Justin patched the bug?",
 		"Get rekt by data analytics",
 		"So I think a brainlet did data analytics, and now I can't meme on light mode anymore",
@@ -73,7 +77,14 @@ function shame(plyerTheKnight, message) { //Only people who played fight club wo
 		"You have yeed your last haw",
 		"calling you a brainlet would assume you have a brain to know Justin would go data analytics on ya",
 		"not memeing on light mode- THAT'S HOW THE MAFIA WORKS",
-		"The person above me is now the daily special at Shop Lift Up"
+		"The person above me is now the daily special at Shop Lift Up",
+		"Hey, how do you like the substring function?",
+		"smh go kermit substring function", 
+		"smh go kermit substring function", 
+		"smh go kermit substring function", 
+		"smh go kermit substring function", 
+		"smh go kermit substring function", 
+		"The power of tier III technologies stop you from exploiting srs rate"
 	]; //Now that I think of it, if Cat tries to infiltrate this code, the new variable names would give it all away
 	Yurr(response, message);
 	if (plyerTheKnight) {
@@ -236,8 +247,11 @@ bot.on("message", async message => { //Enter portion of text code//
 	};
 	if (cmdDetect("rate")) {
 		if (messageArray.length == "2") {Yeet("smh give me something to rate", message);
-		} else if (Substring(args, "light")) {
-			if ((!Substring(args, "discord")) && messageArray.length > 4) {
+		} else if (regEx(/^\w\s\d,.;!:?/ig, args)) {
+			shame(true, message); //Maybe I'll come up with smth creative
+			return;
+		} else if (regEx(/light/ig, args)) {
+			if ((!regEx(/(discord|discord's|youtube|chrome)/ig, args)) && messageArray.length > 4) {
 				shame(true, message);
 				return;
 			}
@@ -246,8 +260,8 @@ bot.on("message", async message => { //Enter portion of text code//
 				return;
 			}
 			Yeet("I give 10/10", message);
-		} else if (Substring(args, "dark")) {
-			if ((Substring(args, "discord")) && messageArray.length > 4) {
+		} else if (regEx(/dark/ig, args)) {
+			if ((!regEx(/discord|discord's|youtube|chrome/ig, args)) && messageArray.length > 4) {
 				shame(false, message);
 				return;
 			}
