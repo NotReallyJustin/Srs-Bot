@@ -217,7 +217,11 @@ bot.on("message", async message => { //Enter portion of text code//
 	};
 	if (cmdDetect("advice")) {
 		if (messageArray.length == "2") {Yeet("smh what am I supposed to give you advice on?"); 
-		} else if ((Substring(args, "light") & Substring(args, "mode")) | (Substring(args, "dark") & Substring(args, "mode"))) {
+		} else if (regEx(/[^\w\s\d,.;!:?]/ig, args)) {
+			shame(true, message);
+			return;
+		}
+		else if ((Substring(args, "light") & Substring(args, "mode")) | (Substring(args, "dark") & Substring(args, "mode"))) {
 			let seeNoEvil = [
 			"Aight mate you know light mode is good",
 			"Smh I'm not meming on light theme",
@@ -247,11 +251,11 @@ bot.on("message", async message => { //Enter portion of text code//
 	};
 	if (cmdDetect("rate")) {
 		if (messageArray.length == "2") {Yeet("smh give me something to rate", message);
-		} else if (regEx(/^\w\s\d,.;!:?/ig, args)) {
+		} else if (regEx(/[^\w\s\d,.;!:?]/ig, args)) {
 			shame(true, message); //Maybe I'll come up with smth creative
 			return;
 		} else if (regEx(/light/ig, args)) {
-			if ((!regEx(/(discord|discord's|youtube|chrome)/ig, args)) && messageArray.length > 4) {
+			if ((!regEx(/[discord|discord's|youtube|chrome]/ig, args)) && messageArray.length > 4) {
 				shame(true, message);
 				return;
 			}
@@ -261,7 +265,7 @@ bot.on("message", async message => { //Enter portion of text code//
 			}
 			Yeet("I give 10/10", message);
 		} else if (regEx(/dark/ig, args)) {
-			if ((!regEx(/discord|discord's|youtube|chrome/ig, args)) && messageArray.length > 4) {
+			if ((!regEx(/[discord|discord's|youtube|chrome]/ig, args)) && messageArray.length > 4) {
 				shame(false, message);
 				return;
 			}
