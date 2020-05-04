@@ -220,16 +220,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		} else if (regEx(/[^\w\d, .;!:?]/ig, args)) {
 			shame(true, message);
 			return;
-		}
-		else if ((Substring(args, "light") & Substring(args, "mode")) | (Substring(args, "dark") & Substring(args, "mode"))) {
-			let seeNoEvil = [
-			"Aight mate you know light mode is good",
-			"Smh I'm not meming on light theme",
-			"Justin patched the bug! What are you going to do now?",
-			"See no evil"
-			];
-			Yurr(seeNoEvil, message);
-		} else if ((Substring(args, "light") & Substring(args, "theme")) | (Substring(args, "dark") & Substring(args, "theme"))) {
+		} else if ((regEx(/light/ig, args)) || regEx(/dark/ig, args)) {
 			let feelNoEvil = [
 			"smh Light theme best theme",
 			"Rule #1, is that you gotta have fun. And heathen when you're done, dark mode's gotta be the first to run",
@@ -254,7 +245,7 @@ bot.on("message", async message => { //Enter portion of text code//
 		} else if (regEx(/[^\w\d,.; '!:?]/ig, args)) {
 			shame(true, message); //Maybe I'll come up with smth creative
 			return;
-		} else if (regEx(/\blight\b/ig, args)) {
+		} else if (regEx(/light/ig, args)) {
 			if ((!regEx(/\bdiscord\b|\bdiscord's\b|\byoutube\b|\bchrome\b/ig, args)) && messageArray.length > 4) {
 				shame(true, message);
 				return;
@@ -264,7 +255,7 @@ bot.on("message", async message => { //Enter portion of text code//
 				return;
 			}
 			Yeet("I give 10/10", message);
-		} else if (regEx(/\bdark\b/ig, args)) {
+		} else if (regEx(/dark/ig, args)) {
 			if ((!regEx(/\bdiscord\b|\bdiscord's\b|\byoutube\b|\bchrome\b/ig, args)) && messageArray.length > 4) {
 				shame(false, message);
 				return;
@@ -297,16 +288,19 @@ bot.on("message", async message => { //Enter portion of text code//
 		}
 		else
 		{
-			let author = message.author;
+			let userId = args[1].toString();
 			let newArgs = messageArray.slice(3);
 			newArgs = newArgs.toString();
 			newArgs = newArgs.replace(/,/g, " ");
-			if (author != '@JC23') {
-				newArgs = newArgs + `(${author})` //Well if there is no tag, then you know who it's from
+
+			if (message.author.id != '269971449328959488' || message.author.id == '348208769941110784') {
+				newArgs = newArgs + ` (frum ${message.author.username})` 
+			}else if (message.author.id == '706132125178527765'){
+				bot.channels.get("701858995299942482").send(`Asta has sent "${newArgs}" to ${bot.users.get(userId).username}!`);
 			}else {
 				let randomList = [
 					"Egg Pudding",
-					"Valdictorian",
+					"Valdictorian", //Justin exclusive nicknames
 					"Seal Team 6",
 					"United States Navy Seals",
 					"PlyerTheDefender",
@@ -315,7 +309,6 @@ bot.on("message", async message => { //Enter portion of text code//
 				newArgs += `(${randomList[Roll(6)]})`
 			}
 
-			let userId = args[1].toString();
 			message.guild.fetchMember(userId).then((user) => { //user=> is function(user)
 				user.send(newArgs);
 			}); //Need smth like if UserId does not exist on guild
@@ -327,13 +320,30 @@ bot.on("message", async message => { //Enter portion of text code//
 		message.guild.fetchMember(ID).then((user) => {
 			if (message.member.hasPermission(`BAN_MEMBERS`) && !user.hasPermission(`BAN_MEMBERS`)) { //If user has ban perms
 				user.send("You have been banned! Ban reason: " + Reason);
-				user.ban({reason: Reason});
+				user.ban({reason: Reason}); //Capped reason to prevent confusion with built in reason
 				Yeet("Done! Now gimme a cookie", message);
 			}else {
 				Yeet("You don't have ban permissions lol", message);
 			}
-		});
-	};
+		})
+	}
+	function warn(ID, reason) {
+		message.guild.fetchMember(ID).then((user) => {
+			if (message.member.hasPermission(`BAN_MEMBERS`)) {
+
+				let warnMessage = new Discord.RichEmbed();
+				warnMessage.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
+				warnMessage.setColor('GOLD');
+				warnMessage.setTitle("Warn Message");
+				warnMessage.setDescription(`You have been warned by ${message.author.username}! Warn reason:\n${reason}`);
+				
+				user.send(warnMessage);
+				Yeet("If your ID exists, it's done!", message);
+			} else {
+				Yeet("You don't have perms bruv", message);
+			}
+		})
+	}
 	if (cmdDetect("ban")) {
 		if (messageArray.length == "2") {
 			Yeet("Give me someone to ban", message);
@@ -341,11 +351,25 @@ bot.on("message", async message => { //Enter portion of text code//
 		} else if (messageArray.length == "3") {
 			Yeet("Give me a ban reason smh", message);
 			return;
-		}
+		} 
 		let banUser = args[1].toString();
 		let reason = messageArray.slice(3);
 		reason = reason.toString(); //Could use come concats here, but to string is easier to understand
 		reason = reason.replace(/,/g, " ");
 		ban(banUser, reason);
+	}
+	if (cmdDetect("warn")) {
+		if (messageArray.length == 2) {
+			Yeet("Give me someone to warn smh", message);
+			return;
+		} else if (messageArray.length == 3) {
+			Yeet("give me a warn reason smh", message);
+			return;
+		}
+		let warnUser = args[1];
+		let reason = messageArray.slice(3);
+		reason = reason.toString();
+		reason = reason.replace(/,/g, " ");
+		warn(warnUser, reason);
 	}
 });
