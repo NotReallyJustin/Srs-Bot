@@ -81,9 +81,6 @@ function shame(plyerTheKnight, message) { //Only people who played fight club wo
 		"Hey, how do you like the substring function?",
 		"smh go kermit substring function", 
 		"smh go kermit substring function", 
-		"smh go kermit substring function", 
-		"smh go kermit substring function", 
-		"smh go kermit substring function", 
 		"The power of tier III technologies stop you from exploiting srs rate"
 	]; //Now that I think of it, if Cat tries to infiltrate this code, the new variable names would give it all away
 	Yurr(response, message);
@@ -316,14 +313,33 @@ bot.on("message", async message => { //Enter portion of text code//
 		}
 	};
 	//Moderation
-	function ban(ID, Reason) { //If the executor has ban perms and the offender doesn't, ban the user and send them a DM.
+	function ban(ID, reason) { //If the executor has ban perms and the offender doesn't, ban the user and send them a DM.
 		message.guild.fetchMember(ID).then((user) => {
 			if (message.member.hasPermission(`BAN_MEMBERS`) && !user.hasPermission(`BAN_MEMBERS`)) { //If user has ban perms
-				user.send("You have been banned! Ban reason: " + Reason);
-				user.ban({reason: Reason}); //Capped reason to prevent confusion with built in reason
+				user.send("You have been banned! Ban reason: " + reason);
+				user.ban({reason: reason}); //Capped reason to prevent confusion with built in reason
 				Yeet("Done! Now gimme a cookie", message);
 			}else {
 				Yeet("You don't have ban permissions lol", message);
+			}
+		})
+	}
+	function mute(ID, time, reason) { //not executing mute b/c IDK which server has mute perms
+		message.guild.fetchMember(ID).then((user) => {
+			if (message.member.hasPermission(`BAN_MEMBERS`)) {
+
+				user.Permissions.remove(`SEND_MESSAGES`);
+
+				let muteMessage = new Discord.RichEmbed();
+				warnMessage.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
+				warnMessage.setColor('CYAN');
+				warnMessage.setTitle("Muted Message");
+				warnMessage.setDescription(`You have been muted by ${message.author.username}! Mute reason:\n${reason}`);
+				user.send(warnMessage);
+
+				Yeet("Just like DistrictPvP Days - Muted!", message);
+			} else {
+				Yeet("You don't have perms bruv", message);
 			}
 		})
 	}
