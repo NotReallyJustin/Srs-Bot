@@ -2,11 +2,19 @@ const Discord = require("discord.js");
 const prefix = "srs";
 const weather = require("weather-js");
 const bot = new Discord.Client();
+const messageLimit = 5;
+const slowmodeTime = 20000;
+const slowmodeRateLimit = 3;
 
 bot.login(process.env.BOT_TOKEN);
 
 bot.on("ready", () => {
 	console.log("I'm clearly confused");
+
+	messages = 0;
+	numTimesReachedLimit = 0;
+	inslowMode = false;
+	slowmode = false;
 
 	bot.generateInvite(["ADMINISTRATOR"]).then(link => {
 		console.log(link);
@@ -80,7 +88,26 @@ function shame(plyerTheKnight, message) { //Only people who played fight club wo
 	}
 }
 
+function slowmodeCheck(message) {
+
+	if ((messages < messageLimit) && (inslowMode)) //If messages are less than this amount in the given timeframe
+	{
+		numTimesReachedLimit += 1;
+
+		if (numTimesReachedLimit == 3)
+		{
+			numTimesReachedLimit = 0;
+			message.channel.setRateLimitPerUser(0);
+			inslowMode = false;
+		}
+	}
+
+	message.channel.send(`Slowmode is on is ${inslowMode}`);
+	messages = 0;
+}
+
 bot.on('message', async message => {
+
 	let uppercaseMatch = function(queryMatch, reply) {
 		if (message.content.toUpperCase() == queryMatch.toUpperCase())
 		{
@@ -88,28 +115,38 @@ bot.on('message', async message => {
 		}
 	}
 
-	if ((message.author.bot) && (message.author.id != "542408239946661898") && (message.author.id != "159985870458322944"))
+	if ((message.author.bot) &&(message.author.id != "159985870458322944"))
 	{
 		return;
-	}
-	if (message.author.id == "159985870458322944")
-	{
-		message.channel.send("The power of mee7 compells you");
 	}
 	if (message.author.id == "542408239946661898")
 	{
 		let techBotList = [
 			"Shut up degenerate",
 			"smh go kermit substring function",
-			"Go live on the dark side smh",
+			"The person who made you anti-light mode is a brainlet",
 			`If your username is "imagine using light mode," your author is a brainlet`,
 			"Hey! That's my quote!",
 			"BE QUIET YOU PIECE OF CHINESE ADWARE",
-			"BE QUIET YOU PIECE OF CHINESE ADWARE",
-			"Go kermit download Clean Master you donkey bot"
+			"Go kermit download Clean Master you donkey bot",
+			"Go back to the time out corner you bot",
+			"It's not horny hour, no Cheetah Mobile spyware yet"
 		];
 		randomResp(techBotList, message);
 	}
+
+	//Srs Slowmode
+	if ((slowmode) && (message.author.bot == false))
+	{
+		messages++;
+
+		if ((messages > messageLimit) && (!inslowMode))
+		{
+			message.channel.setRateLimitPerUser(slowmodeRateLimit);
+			inslowMode = true;
+		}
+	}
+
 	uppercaseMatch("My trig grade is ruined", "smh be quiet and study for your 1520");
 	uppercaseMatch("Daily miku!", "smh stop being a degenerate and worshipping some egirl");
 	uppercaseMatch("Seal hunting time", "You better start running before I put you in char su fan");
@@ -216,14 +253,14 @@ bot.on('message', async message => {
   					let vaporization = nyc[0].forecast[1].high;
   					let DihydrogenMonoxide = nyc[0].forecast[1].precip;
 
-  					message.channel.send(`wtf it's ${fusion} lowest and ${vaporization} highest with ${precip}% chance to get wet`);
+  					message.channel.send(`wtf it's ${fusion} lowest and ${vaporization} highest with ${DihydrogenMonoxide}% chance to get wet`);
 
   					let weatherRec = function(temp1, temp2, text) { //Srs bot reccomends you what to wear sorta
   						if ((fusion > temp1) && (fusion < temp2))
   						{
   							message.channel.send(text);
   						}
-  						if (parseInt(precip) > 30)
+  						if (parseInt(DihydrogenMonoxide) > 30)
   						{
   							message.channel.send("bring an umbrella with you");
   						}
@@ -379,6 +416,47 @@ bot.on('message', async message => {
 			}); 
 			message.channel.send("If all goes well, message is sent!");
 		}
+		if (cmdDetect('mention'))
+		{
+			if (messageArray.length == 2)
+			{
+				message.channel.send("What am I pinging?");
+				return;
+			}
+			if (messageArray[2] == "owner")
+			{
+				message.channel.send("<@348208769941110784>");
+				return;
+			}
+			if (messageArray[2] == "band")
+			{
+				let bandList = [
+				"458997270227058698", 
+				"309494444925911041",
+				"464229820994158615", 
+				"360859374870331414",
+				"348208769941110784"
+				];
+
+				if (bandList.indexOf(message.author.id) == -1)
+				{
+					message.channel.send("smh don't be a rulerbreaker you're not in band");
+				}
+				else
+				{
+					let mentionMessage = `From ${message.author}:`;
+
+					for (var i in bandList)
+					{
+						mentionMessage += ` <@${bandList[i]}>`;
+					}
+
+					message.channel.send(mentionMessage);
+				}
+				return;
+			}
+			message.channel.send("No matches\nIf you don't know the code word, chances are, you can't mass ping")
+		}
 
 		//Srs Bot Moderation
 
@@ -459,6 +537,46 @@ bot.on('message', async message => {
 			reason = reason.toString();
 			reason = reason.replace(/,/g, " ");
 			warn(warnUser, reason);
+		}
+		if (cmdDetect("slowmode"))
+		{
+			if (messageArray.length == 2)
+			{
+				message.channel.send("Smh what do you want me to do with slowmode");
+				return;
+			}
+			if (messageArray[2] == "start") 
+			{
+				if (slowmode)
+				{
+					message.channel.send("Buddy slowmode is already on");
+				}
+				else
+				{
+					slowmode = true;
+					slowmodeReset = setInterval(slowmodeCheck, slowmodeTime, message);
+					message.channel.send("Slowmode on!");
+				}
+				return;
+			}
+			if (messageArray[2] == "stop")
+			{
+				if (slowmode)
+				{
+					slowmode = false;
+					messages = 0;
+					clearInterval(slowmodeReset);
+					message.channel.send("Slowmode off!");
+				}
+				else
+				{
+					message.channel.send("There's no slowmode lmao don't be paranoid");
+				}
+				return;
+			}
+
+			//This gets executed if it's neither start or stop; kinda like staten Island
+			message.channel.send("Buddy your command doesn't exist");
 		}
 	}
 })
