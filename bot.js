@@ -605,6 +605,7 @@ bot.on('message', async message => {
 						{
 							if (currentChannel.messageCount < messageArray[4])
 							{
+								console.log(messageArray[4])
 								currentChannel.decentMessageCount++;
 
 								if (currentChannel.decentMessageCount == 5) //After 5 good sessions, clear the slowmode
@@ -628,7 +629,7 @@ bot.on('message', async message => {
 						}
 
 						message.channel.send("iteration count yes");
-						message.channel.send(currentChannel.messageCount);
+						console.log(currentChannel.messageCount);
 						currentChannel.messageCount = 0;
 
 					}, (messageArray[3]*1000));
