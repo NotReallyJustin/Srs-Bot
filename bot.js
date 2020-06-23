@@ -19,10 +19,13 @@ bot.on("ready", () => {
 })
 
 //Basic functions
+
+//Roll generates a random integer
 function roll(outcomes) {
 	return Math.floor(Math.random() * outcomes);
 }
 
+//Takes something in a list, and randomly sends something in it
 function randomResp(list, message) {
 	if (typeof list != "object")
 	{
@@ -91,12 +94,14 @@ function Server(serverId) {
 function Channel(channelId) {
 	this.slowmodeId = -1; //Slowmode id keeps track of the timer number to clear
 	this.inSlowmode = false;
-	//this.slowmodeTime = -1;
+	this.maxNum = -1;
 	this.id = channelId;
 	this.messageCount = 0;
 	this.slowmoding = false; //Slowmoding tells if the channel is act on slowmode
 	this.decentMessageCount = 0;
 }
+
+//Returns the server/channel object in a server or channel list given the snowflake ID
 function findItem(list, requestedId)
 {
 	for (var i=0; i<list.length; i++)
@@ -112,6 +117,7 @@ function findItem(list, requestedId)
 
 bot.on('message', async message => {
 
+	//Returns a value if it matches the uppercase
 	let uppercaseMatch = function(queryMatch, reply) {
 		if (message.content.toUpperCase() == queryMatch.toUpperCase())
 		{
@@ -119,6 +125,12 @@ bot.on('message', async message => {
 		}
 	}
 
+
+	/*Three parts to this section
+	If the author is a bot, do nothing
+	If the author is tech bot, shame it
+	If the author is not a bot, jot down the slowmode messages
+	*/
 	if ((message.author.bot) && (message.author.id != "542408239946661898"))
 	{
 		return;
@@ -136,7 +148,9 @@ bot.on('message', async message => {
 			"Go back to the time out corner you bot",
 			"It's not horny hour, no Cheetah Mobile spyware yet",
 			"BE QUIET YOU PIECE OF STEVENWARE",
-			"BE QUIET YOU PIECE OF STEVENWARE"
+			"BE QUIET YOU PIECE OF STEVENWARE",
+			"Be quiet you bot and go kermit palpitate",
+			"smh go back to debug mode"
 		];
 		randomResp(techBotList, message);
 	}
@@ -154,7 +168,7 @@ bot.on('message', async message => {
 
 	//Registers number of messages for the slowmode. If the author is not a bot, regiser it.
 	//If it is not in slowmode detection mode, do not register the messages
-	currentChannel = findItem(findItem(serverArray, message.guild.id).channelArray, message.channel.id);
+	let currentChannel = findItem(findItem(serverArray, message.guild.id).channelArray, message.channel.id);
 	if ((!message.author.bot) && (currentChannel.inSlowmode))
 	{
 		currentChannel.messageCount += 1;
@@ -186,17 +200,25 @@ bot.on('message', async message => {
 	];
 	uppercaseMatch("ew light mode", roll(lightMode[lightMode.length]));
 
+	/*messageArray converts the command into an array of text, which are used to determine srs commands
+	Accordingly, command is the first item inside the array (srs)
+	Anything after that are args to the command - although args will be used very sparingly due to confusion*/
+
 	messageArray = message.content.split(" ");
 	command = messageArray[0];
 	args = messageArray.slice(1); 
 
 	//These two functions are used to condense code
+	//beforeArgs sends a message if the arguments match
 	function beforeArgs(suffix, response) {
 		if (args[0] == suffix)
 		{
 			message.channel.send(response);
 		}
 	}
+
+	//cmdDetect takes the first argument to the srs command chain, and returns the command from that.
+	//It returns whether the srs command matches a certain designated command
 	function cmdDetect(suffix) {
 		return (args[0].toLowerCase() == suffix);
 	}
@@ -252,9 +274,10 @@ bot.on('message', async message => {
 			randomResp(chad, message);
 		}
 
-		//Srs Weather
+		//Srs Weather - Returns the weather
 		if (cmdDetect("weather"))
 		{
+			//WeatherAPI fetches NYC temperature, and returns it
 			weather.find({search: 'New York, NY', degreeType: 'F'}, (reject, result) => {
 				if (reject)
 				{
@@ -262,6 +285,7 @@ bot.on('message', async message => {
 				}
 				else
 				{
+					//NYC returns the entire JSON from weatherAPI, fusion and vaporization gets the low and highs, and H2O gets the precip chance
 					let nyc = JSON.parse(JSON.stringify(result, null, 0));
 					let fusion = nyc[0].forecast[1].low;
   					let vaporization = nyc[0].forecast[1].high;
@@ -294,16 +318,17 @@ bot.on('message', async message => {
 				}	
 			})
 		}
+		//Srs gives a yes no answer to your burning questions
 		if (cmdDetect("advice")) {
-			if (messageArray.length == "2") 
+			if (messageArray.length == "2") //Checks whether there are additional arguments. srs advice == length of 2
 			{
 				message.channel.send("smh what am I supposed to give you advice on?"); 
 			} 
-			else if (/[^\w\d, .;'!:?]/ig.test(args)) {
+			else if (/[^\w\d, .;'!:?]/ig.test(args)) { //Uses regEx to filter out any anti-light mode treachery
 				shame(true, message);
 				return;
 			} 
-			else if ((/light/ig.test(args)) || (/dark/ig.test(args))) 
+			else if ((/light/ig.test(args)) || (/dark/ig.test(args))) //If there is light mode and dark mode, praise the light
 			{
 				let seeNoEvil = [
 					"smh Light theme best theme",
@@ -314,7 +339,7 @@ bot.on('message', async message => {
 				];
 				randomResp(seeNoEvil, message);
 			} 
-			else if (/amoled/ig.test(args)) 
+			else if (/amoled/ig.test(args)) //AMOLED users are respectable
 			{
 				message.channel.send("Yes don't be those dark mode brainlets and use amoled in the dark");
 			} 
@@ -331,21 +356,22 @@ bot.on('message', async message => {
 				randomResp(eightWheel, message);
 			}
 		}
+		//Srs rates your hot stuff
 		if (cmdDetect("rate"))
 		{
 			if (messageArray.length == 2)
 			{
-				message.channel.send("smh what am I supposed to rate?");
+				message.channel.send("smh what am I supposed to rate?"); //Sees if there are arguments
 			}
-			else if (/[^\w\d,.; '!:?]/ig.test(args))
+			else if (/[^\w\d,.; '!:?]/ig.test(args)) //If there are invalid characters, stop them from ruining light mode
 			{
 				shame(true, message);
 			}
-			else if (/light|amoled/ig.test(args))
+			else if (/light|amoled/ig.test(args)) //Light theme best theme
 			{
 				if ((!(/\bdiscord\b|\bdiscord's\b|\byoutube\b|\bchrome\b/ig.test(args))) && (messageArray.length > 4))
 				{
-					shame(true, message);
+					shame(true, message); //If there are additional words, shame them for trying to make light mode sound bad
 					return;
 				}
 				if (messageArray.length > 5)
@@ -355,11 +381,11 @@ bot.on('message', async message => {
 				}
 				message.channel.send("I give 10/10");
 			}
-			else if (/dark/ig.test(args))
+			else if (/dark/ig.test(args)) //Ew dark mode
 			{
 				if ((!(/\bdiscord\b|\bdiscord's\b|\byoutube\b|\bchrome\b/ig.test(args))) && (messageArray.length > 4))
 				{
-					shame(false, message);
+					shame(false, message); //Same for the shame part in light mode
 					return;
 				}
 				if (messageArray.length > 5)
@@ -387,19 +413,22 @@ bot.on('message', async message => {
 			}
 		}
 
+		//Srs sends a private dm - there are many uses for this
 		if (cmdDetect('dm')) 
 		{
+			//Detects if they have a user ID in the first place
 			if (isNaN(args[1])) 
 			{
 				message.channel.send("Give me a user ID smh");
 			}
-			else if (messageArray.length == 3) 
+			else if (messageArray.length == 3) //Makes sure they have something to send
 			{
 				message.channel.send("smh what am I supposed to say");
 			}
 			else
 			{
-				userId = args[1].toString();
+				userId = args[1].toString(); //Takes the message array and turns it to a string, which we replace the array commas to form a legible sentence
+				//then we send the message
 				newArgs = messageArray.slice(3);
 				newArgs = newArgs.toString();
 				newArgs = newArgs.replace(/,/g, " ");
@@ -431,19 +460,21 @@ bot.on('message', async message => {
 			}); 
 			message.channel.send("If all goes well, message is sent!");
 		}
+
+		//Srs mentions certain people if conditions are met
 		if (cmdDetect('mention'))
 		{
-			if (messageArray.length == 2)
+			if (messageArray.length == 2) //Checks for extra mandatory args
 			{
 				message.channel.send("What am I pinging?");
 				return;
 			}
-			if (messageArray[2] == "owner")
+			if (messageArray[2] == "owner") //Pings Justin
 			{
 				message.channel.send("<@348208769941110784>");
 				return;
 			}
-			if (messageArray[2] == "band")
+			if (messageArray[2] == "band") //Pings the band kids
 			{
 				let bandList = [
 				"458997270227058698", 
@@ -459,6 +490,7 @@ bot.on('message', async message => {
 				}
 				else
 				{
+					//This section makes life easier in case we want to add more names: go through the for loop and tag them all
 					let mentionMessage = `From ${message.author}:`;
 
 					for (var i in bandList)
@@ -492,11 +524,11 @@ bot.on('message', async message => {
 	
 	//Can't mute because that requires a designated mute role
 
-		function warn(ID, reason) {
+		function warn(ID, reason) { //Warns the user
 			message.guild.fetchMember(ID).then((user) => {
 				if (message.member.hasPermission(`BAN_MEMBERS`)) 
 				{
-					let warnMessage = new Discord.RichEmbed();
+					let warnMessage = new Discord.RichEmbed(); //Creates a fancy embembed to warn them
 					warnMessage.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
 					warnMessage.setColor('GOLD');
 					warnMessage.setTitle("Warn Message");
@@ -512,14 +544,14 @@ bot.on('message', async message => {
 			})
 		}
 
-		if (cmdDetect("ban")) 
+		if (cmdDetect("ban")) //Ban hammer
 		{
-			if (messageArray.length == "2") //Preventing Justin moments
+			if (messageArray.length == "2") //Preventing Justin moments with args
 			{
 				message.channel.send("Give me someone to ban");
 				return;
 			} 
-			else if (messageArray.length == "3") 
+			else if (messageArray.length == "3") //Bans are severe - srs bot requires a reason
 			{
 				message.channel.send("Give me a ban reason smh");
 				return;
@@ -533,14 +565,15 @@ bot.on('message', async message => {
 
 			ban(banUser, reason);
 		}
-		if (cmdDetect("warn")) 
+
+		if (cmdDetect("warn")) //Warns the user
 		{
-			if (messageArray.length == 2) 
+			if (messageArray.length == 2) //Checks for the second arg
 			{
 				message.channel.send("Give me someone to warn smh", message);
 				return;
 			} 
-			else if (messageArray.length == 3) 
+			else if (messageArray.length == 3) //Checks for a message
 			{
 				message.channel.send("give me a warn reason smh", message);
 				return;
@@ -553,30 +586,42 @@ bot.on('message', async message => {
 			reason = reason.replace(/,/g, " ");
 			warn(warnUser, reason);
 		}
+
+		/*Smart slowmode - An alternative to slowmode en masse
+		If the chat has a certain number of messages in an alloted time frame, turn on slowmode to prevent it from getting hectic
+		Moderator customizable*/
+
 		if (cmdDetect("slowmode"))
 		{
-			if (messageArray.length == 2)
+			if (messageArray.length == 2) //Checks for args
 			{
 				message.channel.send("smh give me a command");
+				return;
+			}
+
+			if (!message.member.hasPermission(`BAN_MEMBERS`)) //Only staff can turn on slowmode, because slowmode sucks
+			{
+				message.channel.send("You don't have perms to unleash the nuclear weapon");
 				return;
 			}
 
 			//Starts the smart slowmode
 			if (messageArray[2] == "start") 
 			{
-				switch(messageArray.length) //Checks for the length of all the stuff
+				switch(messageArray.length)
+				//Checks for the length of all the stuff. length of the messageArray corresponds to whether an argument is placed for the cmd parameters
 				{
 					case 3:
-						message.channel.send("smh set a timer interval");
+						message.channel.send("smh set a timer interval"); //Missing a timer for the bot to check
 						return;
 					case 4:
-						message.channel.send("smh set a message limit");
+						message.channel.send("smh set a message limit"); //Missing number of messages 
 						return;
 					default:
 						break;
 				}
 
-				//Makes sure we don't have any buggy code that can be exploited by weird arguments
+				//Makes sure we don't have any buggy code that can be exploited by weird arguments, and makes sure mods aren't too abusive with slowmode
 				if (isNaN(messageArray[3]))
 				{
 					message.channel.send("Bruh you need a valid number for your timer interval");
@@ -593,27 +638,28 @@ bot.on('message', async message => {
 					return;
 				}
 
+				//Prevents retriggering of slowmode while it is on
 				if (currentChannel.inSlowmode)
 				{
 					message.channel.send("Buddy slowmode detection is already on");
 				}
 				else //If all the parameters and arguments are all clear, start the slowmode
 				{
-					currentChannel.inSlowmode = true;
+					currentChannel.inSlowmode = true; //Stores that slowmode is on backend
+					currentChannel.maxNum = messageArray[4]; //Stores the customizations in the backend
 					slowmodeReset = setInterval(function () {
 						if (currentChannel.slowmoding)
 						{
-							if (currentChannel.messageCount < messageArray[4])
+							if (currentChannel.messageCount < currentChannel.maxNum)
 							{
-								console.log(messageArray[4])
 								currentChannel.decentMessageCount++;
 
-								if (currentChannel.decentMessageCount == 5) //After 5 good sessions, clear the slowmode
+								if (currentChannel.decentMessageCount == 5) //After 5 good streaks, clear the slowmode
 								{
-									message.channel.setRateLimitPerUser(0); //Clears slowmode
+									bot.channels.get(currentChannel.id).setRateLimitPerUser(0); //Clears slowmode
 									currentChannel.slowmoding = false;
 									currentChannel.decentMessageCount = 0;
-									message.channel.send("Slowmode off!");
+									bot.channels.get(currentChannel.id).send("Slowmode off!");
 								}
 							}
 							else //If the slowmode message count is broken, reset the whole streak
@@ -622,14 +668,14 @@ bot.on('message', async message => {
 							}
 						}
 
-						if ((currentChannel.messageCount > messageArray[4]) && (!currentChannel.slowmoding)) //If there are too many messages, start the slowmode
+						if ((currentChannel.messageCount > currentChannel.maxNum) && (!currentChannel.slowmoding)) 
+						//If there are too many messages, start the slowmode
 						{
-							message.channel.setRateLimitPerUser(5);
-							message.channel.send("Aight because you kiddos can't stop yapping, slowmode is on");
+							bot.channels.get(currentChannel.id).setRateLimitPerUser(5);
+							bot.channels.get(currentChannel.id).send("Aight because you kiddos can't stop yapping, slowmode is on");
+							currentChannel.slowmoding = true;
 						}
 
-						message.channel.send("iteration count yes");
-						console.log(currentChannel.messageCount);
 						currentChannel.messageCount = 0;
 
 					}, (messageArray[3]*1000));
@@ -645,17 +691,19 @@ bot.on('message', async message => {
 				return;
 			}
 
-			if (messageArray[2] == "stop")
+			if (messageArray[2] == "stop") //Stops the clowmode in the channel
 			{
-				if (currentChannel.inSlowmode) //If slowmode is on
+				if (currentChannel.inSlowmode) //If slowmode is on, do the command - or else bot will return a bunch of errors
 				{
 					//Resets the interval and all the channel stats
-					clearInterval(currentChannel.slowmodeId);
+					clearInterval(currentChannel.slowmodeId); //Uses the stored backend intervalID to clear the slowmode
+					message.channel.setRateLimitPerUser(0);
 					currentChannel.inSlowmode = false;
 					currentChannel.slowmoding = false;
 					currentChannel.slowmodeId = -1;
 					currentChannel.decentMessageCount = 0;
-					currentChannel.messageCount;
+					currentChannel.messageCount = 0;
+					currentChannel.maxNum = -1;
 
 					message.channel.send("Slowmode detction off!");
 				}
