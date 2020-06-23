@@ -2,19 +2,14 @@ const Discord = require("discord.js");
 const prefix = "srs";
 const weather = require("weather-js");
 const bot = new Discord.Client();
-const messageLimit = 5;
-const slowmodeTime = 20000;
-const slowmodeRateLimit = 3;
 
 bot.login(process.env.BOT_TOKEN);
 
 bot.on("ready", () => {
 	console.log("I'm clearly confused");
 
-	messages = 0;
-	numTimesReachedLimit = 0;
-	inslowMode = false;
-	slowmode = false;
+	/* Array to keep track of all the servers; can't make a hash table because Array(1E18) doesn't work */
+	serverArray = [];
 
 	bot.generateInvite(["ADMINISTRATOR"]).then(link => {
 		console.log(link);
@@ -88,22 +83,31 @@ function shame(plyerTheKnight, message) { //Only people who played fight club wo
 	}
 }
 
-function slowmodeCheck(message) {
-
-	if ((messages < messageLimit) && (inslowMode)) //If messages are less than this amount in the given timeframe
+//Keeps track of the server's slowmode status and all that
+function Server(serverId) {
+	this.channelArray = []; //Starts hash table for these too because I'm lazy
+	this.id = serverId;
+}
+function Channel(channelId) {
+	this.slowmodeId = -1; //Slowmode id keeps track of the timer number to clear
+	this.inSlowmode = false;
+	//this.slowmodeTime = -1;
+	this.id = channelId;
+	this.messageCount = 0;
+	this.slowmoding = false; //Slowmoding tells if the channel is act on slowmode
+	this.decentMessageCount = 0;
+}
+function findItem(list, requestedId)
+{
+	for (var i=0; i<list.length; i++)
 	{
-		numTimesReachedLimit += 1;
-
-		if (numTimesReachedLimit == 3)
+		if (list[i].id == requestedId)
 		{
-			numTimesReachedLimit = 0;
-			message.channel.setRateLimitPerUser(0);
-			inslowMode = false;
+			return list[i];
 		}
 	}
 
-	message.channel.send(`Slowmode is on is ${inslowMode}`);
-	messages = 0;
+	return null; //If it can't find anything, return null
 }
 
 bot.on('message', async message => {
@@ -115,7 +119,7 @@ bot.on('message', async message => {
 		}
 	}
 
-	if ((message.author.bot) &&(message.author.id != "159985870458322944"))
+	if ((message.author.bot) && (message.author.id != "542408239946661898"))
 	{
 		return;
 	}
@@ -130,23 +134,33 @@ bot.on('message', async message => {
 			"BE QUIET YOU PIECE OF CHINESE ADWARE",
 			"Go kermit download Clean Master you donkey bot",
 			"Go back to the time out corner you bot",
-			"It's not horny hour, no Cheetah Mobile spyware yet"
+			"It's not horny hour, no Cheetah Mobile spyware yet",
+			"BE QUIET YOU PIECE OF STEVENWARE",
+			"BE QUIET YOU PIECE OF STEVENWARE"
 		];
 		randomResp(techBotList, message);
 	}
-
-	//Srs Slowmode
-	if ((slowmode) && (message.author.bot == false))
+	//Adds the server and channel to the array so we can keep track of it later if it does not already exist
+	if (findItem(serverArray, message.guild.id) == null) //Checking to see if server objects exist so we can clear the damn timers
 	{
-		messages++;
-
-		if ((messages > messageLimit) && (!inslowMode))
-		{
-			message.channel.setRateLimitPerUser(slowmodeRateLimit);
-			inslowMode = true;
-		}
+		let tempServer = new Server(message.guild.id);
+		serverArray.push(tempServer);
+	}
+	if (findItem(findItem(serverArray, message.guild.id).channelArray, message.channel.id) == null)
+	{
+		let tempChannel = new Channel(message.channel.id);
+		findItem(serverArray, message.guild.id).channelArray.push(tempChannel);
 	}
 
+	//Registers number of messages for the slowmode. If the author is not a bot, regiser it.
+	//If it is not in slowmode detection mode, do not register the messages
+	currentChannel = findItem(findItem(serverArray, message.guild.id).channelArray, message.channel.id);
+	if ((!message.author.bot) && (currentChannel.inSlowmode))
+	{
+		currentChannel.messageCount += 1;
+	}
+
+	//Srs easter egg section
 	uppercaseMatch("My trig grade is ruined", "smh be quiet and study for your 1520");
 	uppercaseMatch("Daily miku!", "smh stop being a degenerate and worshipping some egirl");
 	uppercaseMatch("Seal hunting time", "You better start running before I put you in char su fan");
@@ -259,10 +273,11 @@ bot.on('message', async message => {
   						if ((fusion > temp1) && (fusion < temp2))
   						{
   							message.channel.send(text);
-  						}
-  						if (parseInt(DihydrogenMonoxide) > 30)
-  						{
-  							message.channel.send("bring an umbrella with you");
+
+  							if (parseInt(DihydrogenMonoxide) > 30)
+  							{
+  								message.channel.send("bring an umbrella with you");
+  							}
   						}
   					}
 
@@ -292,7 +307,7 @@ bot.on('message', async message => {
 			{
 				let seeNoEvil = [
 					"smh Light theme best theme",
-					"Rule #1, is that you gotta have fun. And heathen when you're done, dark mode's gotta be the first to run",
+					"I swear I will launch the Spanish Inquisition against dark mode",
 					"reference error: Srs.Betray(Justin) does not exist",
 					"Internal error: You should know light mode > dark mode",
 					"smh Light Mode good"
@@ -376,7 +391,7 @@ bot.on('message', async message => {
 		{
 			if (isNaN(args[1])) 
 			{
-				message.channel.send("Give me a user ID smh, I need to DM them secretly");
+				message.channel.send("Give me a user ID smh");
 			}
 			else if (messageArray.length == 3) 
 			{
@@ -389,7 +404,7 @@ bot.on('message', async message => {
 				newArgs = newArgs.toString();
 				newArgs = newArgs.replace(/,/g, " ");
 
-				if (message.author.id != '269971449328959488' && message.author.id != '348208769941110784') 
+				if (message.author.id != '269971449328959488' && message.author.id != '0') 
 				{
 					newArgs += ` (frum ${message.author.username})` 
 				}
@@ -542,31 +557,106 @@ bot.on('message', async message => {
 		{
 			if (messageArray.length == 2)
 			{
-				message.channel.send("Smh what do you want me to do with slowmode");
+				message.channel.send("smh give me a command");
 				return;
 			}
+
+			//Starts the smart slowmode
 			if (messageArray[2] == "start") 
 			{
-				if (slowmode)
+				switch(messageArray.length) //Checks for the length of all the stuff
 				{
-					message.channel.send("Buddy slowmode is already on");
+					case 3:
+						message.channel.send("smh set a timer interval");
+						return;
+					case 4:
+						message.channel.send("smh set a message limit");
+						return;
+					default:
+						break;
 				}
-				else
+
+				//Makes sure we don't have any buggy code that can be exploited by weird arguments
+				if (isNaN(messageArray[3]))
 				{
-					slowmode = true;
-					slowmodeReset = setInterval(slowmodeCheck, slowmodeTime, message);
-					message.channel.send("Slowmode on!");
+					message.channel.send("Bruh you need a valid number for your timer interval");
+					return;
+				}
+				if (messageArray[3] < 10)
+				{
+					message.channel.send("The time limit is too short buddy, try more than 10s");
+					return;
+				}
+				if (isNaN(messageArray[4]) || (messageArray[4] < 5))
+				{
+					message.channel.send("Enter a valid message number more than 5s")
+					return;
+				}
+
+				if (currentChannel.inSlowmode)
+				{
+					message.channel.send("Buddy slowmode detection is already on");
+				}
+				else //If all the parameters and arguments are all clear, start the slowmode
+				{
+					currentChannel.inSlowmode = true;
+					slowmodeReset = setInterval(function () {
+						if (currentChannel.slowmoding)
+						{
+							if (currentChannel.messageCount < messageArray[4])
+							{
+								currentChannel.decentMessageCount++;
+
+								if (currentChannel.decentMessageCount == 5) //After 5 good sessions, clear the slowmode
+								{
+									message.channel.setRateLimitPerUser(0); //Clears slowmode
+									currentChannel.slowmoding = false;
+									currentChannel.decentMessageCount = 0;
+									message.channel.send("Slowmode off!");
+								}
+							}
+							else //If the slowmode message count is broken, reset the whole streak
+							{
+								currentChannel.decentMessageCount = 0;
+							}
+						}
+
+						if ((currentChannel.messageCount > messageArray[4]) && (!currentChannel.slowmoding)) //If there are too many messages, start the slowmode
+						{
+							message.channel.setRateLimitPerUser(5);
+							message.channel.send("Aight because you kiddos can't stop yapping, slowmode is on");
+						}
+
+						message.channel.send("iteration count yes");
+						message.channel.send(currentChannel.messageCount);
+						currentChannel.messageCount = 0;
+
+					}, (messageArray[3]*1000));
+
+					//Message array 3 is the time in seconds, message array 4 is the number of messages before slowmode
+					
+					//Logs the interval id so we can clear it
+					currentChannel.slowmodeId = slowmodeReset;
+
+					//Alerts the user slowmode has started
+					message.channel.send("Slowmode detection on!");
 				}
 				return;
 			}
+
 			if (messageArray[2] == "stop")
 			{
-				if (slowmode)
+				if (currentChannel.inSlowmode) //If slowmode is on
 				{
-					slowmode = false;
-					messages = 0;
-					clearInterval(slowmodeReset);
-					message.channel.send("Slowmode off!");
+					//Resets the interval and all the channel stats
+					clearInterval(currentChannel.slowmodeId);
+					currentChannel.inSlowmode = false;
+					currentChannel.slowmoding = false;
+					currentChannel.slowmodeId = -1;
+					currentChannel.decentMessageCount = 0;
+					currentChannel.messageCount;
+
+					message.channel.send("Slowmode detction off!");
 				}
 				else
 				{
