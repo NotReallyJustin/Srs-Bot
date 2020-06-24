@@ -135,7 +135,7 @@ bot.on('message', async message => {
 	{
 		return;
 	}
-	if (message.author.id == "542408239946661898")
+	if (message.author.id == "542408239946661898=")
 	{
 		let techBotList = [
 			"Shut up degenerate",
@@ -324,7 +324,7 @@ bot.on('message', async message => {
 			{
 				message.channel.send("smh what am I supposed to give you advice on?"); 
 			} 
-			else if (/[^\w\d, .;'!:?]/ig.test(args)) { //Uses regEx to filter out any anti-light mode treachery
+			else if (/[^\w\d, .;'@#<>!:?]/ig.test(args)) { //Uses regEx to filter out any anti-light mode treachery
 				shame(true, message);
 				return;
 			} 
@@ -363,7 +363,7 @@ bot.on('message', async message => {
 			{
 				message.channel.send("smh what am I supposed to rate?"); //Sees if there are arguments
 			}
-			else if (/[^\w\d,.; '!:?]/ig.test(args)) //If there are invalid characters, stop them from ruining light mode
+			else if (/[^\w\d,.; <>'!@#:?]/ig.test(args)) //If there are invalid characters, stop them from ruining light mode
 			{
 				shame(true, message);
 			}
