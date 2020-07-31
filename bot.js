@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const prefix = "srs";
 const weather = require("weather-js");
 const bot = new Discord.Client();
+const ajaxAPI = "https://cors-anywhere.herokuapp.com/"
 
 bot.login(process.env.BOT_TOKEN);
 
@@ -348,10 +349,27 @@ bot.on('message', async message => {
 						let high = nyc[0].forecast[1].high;
 						let precipChance = nyc[0].forecast[1].precip;
 
-						message.channel.send(`wtf it's ${low} lowest and ${high} highest with ${precipChance}% chance to get wet`);
+						//Srs gives advanced weather if requested
+						//This actually looks so good I'm not even going to make the code wait for message.channel.send
+						if ((args[1] != undefined) && (args[1] == "advanced"))
+						{
+							let weatherMessage = new Discord.RichEmbed(); //Creates a fancy embembed to warn them
+							weatherMessage.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
+							weatherMessage.setColor('AQUA');
+							weatherMessage.setTitle("Advanced Forecast");
+							weatherMessage.setDescription(`Current Temp: ${nyc[0].current.temperature} \n` +
+								`Feels like: ${nyc[0].current.feelslike} \n`+
+								`Humidity: ${nyc[0].current.humidity} \n` +
+								`Sky Text: ${nyc[0].current.skytext} \n` +
+								`Recent Weather Bloon Launch Time: ${nyc[0].current.observationtime}`);
+							weatherMessage.setFooter("Earth Science :pepega:");
 
-						//If the second argument is advanced, give advanced feedback
-
+							message.channel.send(weatherMessage);
+						}
+						else
+						{
+							message.channel.send(`wtf it's ${low} lowest and ${high} highest with ${precipChance}% chance to get wet`);
+						}
 
 						let weatherRec = function(temp1, temp2, text) { //Srs bot reccomends you what to wear sorta
   							if ((high > temp1) && (high < temp2))
@@ -776,6 +794,66 @@ bot.on('message', async message => {
 				//This gets executed if it's neither start or stop; kinda like staten Island
 				message.channel.send("Buddy your command doesn't exist");
 			break;
+
+			//Srs Utility
+			/*case "translate":
+				//Determine what languages to translate into
+
+				let languageArray = { //Translates common languages into google translate code
+					english: "en";
+					spanish: "es";
+				}
+
+				if (messageArray.length < 4) //Checks for user errors if they forgot to fill in all arguments
+				{
+					message.channel.send("smh specify the language using proper English.");
+					message.channel.send("The input language goes in the 3rd command argument; the output one goes in the 4th");
+					return;
+				}
+				else if (messageArray.length < 5)
+				{
+					message.channel.send("Smh what am I translating");
+					return;
+				}
+				else if (languageArray[args[1]] == undefined)
+				{
+					message.channel.send("Looks like your input language does not exist or isn't supported yet");
+				}
+				else if (languageArray[args[2]] == undefined)
+				{
+					message.channel.send("What kind of fake asian language are you translating into?");
+				}
+				//else if (args[3] == dan tat) return "Egg pudding";
+
+				let translateString = "";
+				for (var i=3; i < args.length; i++)
+				{
+					if (i != 3)
+					{
+						translateString += "%20";
+					}
+
+					translateString += args[i];
+				}
+
+				try
+				{
+					let translateRequest = new XMLHttpRequest(); //Sends AJAX request to fetch the translated words
+					translateRequest.open("GET", 
+						`${ajaxAPI}https://translate.google.com/#view=home&op=translate&sl=${languageArray[args[1]]}&tl=`${languageArray[args[2]]}`&text=${translateString}`);
+					translateRequest.onreadystatechange = function() {
+						if (translateRequest.readyState == 4)
+						{
+							let recievedJSON = translateRequest.responseText;
+						}
+					}
+					translateRequest.send();
+				}
+				catch
+				{
+					message.channel.send("<@348208769941110784> oi AJAX request is acting up");
+				}
+			break;*/
 		}
 	}
 })
