@@ -1,8 +1,21 @@
+//Backend
 const Discord = require("discord.js");
-const prefix = "srs";
 const weather = require("weather-js");
+const translator = require("@danke77/google-translate-api");
 const bot = new Discord.Client();
-const ajaxAPI = "https://cors-anywhere.herokuapp.com/"
+const prefix = "srs";
+
+//Cloud
+const Mango = new require("mongodb").MongoClient;
+const mango = new Mango(process.env.MANGO_CONNECTION);
+let connectionPromise = mango.connect()
+connectionPromise.then(function(){
+	console.log("Let that mango, we connected to someone else's computer");
+	mangoDatabase = mango.db("BotData");
+})
+connectionPromise.catch(err => {
+	console.log(err.stack);
+});
 
 bot.login(process.env.BOT_TOKEN);
 
@@ -10,6 +23,7 @@ bot.on("ready", () => {
 	console.log("I'm clearly confused");
 
 	/* Array to keep track of all the servers; can't make a hash table because Array(1E18) doesn't work */
+	//In Prog: Export to db
 	serverArray = [];
 
 	bot.generateInvite(["ADMINISTRATOR"]).then(link => {
@@ -19,10 +33,9 @@ bot.on("ready", () => {
 	})
 })
 
-//Basic functions
-
-//Roll generates a random integer
-function roll(outcomes) {
+//Roll generates a random positive integer
+function roll(outcomes) 
+{
 	return Math.floor(Math.random() * outcomes);
 }
 
@@ -37,6 +50,14 @@ function randomResp(list, message) {
 		var rollNum = roll(list.length);
 		message.channel.send(list[rollNum]);
 	}
+}
+
+//Returns the arguments inside the bot command that is not bounded to a specific argument index 
+//Usually happens when the user can write any message they like (ie. a message to dm to another discord user)
+function returnUnbound(message, lastBoundArg)
+{
+	//Bound arg as in "bound to a specific index"
+	return message.content.substring(message.content.indexOf(lastBoundArg)+ (lastBoundArg.length));
 }
 
 function shame(plyerTheKnight, message) { //Only people who played fight club would know
@@ -308,7 +329,7 @@ bot.on('message', async message => {
 			break;
 
 			case "updatelist":
-				message.channel.send("Justin rewrote me agai- wait. Isn't this the 4th time he rewrote the bot code");
+				message.channel.send("Updated to v12! :pandaYay:");
 			break;
 
 			case "commands":
@@ -353,7 +374,7 @@ bot.on('message', async message => {
 						//This actually looks so good I'm not even going to make the code wait for message.channel.send
 						if ((args[1] != undefined) && (args[1] == "advanced"))
 						{
-							let weatherMessage = new Discord.RichEmbed(); //Creates a fancy embembed to warn them
+							let weatherMessage = new Discord.MessageEmbed(); //Creates a fancy embembed to warn them
 							weatherMessage.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
 							weatherMessage.setColor('AQUA');
 							weatherMessage.setTitle("Advanced Forecast");
@@ -534,7 +555,7 @@ bot.on('message', async message => {
 					}
 				}
 
-				message.guild.fetchMember(userId).then((user) => { //Sends the message!
+				message.guild.members.fetch(userId).then((user) => { //Sends the message!
 					user.send(newArgs);
 				}); 
 				message.channel.send("If all goes well, message is sent!");
@@ -582,12 +603,28 @@ bot.on('message', async message => {
 				message.channel.send("No matches\nIf you don't know the code word, chances are, you can't mass ping")
 			break;
 
+			case "uwu": //Turns something into uwu
+
+				if (messageArray.length < 3)
+				{
+					message.channel.send("uwu I thwink you need to add sum text");
+				}
+				let uwuMsg = message.content.replace(/[rl]/gmi, "w").substring(8); //This will get rid of srs uwu exactly
+				uwuMsg = uwuMsg.replace(/om/gmi, "um");
+				uwuMsg = uwuMsg.replace(/be/gmi, "bwe").replace(/de/gmi, "dwe");
+				uwuMsg = uwuMsg.replace(/thi/gmi, "thwi");
+				uwuMsg = uwuMsg.replace(/ha/gmi, "hwa")
+				uwuMsg = uwuMsg.replace(/mo/gmi, "mwo").replace(/so/gmi, "swo").replace(/bo/gmi, "bwo").replace(/do/gmi, "dwo");
+				uwuMsg = uwuMsg.replace(/ff/gmi, "fw").replace(/qu/gmi, "qw");
+				message.channel.send(uwuMsg);
+			break;
+
 			//*SRS MODERATION*//
 
 			//Maybe one day I'll make a command handler and use the trash eval function
 
 			function ban(ID, reason) { //If the executor has ban perms and the offender doesn't, ban the user and send them a DM.
-				message.guild.fetchMember(ID).then((user) => {
+				message.guild.members.fetch(ID).then((user) => {
 					if (message.member.hasPermission(`BAN_MEMBERS`) && !user.hasPermission(`BAN_MEMBERS`)) 
 					{
 						user.send("You have been banned! Ban reason: " + reason);
@@ -604,10 +641,10 @@ bot.on('message', async message => {
 			//Can't mute because that requires a designated mute role
 
 			function warn(ID, reason) { //Warns the user
-				message.guild.fetchMember(ID).then((user) => {
+				message.guild.members.fetch(ID).then((user) => {
 					if (message.member.hasPermission(`BAN_MEMBERS`)) 
 					{
-						let warnMessage = new Discord.RichEmbed(); //Creates a fancy embembed to warn them
+						let warnMessage = new Discord.MessageEmbed(); //Creates a fancy embembed to warn them
 						warnMessage.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
 						warnMessage.setColor('GOLD');
 						warnMessage.setTitle("Warn Message");
@@ -733,10 +770,10 @@ bot.on('message', async message => {
 
 									if (currentChannel.decentMessageCount == 5) //After 5 good streaks, clear the slowmode
 									{
-										bot.channels.get(currentChannel.id).setRateLimitPerUser(0); //Clears slowmode
+										bot.channels.cache.get(currentChannel.id).setRateLimitPerUser(0); //Clears slowmode
 										currentChannel.slowmoding = false;
 										currentChannel.decentMessageCount = 0;
-										bot.channels.get(currentChannel.id).send("Slowmode off!");
+										bot.channels.cache.get(currentChannel.id).send("Slowmode off!");
 									}
 								}
 								else //If the slowmode message count is broken, reset the whole streak
@@ -748,8 +785,8 @@ bot.on('message', async message => {
 							if ((currentChannel.messageCount > currentChannel.maxNum) && (!currentChannel.slowmoding)) 
 							//If there are too many messages, start the slowmode
 							{
-								bot.channels.get(currentChannel.id).setRateLimitPerUser(5);
-								bot.channels.get(currentChannel.id).send("Aight because you kiddos can't stop yapping, slowmode is on");
+								bot.channels.cache.get(currentChannel.id).setRateLimitPerUser(5);
+								bot.channels.cache.get(currentChannel.id).send("Aight because you kiddos can't stop yapping, slowmode is on");
 								currentChannel.slowmoding = true;
 							}
 
@@ -796,64 +833,239 @@ bot.on('message', async message => {
 			break;
 
 			//Srs Utility
-			/*case "translate":
-				//Determine what languages to translate into
+			case "translate":
 
-				let languageArray = { //Translates common languages into google translate code
-					english: "en";
-					spanish: "es";
-				}
-
-				if (messageArray.length < 4) //Checks for user errors if they forgot to fill in all arguments
+				if (args[1] == "help") //Displays the help message panel
 				{
-					message.channel.send("smh specify the language using proper English.");
-					message.channel.send("The input language goes in the 3rd command argument; the output one goes in the 4th");
+					let langMessage = new Discord.MessageEmbed();
+					langMessage.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
+					langMessage.setColor('GREEN');
+					langMessage.setTitle("Translate Syntax");
+					langMessage.setDescription(`English: 'en' \n` +
+						`Spanish: 'es' \n`+
+						`German: 'de' \n` +
+						`French: 'fr' \n` +
+						`Portugese: 'pt' \n` +
+						`Italian: 'it' \n` +
+						`Dutch: 'nl' \n` +
+						`Polish: 'pl' \n` +
+						`Russian: 'ru' \n` +
+						`Japanese: 'ja'\n` +
+						`Chinese: 'zh' \n` +
+						`Swedish: 'sv'\n` +
+						`Latin: 'la' \n` +
+						`Greek: 'el' \n` +
+						`Korean: 'ko`);
+
+					message.channel.send(langMessage);
 					return;
 				}
-				else if (messageArray.length < 5)
-				{
-					message.channel.send("Smh what am I translating");
-					return;
-				}
-				else if (languageArray[args[1]] == undefined)
-				{
-					message.channel.send("Looks like your input language does not exist or isn't supported yet");
-				}
-				else if (languageArray[args[2]] == undefined)
-				{
-					message.channel.send("What kind of fake asian language are you translating into?");
-				}
-				//else if (args[3] == dan tat) return "Egg pudding";
 
+				//Check Array - these special codewords will allow us to customize the translate process
+				checkArray = [
+					"english"
+				];
+
+				if (checkArray.indexOf(args[1]) != -1) //If codeword exists, use it - more to be added
+				{
+					if (messageArray.length < 4)
+					{
+						message.channel.send("smh what am I translating?");
+						return; //Stop the whole code from carrying through
+					}
+
+					switch(args[1])
+					{
+						case "english":
+							args.splice(1,1, "auto", "en");
+						break;
+					}
+				}
+				else //If not, go the normal route
+				{
+					languageArray = [ //Makes sure the translation language is currently supported
+						"en", "es", "de", "fr", "pt", "it", "nl", "pl", "ru", "ja", "zh", "el", "ko", "la", "sv", "auto"
+					]
+
+					if (messageArray.length < 4) //Checks for user errors if they forgot to fill in all arguments
+					{
+						message.channel.send("smh specify the language using proper symbols. Use srs translate help for well... help");
+						message.channel.send("The input language goes in the 3rd command argument; the output one goes in the 4th");
+						return;
+					}
+					else if (messageArray.length < 5)
+					{
+						message.channel.send("Smh what am I translating");
+						return;
+					}
+					else if ((languageArray.indexOf(args[1]) == -1) || (languageArray.indexOf(args[2]) == -1))
+					{
+						message.channel.send("Looks like your input language does not exist or isn't supported yet, or you just oofed up");
+						return;
+					}
+				}
+
+				//Gather the things we need to translate
 				let translateString = "";
 				for (var i=3; i < args.length; i++)
 				{
-					if (i != 3)
-					{
-						translateString += "%20";
-					}
-
 					translateString += args[i];
+					translateString += " ";
+				}
+
+				//Fixing the Chinese translations - making it simplified Chinese
+				for (var c=1; c<3; c++)
+				{
+					if (args[c] == "zh")
+					{
+						args[c] = "zh-CN";
+					}
 				}
 
 				try
 				{
-					let translateRequest = new XMLHttpRequest(); //Sends AJAX request to fetch the translated words
-					translateRequest.open("GET", 
-						`${ajaxAPI}https://translate.google.com/#view=home&op=translate&sl=${languageArray[args[1]]}&tl=`${languageArray[args[2]]}`&text=${translateString}`);
-					translateRequest.onreadystatechange = function() {
-						if (translateRequest.readyState == 4)
+					new translator({from: args[1], to: args[2]}).translate(translateString).then(response => {
+
+						//Corrects a very important chinese translation (hi Cat I know you're snooping here)
+						if (args.indexOf('蛋挞') != -1)
 						{
-							let recievedJSON = translateRequest.responseText;
+							response.text = "egg pudding";
 						}
-					}
-					translateRequest.send();
+
+						let translateMessage = new Discord.MessageEmbed(); //Creates a fancy embembed to warn them
+						translateMessage.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
+						translateMessage.setColor('RANDOM');
+						translateMessage.setTitle("Translation");
+							
+						var descriptionString = response.text;
+				
+						if (response.from.text.didYouMean)
+						{
+							descriptionString += `\n\nIt seems we detected a typo. Do you mean to say: ${response.from.text.value}?`;
+						}
+
+						translateMessage.setDescription(descriptionString);
+
+						message.channel.send(translateMessage);
+					});
 				}
-				catch
+				catch(err)
 				{
-					message.channel.send("<@348208769941110784> oi AJAX request is acting up");
+					console.log(err);
+					message.channel.send("Looks like something is acting up...");
 				}
-			break;*/
+			break;
+
+			case "tasks": //Srs Task Reminder
+				let collection = mangoDatabase.collection("Tasks");
+				let userId = message.author.id;
+
+				//If database entry does not exist, make a JSON entry
+				var matchNum = await collection.countDocuments({"id": userId});
+				if (matchNum == 0)
+				{
+					await collection.insertOne({
+						id: userId,
+						tasks: []
+					})
+				}
+
+				let userCollection = await collection.findOne({"id": userId});
+
+				switch(args[1]) //Arguments
+				{
+					case "view":
+					case undefined: //Display tasks in embed
+						let tDisplay = new Discord.MessageEmbed(); 
+						tDisplay.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
+						tDisplay.setColor('GREEN');
+						tDisplay.setTitle("Your Tasks:");
+
+						let description = "";
+						for (var i in userCollection.tasks)
+						{
+							description += `${parseInt(i)+1}) ${userCollection.tasks[i]}\n`;
+						}
+
+						//If it's still empty, encourage the user to write stuff
+						if (description == "")
+						{
+							description = "<There is nothing here right now, add a task>";
+						}
+
+						tDisplay.setDescription(description);
+						message.channel.send(tDisplay);
+					break;
+
+					case "add": //Create new task and add it to db
+						let nTask = returnUnbound(message, "add");
+						await collection.updateOne({"id": userId}, {$push: {"tasks": nTask}});
+
+						var addResp = [
+							"Updated!",
+							"Ur tasks has been jotted down in my nonexistent tech planner",
+							"Tech bot is now working on remembering this thing",
+							"the task has been assigned to a mango",
+							"io ho finito"
+						]
+
+						randomResp(addResp, message);
+					break;
+
+					case "delete": //Deletes items at a certain index
+						if (args.length == 2)
+						{
+							message.channel.send("there's like no item number for me to delete, but I guess you're right cause 2+2 sometimes equals 5");
+							return;
+						}
+
+
+						let num = parseInt(args[2])-1;
+						if (isNaN(num))
+						{
+							message.channel.send("smh what fake number system are you using where that's a number");
+							return;
+						}
+						if ((num < 0) || (num > userCollection.tasks.length))
+						{
+							message.channel.send("that item index doesn't exist smh my head");
+							return;
+						}
+
+						userCollection.tasks.splice(num, 1);
+						await collection.updateOne({"id": userId}, {$set: {"tasks": userCollection.tasks}});
+
+						var delResp = [
+							"Deleted!",
+							"Flushed down the drain!",
+							"Your task is now paying for my student debt",
+							"Banished to the land of weebery",
+							"Task fed to Tech Bot",
+							"Threw tasks and tech bot in the garbage can",
+							"cheems repeat>Help task deleting scawy",
+							"Tasks is longer in your tech planner!"
+						]
+						randomResp(delResp, message);
+					break;
+
+					case "yeet": //Removes all tasks
+						await collection.updateOne({"id": userId}, {$set: {"tasks": []}});
+						message.channel.send("all your tasks have been yeeted out the window");
+					break;
+
+					default:
+						message.channel.send("smh the command doesn't exist what are you doing");
+					return;
+				}
+			break;
+
+			case "end":
+				if (message.author.id == '348208769941110784')
+				{
+					await mango.close();
+					message.channel.send("Done!");
+				}
+			break;
 		}
 	}
 })
