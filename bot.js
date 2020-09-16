@@ -1,3 +1,4 @@
+//---------------------INIT----------------------------------------
 //Backend
 const Discord = require("discord.js");
 const weather = require("weather-js");
@@ -17,22 +18,7 @@ connectionPromise.catch(err => {
 	console.log(err.stack);
 });
 
-bot.login(process.env.BOT_TOKEN);
-
-bot.on("ready", () => {
-	console.log("I'm clearly confused");
-
-	/* Array to keep track of all the servers; can't make a hash table because Array(1E18) doesn't work */
-	//In Prog: Export to db
-	serverArray = [];
-
-	bot.generateInvite(["ADMINISTRATOR"]).then(link => {
-		console.log(link);
-	}).catch(err => {
-		console.log(err.stack);
-	})
-})
-
+//-------------------Generate Cmds--------------------------------
 //Roll generates a random positive integer
 function roll(outcomes) 
 {
@@ -133,39 +119,74 @@ function findItem(list, requestedId)
 			return list[i];
 		}
 	}
-
 	return null; //If it can't find anything, return null
 }
 
+//Returns a value if it matches the uppercase
+function uppercaseMatch(queryMatch, reply, message) {
+	if (message.content.toUpperCase() == queryMatch.toUpperCase())
+	{
+		message.channel.send(reply);
+	}
+}	
+
+//Stuff like this is why I hate math
+function fuckArjun(message)
+{
+	const arjunIsEvil = [
+		"We do not speak of the devil here",
+		"The power of Christ compells you",
+		"Honestly Arjun smh my head",
+		"WHY THE HELL IS HE STILL TEACHING",
+		"smh go kermit take Arjun's class",
+		"I would insult your intelligence for mentioning Arjun, but that would mean you had some to begin with. Huh, that's from Bathurst? Hey, that's still not Arjun",
+		"Arjun.commitRNGCommand();",
+		"Sadly, Arjun doesn't return a 404 error",
+		"In this world, there are two things that are a pain in the ass: CSS and Arjun",
+		"smh not even Stack Overflow will help with Arjun's nonsense",
+		"Dark mode is evil... but Arjun is a whole new level of heathen",
+		"cheems repeat>Fuck Arjun",
+		"oh mercy me smh my head Arjun",
+		"When we say to go do the math yourself, we don't mean sentence your transcript to death",
+		"huh Arjun - the devil that not even the math major himself dares speak his name",
+		"Hey, if you graph tan(90 degrees), you can probably find how many people like Arjun",
+		"Hit compile. 2 errors. Take Arjun's class. Now you're whole math career is an error.",
+		"What does sqrt(-1) and Arjun's teaching abilities have in common? They're both imaginary",
+		"smh corporate needs you to find the difference between these 2 pictures: Arjun and some Indian guy on YouTube",
+		"for (i=0; i < The number of people that hate Arjun; i++) {alert('Fuck Arjun');}",
+		"Arjun? We don't do that around here",
+		"Arjun? So you have chosen... death",
+		"Having Arjun is alot like debugging - you solve one problem and 20 more appears",
+		"Hey, if Arjun knew how to use `await`, our job wouldn't be half as hard"
+	];
+
+	randomResp(arjunIsEvil, message);
+}
+
+//---------------------BOT LOGIN & CMDS---------------------
+bot.login(process.env.BOT_TOKEN);
+
+bot.on("ready", () => {
+	console.log("I'm clearly confused");
+
+	/* Array to keep track of all the servers; can't make a hash table because Array(1E18) doesn't work */
+	//In Prog: Export to db
+	serverArray = [];
+
+	bot.generateInvite(["ADMINISTRATOR"]).then(link => {
+		console.log(link);
+	}).catch(err => {
+		console.log(err.stack);
+	})
+})
+
 bot.on('message', async message => {
 
-	//Returns a value if it matches the uppercase
-	function uppercaseMatch(queryMatch, reply) {
-		if (message.content.toUpperCase() == queryMatch.toUpperCase())
-		{
-			message.channel.send(reply);
-		}
-	}	
-
-	//beforeArgs sends a message if the arguments match
-	function beforeArgs(suffix, response) {
-		if (args[0] == suffix)
-		{
-			message.channel.send(response);
-		}
-	}
-
-	//cmdDetect takes the first argument to the srs command chain, and returns the command from that.
-	//It returns whether the srs command matches a certain designated command
-	function cmdDetect(suffix) {
-		return (args[0].toLowerCase() == suffix);
-	}
-
+	//----------------------------------msg init-------------------------------------------
 	/*Three parts to this section
 	If the author is a bot, do nothing
 	If the author is tech bot, shame it
-	If the author is not a bot, jot down the slowmode messages
-	*/
+	If the author is not a bot, jot down the slowmode messages*/
 
 	if ((message.author.bot) && (message.author.id != "542408239946661898"))
 	{
@@ -192,6 +213,8 @@ bot.on('message', async message => {
 		return;
 	}
 
+	//---------------------------SLOWMODE ITEMS-----------------------------------------------
+
 	//Adds the server and channel to the array so we can keep track of it later if it does not already exist
 	if (findItem(serverArray, message.guild.id) == null) //Checking to see if server objects exist so we can clear the damn timers
 	{
@@ -212,7 +235,7 @@ bot.on('message', async message => {
 		currentChannel.messageCount += 1;
 	}
 
-	//Srs easter egg section
+	//-----------------------SRS EASTER EGG SECTION------------------------------------
 
 	//Cat - If it contains Btech, smh it
 	if (/bths|btech|brooklyn tech/gmi.test(message.content))
@@ -221,10 +244,17 @@ bot.on('message', async message => {
 		return;
 	}
 
-	uppercaseMatch("My trig grade is ruined", "smh be quiet and study for your 1520");
-	uppercaseMatch("Daily miku!", "smh stop being a degenerate and worshipping some egirl");
-	uppercaseMatch("Seal hunting time", "You better start running before I put you in char su fan");
-	uppercaseMatch("Light theme best theme", "Correct!");
+	//WHY TF IS ARJUN STILL TEACHING
+	if (/Arjun/gmi.test(message.content))
+	{
+		fuckArjun(message);
+		return;
+	}
+
+	uppercaseMatch("My trig grade is ruined", "smh be quiet and study for your 1520", message);
+	uppercaseMatch("Daily miku!", "smh stop being a degenerate and worshipping some egirl", message);
+	uppercaseMatch("Seal hunting time", "You better start running before I put you in char su fan", message);
+	uppercaseMatch("Light theme best theme", "Correct!", message);
 
 	let lightMode = [
 		"Smh at least he can read in the sun",
@@ -244,12 +274,13 @@ bot.on('message', async message => {
 		"Go turn yourself into a JavaDerp function",
 		"Go commit the NRG command"
 	];
-	uppercaseMatch("ew light mode", lightMode[roll(lightMode.length)]);
+	uppercaseMatch("ew light mode", lightMode[roll(lightMode.length)], message);
+
+	//---------------------------ACTUAL SRS COMMANDS => To Do: Make node.js command handlers---------------------------
 
 	/*messageArray converts the command into an array of text, which are used to determine srs commands
 	Accordingly, command is the first item inside the array (srs)
 	Anything after that are args to the command - although args will be used very sparingly due to confusion*/
-
 	messageArray = message.content.split(" ");
 	command = messageArray[0];
 	args = messageArray.slice(1); 
@@ -419,43 +450,41 @@ bot.on('message', async message => {
 			break;
 
 			case "advice": //Srs answers your most burning questions
-				if (cmdDetect("advice")) {
-					if (messageArray.length == "2") //Checks whether there are additional arguments. srs advice == length of 2
-					{
-						message.channel.send("smh what am I supposed to give you advice on?"); 
-					} 
-					else if (/[^\w\d, .;'@#<>!:?]/ig.test(args)) //Uses regEx to filter out any anti-light mode treachery
-					{ 
-						shame(true, message);
-						return;
-					} 
-					else if ((/light/ig.test(args)) || (/dark/ig.test(args))) //If there is light mode and dark mode, praise the light
-					{
-						let seeNoEvil = [
-							"smh Light theme best theme",
-							"I swear I will launch the Spanish Inquisition against dark mode",
-							"reference error: Srs.Betray(Justin) does not exist",
-							"Internal error: You should know light mode > dark mode",
-							"smh Light Mode good"
-						];
-						randomResp(seeNoEvil, message);
-					} 
-					else if (/amoled/ig.test(args)) //AMOLED users are respectable
-					{
-						message.channel.send("Yes don't be those dark mode brainlets and use amoled in the dark");
-					} 
-					else 
-					{
-						let eightWheel = [
-							"smh try again I'm tired",
-							"yes",
-							"hell no",
-							"probably",
-							"i think yea",
-							"i think no"
-						];
-						randomResp(eightWheel, message);
-					}
+				if (messageArray.length == "2") //Checks whether there are additional arguments. srs advice == length of 2
+				{
+					message.channel.send("smh what am I supposed to give you advice on?"); 
+				} 
+				else if (/[^\w\d, .;'@#<>!:?]/ig.test(args)) //Uses regEx to filter out any anti-light mode treachery
+				{ 
+					shame(true, message);
+					return;
+				} 
+				else if ((/light/ig.test(args)) || (/dark/ig.test(args))) //If there is light mode and dark mode, praise the light
+				{
+					let seeNoEvil = [
+						"smh Light theme best theme",
+						"I swear I will launch the Spanish Inquisition against dark mode",
+						"reference error: Srs.Betray(Justin) does not exist",
+						"Internal error: You should know light mode > dark mode",
+						"smh Light Mode good"
+					];
+					randomResp(seeNoEvil, message);
+				} 
+				else if (/amoled/ig.test(args)) //AMOLED users are respectable
+				{
+					message.channel.send("Yes don't be those dark mode brainlets and use amoled in the dark");
+				} 
+				else 
+				{
+					let eightWheel = [
+						"smh try again I'm tired",
+						"yes",
+						"hell no",
+						"probably",
+						"i think yea",
+						"i think no"
+					];
+					randomResp(eightWheel, message);
 				}
 			break;
 
