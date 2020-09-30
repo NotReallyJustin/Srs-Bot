@@ -130,37 +130,32 @@ function uppercaseMatch(queryMatch, reply, message) {
 	}
 }	
 
-//Stuff like this is why I hate math
-function fuckArjun(message)
+//Idk what to put here lol
+function fuckMath(message)
 {
-	const arjunIsEvil = [
+	const mathIsEvil = [
 		"We do not speak of the devil here",
 		"The power of Christ compells you",
-		"Honestly Arjun smh my head",
-		"WHY THE HELL IS HE STILL TEACHING",
+		"Honestly smh my head",
 		"smh go kermit take Arjun's class",
-		"I would insult your intelligence for mentioning Arjun, but that would mean you had some to begin with. Huh, that's from Bathurst? Hey, that's still not Arjun",
-		"Arjun.commitRNGCommand();",
-		"Sadly, Arjun doesn't return a 404 error",
-		"In this world, there are two things that are a pain in the ass: CSS and Arjun",
-		"smh not even Stack Overflow will help with Arjun's nonsense",
-		"Dark mode is evil... but Arjun is a whole new level of heathen",
-		"cheems repeat>Fuck Arjun",
-		"oh mercy me smh my head Arjun",
+		"I would insult your intelligence , but that would mean you had some to begin with.",
+		"go commitRNGCommand();",
+		"Sadly, Precalc doesn't return a 404 error",
+		"In this world, there are two things that are a pain in the ass: CSS and the Math Department",
+		"cheems repeat>Fuck Math",
+		"oh mercy me",
 		"When we say to go do the math yourself, we don't mean sentence your transcript to death",
-		"huh Arjun - the devil that not even the math major himself dares speak his name",
-		"Hey, if you graph tan(90 degrees), you can probably find how many people like Arjun",
-		"Hit compile. 2 errors. Take Arjun's class. Now you're whole math career is an error.",
-		"What does sqrt(-1) and Arjun's teaching abilities have in common? They're both imaginary",
+		"Hey, if you graph tan(90 degrees), you can probably find how many people like math",
+		"Hit compile. 2 errors. Take regents. Now you're whole math career is an error.",
+		"What does sqrt(-1) and how much I like math have in common? They're both imaginary",
 		"smh corporate needs you to find the difference between these 2 pictures: Arjun and some Indian guy on YouTube",
-		"for (i=0; i < The number of people that hate Arjun; i++) {alert('Fuck Arjun');}",
-		"Arjun? We don't do that around here",
-		"Arjun? So you have chosen... death",
-		"Having Arjun is alot like debugging - you solve one problem and 20 more appears",
-		"Hey, if Arjun knew how to use `await`, our job wouldn't be half as hard"
+		"for (i=0; i < The number of people that hate math; i++) {alert('🤮');}",
+		"Math? We don't do that around here",
+		"Math? So you have chosen... death",
+		"Doing math is alot like debugging - you solve one problem and 20 more appears"
 	];
 
-	randomResp(arjunIsEvil, message);
+	randomResp(mathIsEvil, message);
 }
 
 //---------------------BOT LOGIN & CMDS---------------------
@@ -244,8 +239,7 @@ bot.on('message', async message => {
 		return;
 	}
 
-	//WHY TF IS ARJUN STILL TEACHING
-	if (/Arjun/gmi.test(message.content))
+	if (/Math/gmi.test(message.content))
 	{
 		fuckArjun(message);
 		return;
@@ -266,9 +260,8 @@ bot.on('message', async message => {
 		"You have yeed your last haw",
 		"There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them",
 		"smh I would insult your intelligence, but that would mean you had some to begin with",
-		//`${illegal} ${illegal} ${illegal}`,
+		`You just earned a one way ticket to the Hall of Shame`,
 		"I suggest you use your right to remain silent",
-		"Congratulations! Your message is more hated than Space Jams!",
 		"Ding Dong your brainlet opinion is wrong",
 		"smh how can you be more wrong than people who try to meme on Justin's variables",
 		"Go turn yourself into a JavaDerp function",
@@ -383,6 +376,51 @@ bot.on('message', async message => {
 				randomResp(chad, message);
 			break;
 
+			case "christmas": //Finds out how many days it is until Christmas
+				let merryChristmas = new Date(2020, 11, 25);
+				let dayArr = [];
+				var day = new Date().getDate();
+
+				var iterableMonth = new Date().getMonth();
+				for (var c=0; c<2; c++)
+				{
+					for (var i=0; i<iterableMonth; i++)
+					{
+						//1,3,5,7,8,10,12
+						switch(i)
+						{
+							case 0:
+							case 2:
+							case 4:
+							case 6:
+							case 7:
+							case 9:
+							case 11:
+								day += 31;
+							break;
+
+							case 1:
+								day += 29;
+							break;
+
+							case 3:
+							case 5:
+							case 8:
+							case 10:
+								day += 30;
+							break;
+						}
+					}
+					//Reinit
+					dayArr.push(day);
+					iterableMonth = merryChristmas.getMonth();
+					day = merryChristmas.getDate();
+				}
+
+				message.channel.send(`${dayArr[1] - dayArr[0]} days until Christmas!`);
+				message.channel.send("when the time comes, we'll make this place more festive 😃");
+			break;
+
 			//Srs weather - returns the weather
 			case "weather":
 
@@ -447,6 +485,17 @@ bot.on('message', async message => {
 						weatherRec(1000, 5000, "What planet do you live on?")
 					}
 				})
+			break;
+
+			case "coinflip":
+				if ((Math.random() *2) < 1)
+				{
+					message.channel.send("Heads");
+				}
+				else
+				{
+					message.channel.send("Tails");
+				}
 			break;
 
 			case "advice": //Srs answers your most burning questions
@@ -555,12 +604,12 @@ bot.on('message', async message => {
 				}
 				else
 				{
-				//Takes the message array and turns it to a string, which we replace the array commas to form a legible sentence
-				//then we send the message
-					userId = args[1].toString(); 
+					//Takes the message array and turns it to a string, which we replace the array commas to form a legible sentence
+					//then we send the message
 					newArgs = messageArray.slice(3);
 					newArgs = newArgs.toString();
 					newArgs = newArgs.replace(/,/g, " ");
+					let userId = args[1] + ""; 
 
 					if (message.author.id != '269971449328959488' && message.author.id != '0') 
 					{
@@ -582,12 +631,12 @@ bot.on('message', async message => {
 						];
 						newArgs += ` (frum ${randomList[roll(6)]})`
 					}
-				}
 
-				message.guild.members.fetch(userId).then((user) => { //Sends the message!
-					user.send(newArgs);
-				}); 
-				message.channel.send("If all goes well, message is sent!");
+					message.guild.members.fetch(userId).then((user) => { //Sends the message!
+						user.send(newArgs);
+					}); 
+					message.channel.send("If all goes well, message is sent!");
+				}
 			break;
 
 			case "mention": //Srs mentions certain people if conditions are met
