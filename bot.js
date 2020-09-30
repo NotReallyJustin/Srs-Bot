@@ -353,7 +353,7 @@ bot.on('message', async message => {
 			break;
 
 			case "updatelist":
-				message.channel.send("Updated to v12! :pandaYay:");
+				message.channel.send("Stan Aster. Hate on mobile devices.");
 			break;
 
 			case "commands":
