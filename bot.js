@@ -443,7 +443,7 @@ bot.on('message', async message => {
 						//This actually looks so good I'm not even going to make the code wait for message.channel.send
 						if ((args[1] != undefined) && (args[1] == "advanced"))
 						{
-							let weatherMessage = new Discord.MessageEmbed(); //Creates a fancy embembed to warn them
+							let weatherMessage = new Discord.MessageEmbed();
 							weatherMessage.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
 							weatherMessage.setColor('AQUA');
 							weatherMessage.setTitle("Advanced Forecast");
@@ -657,7 +657,8 @@ bot.on('message', async message => {
 						"309494444925911041",
 						"464229820994158615", 
 						"360859374870331414",
-						"348208769941110784"
+						"348208769941110784",
+						"436264683909939211"
 					];
 
 					if (bandList.indexOf(message.author.id) == -1)
