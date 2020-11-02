@@ -3,9 +3,15 @@
   "version": "0.0.0",
   "description": "Srs Bot",
   "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
   "author": "Justin",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.5.1"
+    "@danke77/google-translate-api": "^1.0.0",
+    "discord.js": "^12.3.1",
+    "mongodb": "^3.6.0",
+    "weather-js": "^2.0.0"
   }
 }
