@@ -20,7 +20,19 @@ module.exports.randomResp = (arr) => {
 module.exports.returnUnbound = (message, lastBoundArg) => message.substring(message.indexOf(lastBoundArg) + lastBoundArg.length);
 
 //Combines discord attachments and the message content to form one huge msg blob that we can just send a once o.o
-module.exports.messageCompile = (msgContent, attachArray) => attachArray.reduce((acc, attachment) => acc + attachment.url + "\n", msgContent);
+module.exports.messageCompile = (msgContent, attachArray) => attachArray.reduce((acc, attachment) => acc + attachment.url + "\n", msgContent).replace("@everyone", "No you can't tag everyone.");
 
 //Date 1 is current date, date 2 is target date
 module.exports.dateDistance = (date1, date2) => dateFrom0(-1, date2.getMonth(), date2.getDate()) - dateFrom0(-1, date1.getMonth(), date1.getDate());
+
+//Adjusts the timezones. Time is in UTC. TMZ follows the INTL Conventions
+module.exports.tmzConvert = (time, tmz) => {
+	try
+	{
+		return new Date(time).toLocaleString("en-US", {"timeZone": tmz});
+	}
+	catch //if it fails just default to NY lmao
+	{
+		return new Date(time).toLocaleString("en-US", {"timeZone": "America/New_York"});
+	}
+};

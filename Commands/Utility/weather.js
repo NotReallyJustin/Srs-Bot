@@ -49,6 +49,7 @@ const weatherEmbed = (json) => {
 		`Feels like: ${json.current.feelslike} \n`+
 		`Humidity: ${json.current.humidity} \n` +
 		`Sky Text: ${json.current.skytext} \n` +
+		`Wind Speed: ${json.current.winddisplay} \n` +
 		`Recent Weather Bloon Launch Time: ${json.current.observationtime}`);
 	embed.setFooter("Does anyone even use this during quarantine");
 

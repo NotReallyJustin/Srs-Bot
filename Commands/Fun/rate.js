@@ -16,11 +16,12 @@ const response = [
 	"smh I would insult your intelligence, but that meant you had some to begin with",
 	"You have yeed your last haw",
 	"aight mate you're the daily special at shop lift up now",
-	"smh go kermit... uh... i forgot which command Justin deleted?",
+	"Hey, how do you like the substring function?",
 	"smh go kermit substring function", 
 	"smh go kermit music recs channel",
 	"Go kermit palpitate",
-	"smh go kermit pure.js"
+	"smh go kermit pure.js",
+	"smh go kermit old rate algorithm"
 ];
 
 const darkMode = [
@@ -31,7 +32,68 @@ const darkMode = [
 	"smh take whatever number you're thinking of, take the absolute value, then multiply it by -1",
 	"less than the chances of Justin joining LAS... oh wait",
 	"less than the chances of Justin going to Finance Major next y... oh wait",
-	"less than the chances of Justin reinstalling Clean Master",
+	"less than the chances of Justin reinstalling Clean Master"
+];
+
+//Just import thesaurs.com lmao
+const negations = [
+	"text",
+	"texts",
+	"no",
+	"not",
+	"differing",
+	"paradoxical",
+	"reverse",
+	"reversed",
+	"opposite",
+	"anti",
+	"anti-light",
+	"counter",
+	"contrary",
+	"unlike",
+	"inverse",
+	"different",
+	"contrast",
+	"polar",
+	"unrelated",
+	"never",
+	"ban",
+	"limit",
+	"boycott",
+	"forbid",
+	"censor",
+	"refuse",
+	"stop",
+	"without",
+	"stopping",
+	"stopped",
+	"reject",
+	"rejecting",
+	"dispel",
+	"dispelling",
+	"remove",
+	"deny",
+	"removing",
+	"denying",
+	"disallowing",
+	"disallow",
+	"exclude",
+	"excluding",
+	"except",
+	"minus",
+	"other than",
+	"but",
+	"besides",
+	"hate",
+	"hating",
+	"loathe",
+	"loathing",
+	"detest",
+	"detesting",
+	"despise",
+	"despising",
+	"dislike",
+	"disliking"
 ];
 
 module.exports = {
@@ -47,13 +109,28 @@ module.exports = {
 				message.channel.send(`I give ${Math.round(Math.random() * 10)}/10`);
 			break;
 
-			case 202:
-				message.channel.send("I give 10/10"); //Yes this is an extremely fair coin lmao
-			break;
+			case 200.1:
+				var b1 = /light\b|white\b|justin\b/gmi.test(message.content);
+				var b2 = /dark\b|black\b|amoled\b/gmi.test(message.content);
 
-			case 204:
-				var x = Helpy.randomResp(darkMode);
-				message.channel.send(x);
+				if (b1 || b2)
+				{
+					let x = rateAlg(message.content, b1);
+
+					if (x)
+					{
+						var e = Helpy.randomResp(darkMode);
+						message.channel.send(e);
+					}
+					else
+					{
+						message.channel.send("I give 10/10");
+					}
+				}
+				else
+				{
+					message.channel.send(`I give ${Math.round(Math.random() * 10)}/10`); //false alarm
+				}
 			break;
 
 			case 404:
@@ -85,20 +162,37 @@ const rateStatus = (args) => {
 		return 400; //Illegal Chars
 	}
 
-	//This will trigger if someone tries to say something like "light mode bad"
-	if ((/light\b/ig.test(args)))
+	if (/\btheme\b|\bmode\b|\bdiscord\b|\bthemes\b|\bmodes\b/gmi.test(args))
 	{
-		var notExploit = /discord\b|github\b|edge\b|fire\b|reddit\b|youtube\b|chrome\b|github\b/ig.test(args);
-
-		return args.length > 2 && !notExploit ? 400 : 202;
-	}
-
-	if (/dark\b/ig.test(args))
-	{
-		var notExploit = /discord\b|github\b|edge\b|fire\b|reddit\b|youtube\b|chrome\b|github\b/ig.test(args);
-
-		return args.length > 2 && !notExploit ? 400 : 204; //Dark Mode
+		return 200.1;
 	}
 
 	return 200;
 }
+
+const rateAlg = (txt, isLight) => {
+	var num = isLight ? 0 : 1;
+
+	//Uses the negations array to create a regEx capturing group
+	var regEx = new RegExp(negations.reduce((cumL, str) => cumL + `|${str}`, "\\b(?:").replace("|", "") + ")\\b", "gmi");
+
+	for (var i = txt.indexOf("rate ") + 5; i < txt.length; i++)
+	{
+		if (/[!^~]/.test(txt[i]))
+		{
+			num++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	var arr = txt.match(regEx);
+
+	num += arr == null ? 0 : arr.length;
+
+	return num % 2;
+}
+
+module.exports.rateAlg = rateAlg;

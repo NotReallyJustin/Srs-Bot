@@ -94,48 +94,51 @@ bot.on('message', async message => {
 	const server = bot.database.getServer(message.guild.id, message.guild);
 	const currentChannel = server.getChannel(message.channel.id, message.channel);
 
-
 	if (currentChannel.inSlowmode)
 	{
 		currentChannel.messageCount += 1;
 	}
+
+	//------------------Alternate Move Pathway-------------------------------
+	server.getMoves(message.author.id)(message.content, message);
+	currentChannel.getMoves(message.author.id)(message.content, message);
 
 	//-----------------------SRS EASTER EGG SECTION------------------------------------
 
 	//Easter egg array
 	//f1 - currply is true, f2 - currply is false, f2a - extra arguments we might need to send
 	const easterEggs = [
-		{matches: /\bmy grade is/gmi, 
+		{matches: /\bmy grade is\b/gmi, 
 			f1: () => {}, 
 			f2: (message) => {message.channel.send("smh be quiet and study for your 1520")}, 
 			f2a: ""
 		},
-		{matches: /\bmiku/gmi, 
+		{matches: /\bmiku\b/gmi, 
 			f1: () => {}, 
 			f2: (message) => {message.channel.send("congrats you earned a one way ticket to #wastebin")}, 
 			f2a: ""
 		},
-		{matches: /\bseal hunting/gmi, 
+		{matches: /\bseal hunting\b/gmi, 
 			f1: () => {}, 
 			f2: (message) => {message.channel.send("you better run before I put you in char siu fan")}, 
 			f2a: ""
 		},
-		{matches: /\blight theme best theme/gmi, 
+		{matches: /\blight theme best theme\b/gmi, 
 			f1: () => {}, 
 			f2: (message) => {message.channel.send("Correct!")}, 
 			f2a: ""
 		},
-		{matches: /\bbths|\bbtech|\bbrooklyn tech/gmi, 
+		{matches: /\bbths\b|\bbtech\b|\bbrooklyn tech\b/gmi, 
 			f1: () => {}, 
 			f2: (message) => {message.channel.send("smh bths")}, 
 			f2a: ""
 		},
-		{matches: /\bchizu|\bcheez|\bcheese/gmi, 
+		{matches: /\bchizu\b|\bcheez\b|\bcheese\b/gmi, 
 			f1: (message) => {message.react("🧀")}, 
 			f2: (message) => {message.react("🧀")}, 
 			f2a: ""
 		},
-		{matches: /\blas/gmi, 
+		{matches: /\blas\b/gmi, 
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
@@ -146,7 +149,7 @@ bot.on('message', async message => {
 				"i suggest you use your right to remain silent"
 			]
 		},
-		{matches: /\bew light/gmi, 
+		{matches: /\bew light\b/gmi, 
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
@@ -168,7 +171,7 @@ bot.on('message', async message => {
 			]
 		},
 		//Smh when will the AP Sex meme die :(
-		{matches: /\bsex/gmi, 
+		{matches: /\bsex\b/gmi, 
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
@@ -180,12 +183,12 @@ bot.on('message', async message => {
 				"When we say people like vanilla, we don't mean this stuff 🤮"
 			]
 		},
-		{matches: /\bbill diffrenly/gmi, 
+		{matches: /\bbill diffrenly\b/gmi, 
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send("IDK bub you're also made out of DNA")}, 
 			f2a: ""
 		},
-		{matches: /\bjava/gmi, 
+		{matches: /\bjava\b/gmi, 
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
@@ -199,7 +202,7 @@ bot.on('message', async message => {
 				"smh the probability of a green blob attacking you is small, but never 0 (he's very lucky)" //Dream reference >:)
 			]
 		},
-		{matches: /\bmaclean/gmi, 
+		{matches: /\bmaclean\b/gmi, 
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
@@ -221,8 +224,8 @@ bot.on('message', async message => {
 				"<Insert angry cliff emote here>"
 			]
 		},
-		{matches: /\bsilverman/gmi, 
-			f1: (message) => {message.react("🤮")}, 
+		{matches: /\bsilverman\b/gmi, 
+			f1: (message) => {message.react("⭐")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
 				"whomst have summoned the lord ⭐",

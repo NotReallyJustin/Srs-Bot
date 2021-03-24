@@ -1,4 +1,5 @@
 const Helpy = require("../Helpy.js");
+const Rate = require("./rate.js");
 
 const eightWheel = [
 	"smh try again I'm tired",
@@ -14,7 +15,8 @@ const seeNoEvil = [
 	"I swear I will launch the Spanish Inquisition against dark mode",
 	"reference error: Srs.Betray(Justin) does not exist",
 	"Internal error: You should know light mode > dark mode",
-	"smh Light Mode good"
+	"smh Light Mode good",
+	"no matter how much you try to exploit this, it's still light theme best theme smh"
 ];
 
 const response = [
@@ -54,18 +56,28 @@ module.exports = {
 				message.channel.send(x);
 			break;
 
-			case 202:
-			case 204:
-				var x = Helpy.randomResp(seeNoEvil);
-				message.channel.send(x);
-			break;
+			case 200.1:
+				var b1 = /light\b|white\b|justin\b/gmi.test(message.content);
+				var b2 = /dark\b|black\b|amoled\b/gmi.test(message.content);
 
-			case 203:
-				message.channel.send("Yes don't be those dark mode brainlets and use amoled");
-			break;
+				if (b1 || b2)
+				{
+					let x = Rate.rateAlg(message.content, b1);
 
-			case 404:
-				message.channel.send("smh what am I supposed to give you advice on?"); 
+					if (x)
+					{
+						var e = Helpy.randomResp(seeNoEvil);
+						message.channel.send("hell no \n" + e);
+					}
+					else
+					{
+						message.channel.send("yes");
+					}
+				}
+				else
+				{
+					message.channel.send("If it's for light mode, yes. If it's not, then no.");
+				}
 			break;
 
 			case 400:
@@ -92,24 +104,9 @@ const rateStatus = (args) => {
 		return 400; //Illegal Chars
 	}
 
-	//This will trigger if someone tries to say something like "light mode bad"
-	if ((/light\b/ig.test(args)))
+	if (/\btheme\b|\bmode\b|\bdiscord\b|\bthemes\b|\bmodes\b/gmi.test(args))
 	{
-		var notExploit = /discord\b|github\b|edge\b|fire\b|reddit\b|youtube\b|chrome\b|github\b/ig.test(args);
-
-		return args.length > 2 && !notExploit ? 400 : 202;
-	}
-
-	if (/dark\b/ig.test(args))
-	{
-		var notExploit = /discord\b|github\b|edge\b|fire\b|reddit\b|youtube\b|chrome\b|github\b/ig.test(args);
-
-		return args.length > 2 && !notExploit ? 400 : 204; //Dark Mode
-	}
-
-	if (/amoled\b/ig.test(args))
-	{
-		return 203; //Amoled
+		return 200.1;
 	}
 
 	return 200;

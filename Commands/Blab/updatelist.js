@@ -1,5 +1,5 @@
 //The current update thing!
-const currUpdate = "Reworking the srs bot code, and crying because the PSAT is canceled";
+const currUpdate = "Justin's studying for the SAT to try and make Srs proud with a 1520!";
 
 module.exports = {
     name: "updatelist",
