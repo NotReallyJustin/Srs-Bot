@@ -1,23 +1,34 @@
 /* Uploads the message in the designated txt file onto MongoDb*/
 
-const fs = require("fs");
-const MongoClient = require("mongodb").MongoClient;
-const mango = new MongoClient(process.env.MANGO_CONNECTION).db("BotData").collection("Hangman");
-
 const readFilePath = "./upload.txt";
 
-fs.readFile(readFilePath, (err, txt) => {
-	if (err) console.error(err);
+const fs = require("fs");
+const MongoClient = require("mongodb").MongoClient;
+const client = new MongoClient("no")
 
-	let uploads = txt.split("\n");
+client.connect().then(() => {
+	const mango = client.db("BotData").collection("Hangman");
 
-	for (var link of uploads)
-	{
-		if (mango.countDocuments({phrase: link}) == 0)
+	fs.readFile(readFilePath, "utf8", (err, txt) => {
+		if (err) console.error(err);
+
+		let uploads = txt.split("\n");
+
+		console.log("Uploading in session...");
+
+		for (let link of uploads)
 		{
-			collection.insertOne({
-				phrase: link
-			});
+			mango.countDocuments({phrase: link})
+				.then(num => {
+					if (num == 0)
+					{
+						mango.insertOne({
+							phrase: link
+						});
+
+						console.log("Done!");
+					}
+				});
 		}
-	}
-})
+	})
+});
