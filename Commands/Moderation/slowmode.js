@@ -1,7 +1,7 @@
 const Helpy = require("../Helpy.js");
 const slowmodeDesc = "Smart slowmode - A moderator customizable alternative to slowmode en masse\
 	\nIf the chat has a certain number of messages in an alloted time frame, turn on slowmode to prevent it from getting hectic\
-	\n`srs slowmode <start|stop> <time check interval> <message limit>`";
+	\n`mit slowmode <start|stop> <time check interval> <message limit>`";
 
 module.exports = {
 	name: "slowmode",

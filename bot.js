@@ -1,6 +1,6 @@
 //---------------------INIT----------------------------------------
 //Backend
-const prefix = "srs";
+const prefix = "mit";
 const Database = require("./database.js");
 const Helpy = require("./Commands/Helpy.js");
 
@@ -58,7 +58,15 @@ bot.on("ready", () => {
 		console.log(link);
 	}).catch(err => {
 		console.log(err.stack);
-	})
+	});
+
+	bot.user.setPresence({
+	 	status: "online",  
+	    activity: {
+	        name: "Aiding with the MIT Admissions Process | DM for Headpats",  
+	        type: "PLAYING"
+	    }
+	});
 })
 
 bot.on('message', async message => {
@@ -69,21 +77,22 @@ bot.on('message', async message => {
 
 	if (!message.guild)
 	{
-
-		var collection = mangoDatabase.collection("Hot Seat");
-		var regHotSeat = await collection.countDocuments({"id": message.author.id});
-
-		//If the person is registered for hot seat, send the hot seat
-		if (!!regHotSeat)
+		let currentUser = bot.personal.getUser(message.author.id);
+		//The slash denotes a Justin command prompt to send an MIT thing
+		if (message.author.id == "348208769941110784" && message.content[0] != "/")
 		{
-			let hotseatUser = await collection.findOne({"id": message.author.id});
-			bot.channels.fetch(hotseatUser.channel)
-				.then(channel => {
-					let output = Helpy.messageCompile("Hot Seat Message: \n" + message.content + "\n", message.attachments);
-					channel.send(output);
-				});
+			let uid = message.content.substring(0, message.content.indexOf(" "));
+			bot.users.fetch(uid).then(user => {
+				user.send(message.content.substring(message.content.indexOf(" ") + 1));
+			});
+		}
+		else
+		{
+			bot.users.fetch("348208769941110784").then(user => {
+				user.send(message.author.id + " : " + message.content);
+			});
 
-			message.react("🧀");
+			bot.commands.get(mit).execute(message, currentUser, bot);
 		}
 
 		return;
@@ -110,17 +119,17 @@ bot.on('message', async message => {
 	const easterEggs = [
 		{matches: /\bmy grade is\b/gmi, 
 			f1: () => {}, 
-			f2: (message) => {message.channel.send("smh be quiet and study for your 1520")}, 
+			f2: (message) => {message.channel.send("Is it a 1520? Because you're not making it in MIT with anything less than that")}, 
 			f2a: ""
 		},
 		{matches: /\bmiku\b/gmi, 
 			f1: () => {}, 
-			f2: (message) => {message.channel.send("congrats you earned a one way ticket to #wastebin")}, 
+			f2: (message) => {message.channel.send("On behalf of the Cleansing Department of MIT, go to the bin")}, 
 			f2a: ""
 		},
 		{matches: /\bseal hunting\b/gmi, 
 			f1: () => {}, 
-			f2: (message) => {message.channel.send("you better run before I put you in char siu fan")}, 
+			f2: (message) => {message.channel.send("Filing animal aboose report....")}, 
 			f2a: ""
 		},
 		{matches: /\blight theme best theme\b/gmi, 
@@ -130,7 +139,7 @@ bot.on('message', async message => {
 		},
 		{matches: /\bbths\b|\bbtech\b|\bbrooklyn tech\b/gmi, 
 			f1: () => {}, 
-			f2: (message) => {message.channel.send("smh bths")}, 
+			f2: (message) => {message.channel.send("Brooklyn Technical: I remember we accepted 2 kids last year... out of 2000")}, 
 			f2a: ""
 		},
 		{matches: /\bchizu\b|\bcheez\b|\bcheese\b/gmi, 
@@ -142,32 +151,33 @@ bot.on('message', async message => {
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
-				"Software Major is superior kek",
-				"ok sir now go Pheniox Wright yourself into the Hall of Shame",
+				"It seems you have attracted the attention of our MIT admissions staff. Why on Earth would you go to a technical high school just to enroll in a humanities major?",
+				"It's mens et manus, not sit there and listen to Stein rant",
 				":shut: you discount SSR ripoff",
-				"ok kiddo that's three strikes. Go sit in the time out corner for 20 years", //idk much about 3 strikes law but iirc it goes like dis
-				"i suggest you use your right to remain silent"
+				"If you would like to get rejected from law school, Harvard is right down the road.",
+				"I suggest you use your right to remain silent"
 			]
 		},
 		{matches: /\bew light\b/gmi, 
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
-				"Smh at least he can read in the sun",
-				"no u",
-				"Smh how can you meme on eye strain when you're reading in the dark",
-				"It's let there be light, not let there be heathens",
-				"You dare oppose me with that dark mode",
-				"smh how are you going to say that and then call Justin the brainlet",
+				"It has been scientifically proven that light theme best theme.",
+				"According to our nobel peace prize dissertation, we wish you a very happy no u.",
+				"It's physically impossible to read anything in < 100 Watt light",
+				"Our campus religious center would like to inform you the proper quote is let there be light, not let there be heathens",
+				"You have been waitlisted for saying that.",
+				"Instead of that police car, you're next.",
 				"You have yeed your last haw",
 				"There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them",
-				"smh I would insult your intelligence, but that would mean you had some to begin with",
+				"The Massachusetts Government has officially deemed you to be unsafe for society. You will now to escorted to the wastebin along with our rollar coaster",
 				`You just earned a one way ticket to the Hall of Shame`,
 				"I suggest you use your right to remain silent",
-				"Ding Dong your brainlet opinion is wrong",
-				"smh how can you be more wrong than people who try to meme on Justin's variables",
-				"Go turn yourself into a JavaDerp function",
-				"Go commit the NRG command"
+				"The laws of astrophysics have predicted that all signs point to a very happy no u.",
+				"Our urban planning major will now ensure that your house will be bombarded with light 24/7 in order to cleanse your soul.",
+				"Your MIT Purity score has now decreased by 500%",
+				"Go commit do a P-Set at 12AM",
+				"I hope you're not dividing by zero, because you're about to go to l'hospital"
 			]
 		},
 		//Smh when will the AP Sex meme die :(
@@ -175,53 +185,31 @@ bot.on('message', async message => {
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
-				"congrats you earned yourself a one way ticket to the hall of shame",
+				"We don't commit unintellegent moves like this in our prestigious campus.",
 				"🤮",
-				"oh mercy me",
-				"for the love of democracy, get that thing in the hall of shame",
-				"wym you failed at that subject the last time you tried it in the 7th floor staircase",
-				"When we say people like vanilla, we don't mean this stuff 🤮"
+				"In order for the MIT admissions department to consider your AP Sex grade, you must score a 5. Judging by your behavior in the 7th floor staircase, you're nowhere close to that.",
+				"MIT Medical would like to remind you that we do not endorse this 🤮. Alternatively, we reccomend you to stay away from egirls.gg",
+				"Buddy I'll have to deport you to Boston College for this.",
+				"On behalf of the MIT administration, we'll have to ask you to kindly unenroll yourself from our OCW class on Love, Sex, and Marriage",
+				"The only dating happening around here is Carbon-14"
 			]
 		},
 		{matches: /\bbill diffrenly\b/gmi, 
 			f1: (message) => {message.react("🤮")}, 
-			f2: (message, f2a) => {message.channel.send("IDK bub you're also made out of DNA")}, 
+			f2: (message, f2a) => {message.channel.send("Chemistry says you're 70% water. Physics says you're 99.999% empty space. I say you're not bill differently")}, 
 			f2a: ""
 		},
 		{matches: /\bjava\b/gmi, 
 			f1: (message) => {message.react("🤮")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
 			f2a: [
-				"Which bored person invented strict type 🤮",
+				"As faithful Boston tea drinkers, we reject coffee mugs.",
 				"smh say that word again and I'll overload you",
-				"Yandere Dev has more understandable code than college board",
+				"You see, this is why we don't accept APCSA credits at MIT.",
 				"system.out.print(\"Say Sike Right Now\");",
-				"smh go kermit use jgrasp",
+				"We would like to hack your java program, but we realized you did it to yourself with all that encapsulation",
 				"public class YourPost extends HallOfShame",
-				"smh go slap a private access modifier on youself",
-				"smh the probability of a green blob attacking you is small, but never 0 (he's very lucky)" //Dream reference >:)
-			]
-		},
-		{matches: /\bmaclean\b/gmi, 
-			f1: (message) => {message.react("🤮")}, 
-			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
-			f2a: [
-				"smh since you like democracy so much, democracy this into the hall of shame",
-				"free speech doesn't mean you can keep yappping",
-				"🤮🤮🤮",
-				"when we say think critically we don't mean sentence your transcript to death",
-				"I thought we live in a society",
-				"I am only loyal to Lord Silverman!",
-				"ew smh the only god I worship is silverman",
-				"it's called ma-clean because your transcript average will be power washed into oblivon",
-				"smh go kermit read 5 chapters of the American Yawp",
-				"freeze for the good of society",
-				"everyone has life, liberty, and pursuit of happiness - well until maclean pulls a last minute grade upload",
-				"are your grades the articles of confederation? Because they look like they're about to fall apart",
-				"liberate me from my 89% smh",
-				"are you bri ish? Cause we're about to throw your king's 'T' into the harbor",
-				"call this a second great awakening, I need that for my next LEQ",
-				"<Insert angry cliff emote here>"
+				"I hope your name is Clay, because the odds of you getting into MIT is now 1 in 7.5 trillion" //Dream reference >:)
 			]
 		},
 		{matches: /\bsilverman\b/gmi, 

@@ -13,7 +13,7 @@ const eightWheel = [
 const seeNoEvil = [
 	"smh Light theme best theme",
 	"I swear I will launch the Spanish Inquisition against dark mode",
-	"reference error: Srs.Betray(Justin) does not exist",
+	"reference error: mit.Betray(Justin) does not exist",
 	"Internal error: You should know light mode > dark mode",
 	"smh Light Mode good",
 	"no matter how much you try to exploit this, it's still light theme best theme smh"
@@ -44,7 +44,7 @@ const response = [
 
 module.exports = {
 	name : "advice",
-	description : "Ask srs bot a question, and he'll give a yes or no answer like a 8ball!\n`srs advice <insert statement>`\n" +
+	description : "Ask mit bot a question, and he'll give a yes or no answer like a 8ball!\n`mit advice <insert statement>`\n" +
 		"Remember, light theme best theme and no illegal chars",
 	execute: (message, args) => {
 		let status = rateStatus(args);

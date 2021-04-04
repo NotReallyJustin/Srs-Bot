@@ -1,6 +1,6 @@
 module.exports = {
 	name: "mention",
-	description: "Mention a group and unleash the mass ping! You just need to also be part of the group.\n`srs mention <groupname>`",
+	description: "Mention a group and unleash the mass ping! You just need to also be part of the group.\n`mit mention <groupname>`",
 	execute: (message, args) => {
 		if (args.length == 0)
 		{

@@ -5,7 +5,7 @@ const Discord = require("discord.js");
 module.exports.initialize = (bot) => {
 	bot.database = new Discord.Collection();
 
-	//Note future: Don't change to => because this is inherited lexically
+	//Note future: Don't change to =>
 	bot.database.getServer = function(id, guild) {
 		let server = this.get(id);
 
@@ -19,6 +19,23 @@ module.exports.initialize = (bot) => {
 			this.set(id, tempServer);
 
 			return tempServer;
+		}
+	}
+
+	bot.personal = new Discord.Collection();
+
+	bot.personal.getUser = function(id) {
+		let user = this.get(id);
+
+		if (user)
+		{
+			return user;
+		}
+		else
+		{
+			var tempUser = new User(id);
+			this.set(id, tempUser);
+			return tempUser;
 		}
 	}
 }
@@ -104,3 +121,22 @@ Channel.prototype.getMoves = Server.prototype.getMoves;
 Channel.prototype.addMoves = Server.prototype.addMoves;
 Channel.prototype.deleteMoves = Server.prototype.deleteMoves;
 Channel.prototype.hasValidMoves = Server.prototype.hasValidMoves;
+
+//------------------- DM Databases for MIT Day ---------------------
+function User(uid)
+{
+	this.id = uid;
+	this.responseLogs = () => {};
+	this.name = "";
+	this.school = "";
+	this.acceptanceRate = 0.001;
+}
+
+//Logs must be a moveLog object that takes message object and currentUser database object as execute
+User.prototype.swapLogs = function(logs) {
+	this.responseLogs = logs.execute;
+}
+
+User.prototype.clearLogs = function() {
+	this.responseLogs = () => {};
+}

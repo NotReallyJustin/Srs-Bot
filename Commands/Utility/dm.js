@@ -9,12 +9,12 @@ const justinNicknames = [
 	"Seal",
 	"United States Navy Seals",
 	"PlyerTheDefender",
-	"Srs Bot Owner"
+	"mit Bot Owner"
 ];
 
 module.exports = {
 	name : "dm",
-	description : "Use srs bot to send an anonymous message to someone!\n`srs dm <userID> <message to send>`\nIf it's your bday it becomes anon",
+	description : "Use mit bot to send an anonymous message to someone!\n`mit dm <userID> <message to send>`\nIf it's your bday it becomes anon",
 	execute: async (message, args, toolbox) => {
 		const bot = toolbox.bot;
 		let status = dmStatus(args);

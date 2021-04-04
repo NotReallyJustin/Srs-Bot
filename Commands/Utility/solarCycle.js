@@ -5,7 +5,7 @@ const Helpy = require("../Helpy.js")
 const Discord = require("discord.js");
 
 const desc = "Displays the sunrise and sunset time of a location! Also displays a bunch of twilights that idk the meaning of :P\n" + 
-	"Syntax: `srs solarCycle [latitude] [longitude] [INTL timezone conventions]`\n" +
+	"Syntax: `mit solarCycle [latitude] [longitude] [INTL timezone conventions]`\n" +
 	"If latitude or longitude is not specified, this defaults to NYC. If timezone is not defined, this resorts to America/New_York";
 
 module.exports = {
@@ -40,7 +40,7 @@ module.exports = {
 //Precondition: data is formatted via the http request
 const solarEmbed = (data, lat, long, tmz) => {
 	let embed = new Discord.MessageEmbed();
-	embed.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
+	embed.setAuthor("mit Bot", "https://i.imgur.com/Bnn7jox.png");
 	embed.setColor('DARK_BLUE');
 	embed.setTitle("Solar Cycle");
 

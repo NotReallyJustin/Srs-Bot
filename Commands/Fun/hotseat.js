@@ -2,10 +2,10 @@ const Helpy = require("../Helpy.js");
 
 //Anonymously send an item to a channel
 //It's called hotseat because that's the game pls no meme i swear it's not shameful or anything
-//Thinking about it tho- isn't this basically reverse srs dm
+//Thinking about it tho- isn't this basically reverse mit dm
 module.exports = {
 	name: "hotseat",
-	description: "It's an anon hotseat game! Try to guess who that person is!\nCheck out `srs commands` to check the hotseat hubs",
+	description: "It's an anon hotseat game! Try to guess who that person is!\nCheck out `mit commands` to check the hotseat hubs",
 	execute: async (message, args, toolkit) => {
 		let hStatus = hotseatStatus(args, message.member);
 
@@ -62,7 +62,7 @@ module.exports = {
 					});
 
 					message.guild.members.fetch(args[1]).then(user => {
-						user.send("Welcome to hot seat! You can now send messages through srs bot and have it appears in the hotseat channel!");
+						user.send("Welcome to hot seat! You can now send messages through mit bot and have it appears in the hotseat channel!");
 					})
 
 					message.channel.send("done!");

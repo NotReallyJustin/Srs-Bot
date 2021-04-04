@@ -1,6 +1,6 @@
 module.exports = {
     name: "ping",
-    description: "Given the user id, srs bot ping someone and gives them a push notif.\n`srs ping <userId>`",
+    description: "Given the user id, mit bot ping someone and gives them a push notif.\n`mit ping <userId>`",
     execute : (message, args) => {
     	if (args.length == 0)
     	{

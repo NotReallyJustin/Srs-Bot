@@ -11,7 +11,7 @@ const americanAirlines = [
 
 module.exports = {
     name: "invite",
-    description: "Generates an invite link for srs bot! Well... it tries to generate an invite link.",
+    description: "Generates an invite link for mit bot! Well... it tries to generate an invite link.",
     execute : (message) => {
         let x = Helpy.randomResp(americanAirlines);
         message.channel.send(x);

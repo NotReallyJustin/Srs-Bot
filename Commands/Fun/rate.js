@@ -98,7 +98,7 @@ const negations = [
 
 module.exports = {
 	name : "rate",
-	description : "Give srs bot a statement, and he'll rate it out of 10!\n`srs rate <insert statement>`\n" +
+	description : "Give mit bot a statement, and he'll rate it out of 10!\n`mit rate <insert statement>`\n" +
 		"Remember, light theme best theme and no illegal chars. This is totally not rigged.",
 	execute: (message, args) => {
 		let status = rateStatus(args);

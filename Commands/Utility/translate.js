@@ -14,7 +14,7 @@ const languageArray = [ //Makes sure the translation language is currently suppo
 
 module.exports = {
 	name: "translate",
-	description: "Translates a piece of text\n`srs translate <from> <to> <message to translate>",
+	description: "Translates a piece of text\n`mit translate <from> <to> <message to translate>",
 	execute: (message, args) => {
 		let transStatus = translateStatus(args);
 
@@ -60,12 +60,12 @@ module.exports = {
 
 			case 400.1:
 				message.channel.send("smh specify the language for the 1st input language");
-				message.channel.send("use `srs help` for a full guide, or check `srs translate help` for syntax");
+				message.channel.send("use `mit help` for a full guide, or check `mit translate help` for syntax");
 			break;
 
 			case 400.2:
 				message.channel.send("smh specify the language for the 2nd input language");
-				message.channel.send("use `srs help` for a full guide, or check `srs help translate` for syntax");
+				message.channel.send("use `mit help` for a full guide, or check `mit help translate` for syntax");
 			break;
 
 			case 400.3:
@@ -145,7 +145,7 @@ const translateStatus = (args) => {
 
 const translateHelpEmbed = (jsonArray) => {
 	let langMessage = new Discord.MessageEmbed()
-		.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png")
+		.setAuthor("mit Bot", "https://i.imgur.com/Bnn7jox.png")
 		.setColor('GREEN')
 		.setTitle("Translate Syntax");
 
@@ -169,7 +169,7 @@ const translateEmbed = (response) => {
 	response.text = response.text.includes("egg tart") ? "something about egg pudding" : response.text;
 
 	let translateMessage = new Discord.MessageEmbed()
-		.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png")
+		.setAuthor("mit Bot", "https://i.imgur.com/Bnn7jox.png")
 		.setColor('RANDOM')
 		.setTitle("Translation");
 								

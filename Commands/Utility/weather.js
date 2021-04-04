@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 
 module.exports = {
     name: "weather",
-    description: "Tells you the weather status of NYC. If you want realtime analysis, type `srs weather advanced`!",
+    description: "Tells you the weather status of NYC. If you want realtime analysis, type `mit weather advanced`!",
     execute : (message, args) => {
         let prom = weatherFind();
 
@@ -42,7 +42,7 @@ const weatherFind = () => new Promise((resolve, yeet) => {
 
 const weatherEmbed = (json) => {
 	let embed = new Discord.MessageEmbed();
-	embed.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
+	embed.setAuthor("mit Bot", "https://i.imgur.com/Bnn7jox.png");
 	embed.setColor('AQUA');
 	embed.setTitle("Advanced Forecast");
 	embed.setDescription(`Current Temp: ${json.current.temperature} \n` +
@@ -73,7 +73,7 @@ const weatherRec = (highTemp) => {
 			"message": "Greetings future humans. This is the Diamond Dwerp seal, speaking to you from AD 2020." +
 			" Back in my days, we had a civilization called New York City, where we reached high temperatures of around 90 degrees." +
 			" Farenheight, that is. Farenheight. It's an American measurement unit. If you are reading this right now, if you manage to " +
-			"come across this from srs bot - there is something very, very, very wrong. You see, the temperature here should be... abnormal " +
+			"come across this from mit bot - there is something very, very, very wrong. You see, the temperature here should be... abnormal " +
 			"... but this seems to be New York City now. It's not what it used to be - leave. NOW."
 		}
 	];

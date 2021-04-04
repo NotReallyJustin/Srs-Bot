@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 
 module.exports = {
 	name: "warn",
-	description: "Warns a user for something - or for wastebinning general again\n`srs warn <userId> <warn reason>`",
+	description: "Warns a user for something - or for wastebinning general again\n`mit warn <userId> <warn reason>`",
 	execute: async (message, args) => {
 		let wStatus = warnStatus(args, message.member);
 		let user = await message.guild.members.fetch(args[0]);
@@ -61,7 +61,7 @@ const warnStatus = (args, messageMember) => {
 //Creates a fancy embembed to warn them
 const warnMsg = (messageAuthor, reason) => {
 	let warnMessage = new Discord.MessageEmbed()
-		.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png")
+		.setAuthor("mit Bot", "https://i.imgur.com/Bnn7jox.png")
 		.setColor('GOLD')
 		.setTitle("Warn Message")
 		.setDescription(`You have been warned by ${messageAuthor.username}! Warn reason:\n${reason}`);

@@ -1,6 +1,6 @@
 module.exports = {
 	name: "toggle",
-	description: "Toggles wacky text in current channel\n`srs toggle`",
+	description: "Toggles wacky text in current channel\n`mit toggle`",
 	execute: (message, args, toolkit, currentChannel) => {
 		currentChannel.replyMsg = !currentChannel.replyMsg;
 

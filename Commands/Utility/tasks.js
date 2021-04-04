@@ -3,7 +3,7 @@ const Helpy = require("../Helpy.js");
 
 module.exports = {
 	name: "tasks",
-	description: "The go-to hub for srs tasks, which will keep track of your tasks!\nCheck `srs commands` to see the full srs tasks!",
+	description: "The go-to hub for mit tasks, which will keep track of your tasks!\nCheck `mit commands` to see the full mit tasks!",
 	execute: async (message, args, toolkit) => {
 		const collection = toolkit.mangoDatabase.collection("Tasks");
 		const userId = message.author.id;
@@ -114,7 +114,7 @@ module.exports = {
 
 const taskEmbed = (taskArray) => {
 	let tDisplay = new Discord.MessageEmbed()
-		.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png")
+		.setAuthor("mit Bot", "https://i.imgur.com/Bnn7jox.png")
 		.setColor('GREEN')
 		.setTitle("Your Tasks:");
 

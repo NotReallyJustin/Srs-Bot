@@ -2,7 +2,7 @@ const Helpy = require("../Helpy.js")
 
 module.exports = {
 	name: "ban",
-	description: "Launches the ban hammer\n`srs ban <userId> <ban reason>`",
+	description: "Launches the ban hammer\n`mit ban <userId> <ban reason>`",
 	execute: async (message, args) => {
 		let user = await message.guild.members.fetch(args[0]);
 		let bStatus = banStatus(args, message.member, user);

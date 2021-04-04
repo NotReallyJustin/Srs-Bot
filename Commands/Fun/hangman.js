@@ -2,7 +2,7 @@ const https = require("https");
 
 module.exports = {
 	name: "hangman",
-	description: "Starts a hangman game with a random word!\nSyntax: `srs hangman <start|end>`",
+	description: "Starts a hangman game with a random word!\nSyntax: `mit hangman <start|end>`",
 	execute: (message, args, toolkit, currentChannel) => {
 
 		const collection = toolkit.mangoDatabase.collection("Hangman");
@@ -61,6 +61,7 @@ module.exports = {
 											if (alreadyGuessed.indexOf(messageContent.toUpperCase()) != -1)
 											{
 												status = "smh you guessed this already"
+												message.delete();
 											}
 											else
 											{
@@ -143,7 +144,7 @@ module.exports = {
 			break;
 
 			default:
-				message.channel.send("smh what do you want to do with `srs hangman`");
+				message.channel.send("smh what do you want to do with `mit hangman`");
 			break;
 		}
 	}

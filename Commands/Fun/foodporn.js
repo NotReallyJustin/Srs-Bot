@@ -4,7 +4,7 @@ const Helpy = require("../Helpy.js");
 
 module.exports = {
 	name: "foodporn",
-	description: "It's porn. But it has to do with food so you can't HOS me.\nSyntax: `srs foodporn`",
+	description: "It's porn. But it has to do with food so you can't HOS me.\nSyntax: `mit foodporn`",
 	execute: (message) => {
 
 		https.get("https://www.reddit.com/r/FoodPorn/new.json?limit=50", response => {
