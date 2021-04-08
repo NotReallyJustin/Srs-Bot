@@ -1,6 +1,7 @@
 # MIT Declaration of Independence
 ## Fed up with the Boston Government, MIT officially issues a petition to secede from the US. Circa 4/1/2021
 ***
+Context: MIT's Rollar Costers have been decomissioned by the Boston Government for violating the law
 <img src="https://d3jrnjjmhdihl9.cloudfront.net/public/1/images/l_215120180115143222_lrg.jpeg" />
 When in the Course of human events, it becomes necessary the federal government to disband its tyrannical rule upon its constituents, and to assume among the powers of the engineering world, the separate and equal station to which the Laws of Physics and of Nature's God given right to exploit it, a decent respect to the opinions of mankind requires that they should declare the causes which impel them to the separation. <br /> <br />
 
