@@ -8,4 +8,6 @@ To view documentation and changelog, run `mit commands`. You can probs do this f
 <br /><br />
 ## Bot Testing Repos
 We don't test bots around here <br />
-MIT uses state-of-the-art cosmic energy hosting that exports the bot hosting onto cosmic data grids on the moon.
+MIT uses state-of-the-art cosmic energy hosting that exports the bot hosting onto cosmic data grids on the moon. <br/> <br/>
+
+Be sure to check out our newspaper! Go to Commands/Events/MIT_News
