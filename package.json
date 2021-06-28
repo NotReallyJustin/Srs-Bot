@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@danke77/google-translate-api": "^1.0.0",
+    "@vitalets/google-translate-api": "^7.0.0",
     "discord.js": "^12.3.1",
     "jsdom": "^16.4.0",
     "mongodb": "^3.6.0",

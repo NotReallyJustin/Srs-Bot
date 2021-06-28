@@ -1,6 +1,6 @@
 //Christmas 2020
 //YES WE ARE MAKING STEVEN ANGRY BY ... WEB SCRAPING OFF REDDIT!
-const ytdl = require("ytdl-core");
+//const ytdl = require("ytdl-core");
 const { JSDOM } = require("jsdom");
 const Discord = require("discord.js");
 const Helpy = require("../Helpy.js");

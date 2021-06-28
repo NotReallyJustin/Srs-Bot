@@ -54,12 +54,25 @@ bot.login(process.env.BOT_TOKEN);
 bot.on("ready", () => {
 	console.log("I'm clearly confused");
 
-	bot.generateInvite(["ADMINISTRATOR"]).then(link => {
+	let botPromise = bot.generateInvite(["ADMINISTRATOR"]);
+
+	botPromise.then(link => {
 		console.log(link);
-	}).catch(err => {
+	});
+
+	botPromise.catch(err => {
 		console.log(err.stack);
-	})
-})
+	});
+
+	//Discord custom status for bots when lol
+	bot.user.setPresence({
+	 	status: "online",  
+	    activity: {
+	        name: "PlagueINC Cure Mode - Eliminating the Dark Mode virus",  
+	        type: "PLAYING"
+	    }
+	});
+});
 
 bot.on('message', async message => {
 
@@ -262,4 +275,4 @@ bot.on('message', async message => {
 			message.channel.send("Buddy that command does not exist");
 		}
 	}
-})
+});

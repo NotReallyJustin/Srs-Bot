@@ -1,17 +1,109 @@
-//Original Credit to Becc :uwuCat:
+//Credit for finding the way of getting info from google forms goes to Becc :uwuCat:
 const Discord = require("discord.js");
 const https = require("https");
+const Helpy = require("../Helpy.js");
 
 module.exports = {
 	name: "jobs",
-	description: "Get the latest internship, programs, and volunteering listings! Credit to Ashley Ngo - ango8101@bths.edu and Alvin Xu (and becc)\nSyntax: `srs jobs`",
+	description: "Get the latest internship, programs, and volunteering listings! Credit to Ashley Ngo - ango8101@bths.edu and Alvin Xu (and becc)\nSyntax: `srs jobs <filter type> <filter query>`. If not provided, srs will default to...well.. default.",
 	execute: async (message, args) => {
 		const jobsJSON = await fetchData();
-		const jobsSnapshot = await dataSnapshot(0, 2, jobsJSON);
+		let usedArr; //The array that will be used when displaying stuff
+		let filter; //Le filter the data is going through
 
-		const embed = jobEmbed(jobsSnapshot, "None");
+		switch (args[0])
+		{
+			case "name":
+			case "provider":
+			case "categories":
+				var sorted = Helpy.mergeSort(jobsJSON, (a, b) => {
+					return a[args[0]].toLowerCase() < b[args[0]].toLowerCase();
+				});
+
+				usedArr = Helpy.binArr(sorted, (job) => {
+					if (!args[1]) return 2;
+
+					var loCase = job[args[0]].toLowerCase();
+					var argCase = args[1].toLowerCase();
+
+					if (loCase.includes(argCase)) return 0;
+					if (loCase < argCase) return -1;
+					if (loCase > argCase) return 1;
+				})
+
+				//Capitalize 1st letter of filter query
+				filter = `${Helpy.capFirst(args[0])} Filter : ${Helpy.capFirst(args[1])}`;
+			break;
+
+			//Keep in mind deadline only filters the *exact date*.
+			//Must be inserted via mm/dd/yyyy, but you can also do mm/dd
+			case "deadline":
+				var month = ["", "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+
+				if (args[1] == undefined)
+				{
+					args[1] = "ongoing";
+				}
+				else if (/\bongoing\b|\brolling\b|\btbd\b/gmi.test(args[1]))
+				{
+					args[1] == args[1].toLowerCase();
+				}
+				else
+				{
+					var bananaSplit = args[1].split("/");
+					for (var item of bananaSplit)
+					{
+						item.replace(/ /gmi, "");	
+					}		
+
+					var offenses = bananaSplit.length < 2 || bananaSplit.length > 3 || month[+bananaSplit[0]] == undefined || isNaN(+bananaSplit[1]) || +bananaSplit[1] < 1 || +bananaSplit[1] > 31 || +bananaSplit[1] != Math.round(+bananaSplit[1]) || (bananaSplit.length == 3 && isNaN(+bananaSplit[2]))
+					if (offenses)
+					{
+						args[1] = "ONGOING";
+					}
+					else
+					{
+						bananaSplit[0] = month[+bananaSplit[0]];
+
+						if (bananaSplit[2] && bananaSplit[2].length == 2)
+						{
+							bananaSplit[2] = "20" + bananaSplit[2];
+						}
+
+						args[1] = bananaSplit.join(" ");
+					}
+				}
+
+				var sorted = Helpy.mergeSort(jobsJSON, (a, b) => {
+					a = purifyDate(a.deadline);
+					b = purifyDate(b.deadline);
+
+					return a.toLowerCase() < b.toLowerCase();
+				});
+
+				usedArr = Helpy.binArr(sorted, (job) => {
+					job = purifyDate(job.deadline);
+
+					//You can also compare the numbers in the string, so this should be fine
+					if (job.toUpperCase().includes(args[1].toUpperCase())) return 0;
+					//if (job.includes(args[1].substring(0, args[1].length - 5))) return 0; //Try getting rid of the year and " "
+					if (job.toUpperCase() < args[1].toUpperCase()) return -1;
+					if (job.toUpperCase() > args[1].toUpperCase()) return 1;
+				})
+
+				filter = `Deadline Filter: ${Helpy.capFirst(args[1])}`;
+			break;
+
+			default:
+				usedArr = jobsJSON;
+				filter = "Filters: None";
+			break;
+		}
+
+		const jobsSnapshot = await dataSnapshot(0, Math.min(2, usedArr.length - 1), usedArr);
+		const embed = jobEmbed(jobsSnapshot, filter);
 		message.channel.send(embed).then(sent => {
-			manageReactions(0, 2, sent, message, jobsJSON);
+			manageReactions(0, 2, sent, message, usedArr, filter);
 		});
 	} 
 }
@@ -22,16 +114,17 @@ function Job()
 {
 	//Info key and currKey are universal and depends on how Ashley formats the sheet/whether it changes
 	//This goes by columns
-	this.infoKey = ["name", "provider", "desc", "link", "location", "categories", "deadline"];
+	this.infoKey = ["name", "provider", "desc", "link", "location", "contact", "categories", "deadline"];
 	this.currKey = 0;
 
-	this.name;
-	this.provider;
-	this.desc;
-	this.link;
-	this.location;
-	this.categories;
-	this.deadline;
+	this.name = "";
+	this.provider = "";
+	this.desc = "";
+	this.link = "";
+	this.location = "";
+	this.contact = "";
+	this.categories = "";
+	this.deadline = "ONGOING";
 }
 
 //Checks whether all categories are filled
@@ -54,7 +147,7 @@ Job.prototype.add = function(txt) {
 	}
 	else
 	{
-		var trimmed = txt.length > 800 ? txt.substring(0, 801) + "..." : txt;
+		var trimmed = txt.length > 700 ? txt.substring(0, 701) + "..." : txt;
 		this[this.infoKey[this.currKey]] = trimmed.replace(/(?:\\[rn]|[\r\n]+)+/g, " ").trim();
 		this.currKey++;
 	}
@@ -126,8 +219,8 @@ const jobEmbed = (fields, filters) => {
 
 	embed.setTitle("Job Listings!");
 	embed.setDescription(
-		"https://spreadsheets.google.com/feeds/cells/1l97Q-9_HMcvcxslNsG8XfWKkC4ehBYecvE7x_cqTRPs/1/public/full?alt=json" +
-		`\nFilters: ${filters}`
+		"https://docs.google.com/spreadsheets/d/1l97Q-9_HMcvcxslNsG8XfWKkC4ehBYecvE7x_cqTRPs/edit#gid=0" +
+		`\n${filters}`
 	);
 	embed.setFooter("Job hunting :snore:");
 
@@ -136,7 +229,7 @@ const jobEmbed = (fields, filters) => {
 
 //Toggles the start end index and does the embed swapping thingy
 //Idk I don't have discord on PS4 or Switch
-const prevNextToggle = async(isBackwards, currStart, currEnd, sent, message, jobsJSON) => {
+const prevNextToggle = async(isBackwards, currStart, currEnd, sent, message, jobsJSON, filter) => {
 	var newStart = currStart;
 	var newEnd = currEnd;
 
@@ -159,16 +252,16 @@ const prevNextToggle = async(isBackwards, currStart, currEnd, sent, message, job
 	}
 
 	const snap = await dataSnapshot(newStart, newEnd, jobsJSON);
-	const newEmbed = jobEmbed(snap, "None");
+	const newEmbed = jobEmbed(snap, filter);
 	sent.reactions.removeAll();
 	sent.edit(newEmbed);
 
-	manageReactions(newStart, newEnd, sent, message, jobsJSON);
+	manageReactions(newStart, newEnd, sent, message, jobsJSON, filter);
 }
 
 //Manages reactions
 //Start + End are pointers for the data snapshot
-const manageReactions = (start, end, sent, message, jobsJSON) => {
+const manageReactions = (start, end, sent, message, jobsJSON, filter) => {
     if (start - 3 >= 0) sent.react('⏮️'); // prev
     if (start + 3 < jobsJSON.length) sent.react('⏭️'); // next
 
@@ -180,8 +273,32 @@ const manageReactions = (start, end, sent, message, jobsJSON) => {
 		//Detects whether we're moving backwards
 		var isBackwards = reaction.emoji.name == '⏮️';
 
-		prevNextToggle(isBackwards, start, end, sent, message, jobsJSON);
+		prevNextToggle(isBackwards, start, end, sent, message, jobsJSON, filter);
 	}).catch(collected => {
     	sent.reactions.removeAll();
     });
+}
+
+const purifyDate = (str) => {
+	var arr = str.split("DEADLINE");
+	var date = arr[arr.length - 1];
+
+	if (date[0] == " ")
+	{
+		return date.substring(1);
+	}
+
+	if (date[0] == ":")
+	{
+		if (date[1] == " ")
+		{
+			return date.substring(2);
+		}
+		else
+		{
+			return date.substring(1);
+		}
+	}
+
+	return date;
 }
