@@ -7,7 +7,7 @@ To view current development, click here: https://github.com/ComradeDiamond/Srs-B
 To view documentation and changelog, run `srs commands`. You can probs do this from the Tech Server
 <br /><br />
 ## Bot Testing Repos
-srs-bot-running runs actual version of srs bot<br>
+srs-bot-running runs actual version of srs bot (in a seperate private repo)<br>
 srs-bot-testing runs guinea pig version of srs bot testing
 <br /> <br />
 UWU Bot is very disgwaceful >:(
