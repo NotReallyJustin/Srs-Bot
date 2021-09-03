@@ -1,10 +1,10 @@
 //The current update thing!
-const currUpdate = "Justin's studying for the SAT to try and make Srs proud with a 1520!";
+const currUpdate = "we're currently trying to do some POS tagging with srs rate + hidden markov model calculus stuff that's rly confusing";
 
 module.exports = {
     name: "updatelist",
-    description: currUpdate,
-    execute : (message) => {
-        message.channel.send(currUpdate);
+    description: "Get a sense of what srs bot is doing!",
+    execute : (interaction) => {
+        interaction.reply(currUpdate);
     }
 }

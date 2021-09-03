@@ -1,62 +1,78 @@
-const Helpy = require("../Helpy.js")
+const Helpy = require("../Helpy.js");
+const Discord = require("discord.js");
 
 module.exports = {
 	name: "ban",
-	description: "Launches the ban hammer\n`srs ban <userId> <ban reason>`",
-	execute: async (message, args) => {
-		let user = await message.guild.members.fetch(args[0]);
-		let bStatus = banStatus(args, message.member, user);
-
-		switch (bStatus)
+	description: "Whammm someone with the ban hammer! You need ban perms tho",
+	options: [
 		{
-			case 200:
-				let reason = Helpy.returnUnbound(message.content, args[0]);
-				user.send("You have been banned! Ban reason: " + reason);
-				user.ban({reason: reason});
+            name: "snowflake",
+            description: "The person about to get smashed",
+            required: true,
+            type: "USER"
+        },
+        {
+            name: "reason",
+            description: "discord.gg/go_touch_some_grass",
+            required: true,
+            type: "STRING"
+        },
+        {
+        	name: "days",
+        	description: "How long to ban them for",
+        	required: false,
+        	type: "INTEGER"
+        }
+	],
+	execute: (interaction) => {
+		let user;
+		let reason;
+		let days;
 
-				message.channel.send("Done! Now gimmee a cookie!");
-			break;
+		try
+		{
+			user = interaction.options.getMember("snowflake");
+			if (!user) throw "ok I'm banning you bc you didn't tell me who to ban";
 
-			case 404.1:
-				message.channel.send("ok I'm banning you bc there's no other person to ban");
-			break;
+			reason = interaction.options.getString("reason");
+			if (!reason) throw "smh give me a ban reason";
 
-			case 404.2:
-				message.channel.send("smh gimme a ban reason");
-			break;
+			if (!interaction.member.permissions.has(Discord.Permissions.FLAGS.BAN_MEMBERS))
+			{
+				throw "smh you don't have perms to whack someone with the hammer";
+			}
 
-			case 888.1:
-				message.channel.send("smh why are you trying to ban a staff");
-			break;
+			if (user.permissions.has(Discord.Permissions.FLAGS.BAN_MEMBERS))
+			{
+				throw "smh why are you trying to ban a staff";
+			}
 
-			case 888.2:
-				message.channel.send("smh you don't have perms to whack someone with the hammer");
-			break;
+			days = interaction.options.getInteger("days");
+			if (days && days < 1) throw "smh I can't ban for that number of days";
 		}
+		catch(err)
+		{
+			if (typeof err == 'string')
+			{
+				interaction.reply(err);
+			}
+			else
+			{
+				console.error(err);
+				interaction.reply("smh I don't have perms");
+			}
+			return;
+		}
+
+		let collective = {reason: reason};
+		if (days)
+		{
+			collective["days"] = days;
+		}
+
+		user.send(`You have been banned from ${interaction.guild.name}! Ban reason: ${reason}`);
+		user.ban(collective);
+
+		interaction.reply("Done! Now gimee a cookie!");
 	}
-}
-
-const banStatus = (args, messageMember, user) => {
-
-	if (args.length == 0)
-	{
-		return 404.1; //missing user
-	}
-
-	if (args.length == 1)
-	{
-		return 404.2; //missing reason
-	}
-
-	if (user.hasPermission("BAN_MEMBERS"))
-	{
-		return 888.1; //Ban person is a staff
-	}
-
-	if (!messageMember.hasPermission("BAN_MEMBERS"))
-	{
-		return 888.2; //No perms
-	}
-
-	return 200;
 }

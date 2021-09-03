@@ -8,10 +8,13 @@
   },
   "author": "Justin",
   "license": "ISC",
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "@danke77/google-translate-api": "^1.0.0",
     "@vitalets/google-translate-api": "^7.0.0",
-    "discord.js": "^12.3.1",
+    "discord.js": "^13.1.0",
     "jsdom": "^16.4.0",
     "mongodb": "^3.6.0",
     "weather-js": "^2.0.0"

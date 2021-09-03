@@ -3,25 +3,32 @@ const Discord = require("discord.js");
 
 module.exports = {
     name: "weather",
-    description: "Tells you the weather status of NYC. If you want realtime analysis, type `srs weather advanced`!",
-    execute : (message, args) => {
+    description: "smh can't you log on to weather channel instead of pulling a Justin? Kids these days...",
+    options: [
+    	{
+            name: "realtime",
+            description: "Enables high-tech realtime forecast, brought to you by the r/WallStreetBets Chad Money show!",
+            required: false,
+            type: "BOOLEAN"
+        }
+    ],
+    execute : (interaction) => {
         let prom = weatherFind();
 
-        //If it works properly, the weather stuff should be able to report back the status and the weather embed yes
         prom.then(nycJSON => {
-        	if (args[0] == "advanced")
+        	if (interaction.options.getBoolean("realtime"))
         	{
-        		message.channel.send(weatherEmbed(nycJSON));
+        		interaction.reply({embeds: [weatherEmbed(nycJSON)]});
         	}
         	else
         	{
-        		message.channel.send(`wtf it's ${nycJSON.forecast[1].low} lowest and ${nycJSON.forecast[1].high} highest with ${nycJSON.forecast[1].precip}% chance to get wet 👀`);
-        		message.channel.send(weatherRec(nycJSON.forecast[1].high));
+        		interaction.reply(`wtf it's ${nycJSON.forecast[1].low} lowest and ${nycJSON.forecast[1].high} highest with ${nycJSON.forecast[1].precip}% chance to get wet 👀`);
+        		interaction.reply({embeds: [weatherRec(nycJSON.forecast[1].high)]});
         	}
         });
 
         prom.catch(err => {
-        	message.channel.send("hmm something went wrong");
+        	interaction.reply("hmm something went wrong");
         })
     }
 }

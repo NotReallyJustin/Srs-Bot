@@ -1,12 +1,65 @@
 const Discord = require("discord.js");
 const Helpy = require("../Helpy.js");
+const justinId = "348208769941110784";
 
 module.exports = {
 	name: "tasks",
-	description: "The go-to hub for srs tasks, which will keep track of your tasks!\nCheck `srs commands` to see the full srs tasks!",
-	execute: async (message, args, toolkit) => {
+	description: "The go-to hub for srs tasks, which will keep track of your tasks!",
+	type: "SUB_COMMAND_GROUP",
+	options: [
+		{
+			name: "view",
+			type: "SUB_COMMAND",
+			description: "Stop playing your gameboy advance and fix that 2.85 😤"
+		},
+		{
+			name: "add",
+			type: "SUB_COMMAND",
+			description: "Add a task to your bucket list! Oh wait it's more homework? ew",
+			options: [
+				{
+				    name: "task",
+				    description: "The task to jot down on MongoDB cloud!",
+				    required: true,
+				    type: "STRING"
+				}
+			]
+		},
+		{	
+			name: "delete",
+			type: "SUB_COMMAND",
+			description: "Congrats! You just finished a task and are ready to yeet it!",
+			options: [
+				{
+				    name: "index",
+				    description: "The task index to yeet!",
+				    required: true,
+				    type: "INTEGER"
+				}
+			]
+		},
+		{
+			name: "yeet",
+			type: "SUB_COMMAND",
+			description: "Lady Ninguang shreds all her paper and woosh! The white paper sn- wait a min that's Genshin"
+		},
+		{
+			name: "destroy",
+			type: "SUB_COMMAND",
+			description: "Shut down MangoDb but if you need to wait that's cool with me",
+			defaultPermission: false,
+			permissions: [
+				{
+					id: justinId,
+					type: "USER",
+					permissions: true
+				}
+			],
+		}
+	],
+	execute: async (interaction, toolkit) => {
 		const collection = toolkit.mangoDatabase.collection("Tasks");
-		const userId = message.author.id;
+		const userId = interaction.user.id;
 
 		//If database entry does not exist, make a JSON entry
 		var numCnt = await collection.countDocuments({"id": userId});
@@ -17,95 +70,102 @@ module.exports = {
 				tasks: []
 			});
 		}
-
 		let userCollection = await collection.findOne({"id": userId});
 
+		const subName = interaction.options.getSubcommand(true);
+		if (!subName)
+		{
+			interaction.reply("smh you have an invalid subcommand");
+			return;
+		}
+
+		const subCmd = interaction.options.data[0];
+
 		//Uses the 1st argument to determine what the user wants to do
-		switch(args[0]) 
+		switch(subName) 
 		{
 			case "view":
-			case undefined: //Display tasks in embed
-				message.channel.send(taskEmbed(userCollection.tasks));
+				interaction.reply({embeds: [taskEmbed(userCollection.tasks)]});
 			break;
 
 			case "add": //Create new task and add it to db
-				let nTask = Helpy.returnUnbound(message.content, "add");
-				await collection.updateOne({"id": userId}, {$push: {"tasks": nTask}});
+				let nTask = subCmd.options[0].value;
+				if (!nTask) 
+				{
+					interaction.reply("smh there's no task for me to add");
+				}
+				else
+				{
+					await collection.updateOne({"id": userId}, {$push: {"tasks": nTask}});
 
-				const addResp = [
-					"Updated!",
-					"Ur tasks has been jotted down in my nonexistent tech planner",
-					"Tech bot is now working on remembering this thing",
-					"the task has been assigned to a mango",
-					"io ho finito"
-				]
+					const addResp = [
+						"Updated!",
+						"Ur tasks has been jotted down in my nonexistent tech planner",
+						"Tech bot is now working on remembering this thing",
+						"the task has been assigned to a mango",
+						"io ho finito"
+					]
 
-				message.channel.send(Helpy.randomResp(addResp));
+					interaction.reply(Helpy.randomResp(addResp));
+				}
 			break;
 
 			case "delete": //Deletes items at a certain index
-				let num = parseInt(args[1]) - 1;
-				let status = taskDeleteStatus(args, userCollection.tasks.length, num);
+				//The parseInt converts any null or non-decimal numbers to NaN
+				let num = parseInt(subCmd.options[0].value) - 1;
 
-				switch (status)
+				try
 				{
-					case 200:
-						//Array slice basically is substring
-						let newArr = [...userCollection.tasks.slice(0, num), ...userCollection.tasks.slice(num +1)];
-						await collection.updateOne({"id": userId}, {$set: {"tasks": newArr}});
-
-							const delResp = [
-								"Deleted!",
-								"Flushed down the drain!",
-								"your task is now paying for my student debt",
-								"Banished to the land of weebery",
-								"Task fed to Tech Bot",
-								"Threw tasks and tech bot in the garbage can",
-								"cheems repeat>Help task deleting scawy",
-								"Tasks is longer in your tech planner!"
-							];
-							message.channel.send(Helpy.randomResp(delResp));
-						break;
-
-						case 400:
-							message.channel.send("there's like no item number for me to delete, but I guess ur right cause 2+2 sometimes equals 5");
-						break;
-
-						case 404:
-							message.channel.send("smh what fake number system are you using where that's a number?");
-						break;
-
-						case 500:
-							message.channel.send("that item index doesn't exist smh my head");
-						break;
-
-						default:
-							message.channel.send("woah how did we get here?");
-						break;
+					if (!subCmd.options[0].value) throw "there's like no item number for me to delete, but I guess ur right cause 2/3 == 0";
+					if (isNaN(num)) throw "smh what fake number system are you using where that's a number?";
+					if ((num < 0) || (num > userCollection.tasks.length))
+					{
+						throw "that item index doesn't exist smh my head";
+					}
+				}
+				catch(err)
+				{
+					interaction.reply(err);
+					return;
 				}
 
+				let newArr = [...userCollection.tasks.slice(0, num), ...userCollection.tasks.slice(num + 1)];
+				await collection.updateOne({"id": userId}, {"$set": {"tasks": newArr}});
+
+				const delResp = [
+					"Deleted!",
+					"Flushed down the drain!",
+					"your task is now paying for my student debt",
+					"Banished to the land of weebery",
+					"Task fed to Tech Bot",
+					"Threw tasks and tech bot in the garbage can",
+					"cheems repeat>Help task deleting scawy",
+					"Tasks is longer in your tech planner!",
+					"This task is now officially old tech server"
+				];
+				interaction.reply(Helpy.randomResp(delResp));
 			break;
 
 			case "yeet": //Removes all tasks
 				await collection.updateOne({"id": userId}, {$set: {"tasks": []}});
-				message.channel.send("all your tasks have been yeeted out the window");
+				interaction.reply("all your tasks have been yeeted out the window");
 			break;
 
 			default:
-				message.channel.send("smh the command doesn't exist what are you doing");
+				interaction.reply("smh the command doesn't exist what are you doing");
 			break;
 		
 
 			case "end":
-				if (message.author.id == '348208769941110784')
+				if (interaction.user.id == '348208769941110784')
 				{
 					await mango.close();
-					message.channel.send("Done!");
+					interaction.reply("Done!");
 				}
 				else
 				{
 					//LMAO MONGODB DATABASE VIDEO TOP NOTCH LMAO
-					message.channel.send("i don't think you're seal but if you need to wait that's cool with me");
+					interaction.reply("i don't think you're seal but if you need to wait that's cool with me");
 				}
 			break;
 		}
@@ -131,25 +191,4 @@ const taskEmbed = (taskArray) => {
 
 	tDisplay.setDescription(description);
 	return tDisplay;
-}
-
-//Checks whether the user can delete the tasks
-const taskDeleteStatus = (args, uColLength, num) => {
-
-	if (args.length == 1)
-	{
-		return 400; // Delete index does not exist
-	}
-
-	if (isNaN(num))
-	{
-		return 404; //Index is not a number 
-	}
-
-	if ((num < 0) || (num > uColLength))
-	{
-		return 500; //Index out of bounds
-	}
-
-	return 200;
 }

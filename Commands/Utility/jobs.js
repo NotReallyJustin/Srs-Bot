@@ -3,154 +3,152 @@ const Discord = require("discord.js");
 const https = require("https");
 const Helpy = require("../Helpy.js");
 
+// Credit to Ashley Ngo - ango8101@bths.edu and Alvin Xu (and becc)\nSyntax: `srs jobs <filter type> <filter query>`. If not provided, srs will default to...well.. default.
 module.exports = {
 	name: "jobs",
-	description: "Get the latest internship, programs, and volunteering listings! Credit to Ashley Ngo - ango8101@bths.edu and Alvin Xu (and becc)\nSyntax: `srs jobs <filter type> <filter query>`. If not provided, srs will default to...well.. default.",
-	execute: async (message, args) => {
-		const jobsJSON = await fetchData();
-		let usedArr; //The array that will be used when displaying stuff
-		let filter; //Le filter the data is going through
-
-		switch (args[0])
+	description: "Teach kids how to code! Rake leaves at the park! Your one stop shop to all things jobs!",
+	options: [
 		{
-			case "name":
-			case "provider":
-			case "categories":
-				var sorted = Helpy.mergeSort(jobsJSON, (a, b) => {
-					return a[args[0]].toLowerCase() < b[args[0]].toLowerCase();
-				});
+            name: "name",
+            description: "The name of the job position you're looking for",
+            required: false,
+            type: "STRING"
+        },
+        {
+            name: "provider",
+            description: "Who's you're employer? Gordon Ramsay? Julia Child? Bill Nye the Science Guy?",
+            required: false,
+            type: "STRING"
+        },
+        {
+            name: "categories",
+            description: "Jobs are split up by categories. List one to look for",
+            required: false,
+            type: "STRING"
+        },
+        {
+            name: "deadline",
+            description: "How long can you procrasinate that application? Use MM/DD/YY. This defaults to ongoing.",
+            required: false,
+            type: "STRING"
+        }
+	],
+	execute: async (interaction) => {
+		const jobsJSON = await fetchData();
+		let usedArr = jobsJSON; //The array to display later
+		let stepArr = "Filters: ";
 
-				usedArr = Helpy.binArr(sorted, (job) => {
-					if (!args[1]) return 2;
+		const lambSauce = {
+			name: interaction.options.getString("name"),
+			provider: interaction.options.getString("provider"),
+			categories: interaction.options.getString("categories"),
+			deadline: interaction.options.getString("deadline")
+		};
 
-					var loCase = job[args[0]].toLowerCase();
-					var argCase = args[1].toLowerCase();
+		for (const key of Object.keys(lambSauce))
+		{	
+			let filter = lambSauce[key];
+			if (filter == undefined) continue;
 
-					if (loCase.includes(argCase)) return 0;
-					if (loCase < argCase) return -1;
-					if (loCase > argCase) return 1;
-				})
+			switch(key)
+			{
+				case "name":
+				case "provider":
+				case "categories":
+					var sorted = Helpy.mergeSort(usedArr, (a, b) => {
+						return a[key].toLowerCase() < b[key].toLowerCase();
+					});
 
-				//Capitalize 1st letter of filter query
-				filter = `${Helpy.capFirst(args[0])} Filter : ${Helpy.capFirst(args[1])}`;
-			break;
+					usedArr = Helpy.binArr(sorted, job => {
+						if (!filter) return 2;
 
-			//Keep in mind deadline only filters the *exact date*.
-			//Must be inserted via mm/dd/yyyy, but you can also do mm/dd
-			case "deadline":
-				var month = ["", "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+						var loCase = job[key].toLowerCase();
+						var argCase = filter.toLowerCase();
 
-				if (args[1] == undefined)
-				{
-					args[1] = "ongoing";
-				}
-				else if (/\bongoing\b|\brolling\b|\btbd\b/gmi.test(args[1]))
-				{
-					args[1] == args[1].toLowerCase();
-				}
-				else
-				{
-					var bananaSplit = args[1].split("/");
-					for (var item of bananaSplit)
+						if (loCase.includes(argCase)) return 0;
+						if (loCase < argCase) return -1;
+						if (loCase > argCase) return 1;
+					});
+				break;
+
+				case "deadline":
+					var month = ["", "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+
+					if (/\bongoing\b|\brolling\b|\btbd\b/gmi.test(filter))
 					{
-						item.replace(/ /gmi, "");	
-					}		
-
-					var offenses = bananaSplit.length < 2 || bananaSplit.length > 3 || month[+bananaSplit[0]] == undefined || isNaN(+bananaSplit[1]) || +bananaSplit[1] < 1 || +bananaSplit[1] > 31 || +bananaSplit[1] != Math.round(+bananaSplit[1]) || (bananaSplit.length == 3 && isNaN(+bananaSplit[2]))
-					if (offenses)
-					{
-						args[1] = "ONGOING";
+						filter = filter.toUpperCase();
 					}
 					else
 					{
-						bananaSplit[0] = month[+bananaSplit[0]];
-
-						if (bananaSplit[2] && bananaSplit[2].length == 2)
+						var bananaSplit = filter.split("/");
+						for (var item of bananaSplit) //Maybe could use map
 						{
-							bananaSplit[2] = "20" + bananaSplit[2];
+							item.replace(/ /gmi, "");	
+						}		
+
+						var offenses = bananaSplit.length < 2 || bananaSplit.length > 3 || month[+bananaSplit[0]] == undefined || isNaN(+bananaSplit[1]) || +bananaSplit[1] < 1 || +bananaSplit[1] > 31 || +bananaSplit[1] != Math.round(+bananaSplit[1]) || (bananaSplit.length == 3 && isNaN(+bananaSplit[2]))
+						if (offenses)
+						{
+							filter = "ONGOING";
 						}
+						else
+						{
+							bananaSplit[0] = month[+bananaSplit[0]];
 
-						args[1] = bananaSplit.join(" ");
+							if (bananaSplit[2] && bananaSplit[2].length == 2)
+							{
+								bananaSplit[2] = "20" + bananaSplit[2];
+							}
+
+							filter = bananaSplit.join(" ");
+						}
 					}
-				}
 
-				var sorted = Helpy.mergeSort(jobsJSON, (a, b) => {
-					a = purifyDate(a.deadline);
-					b = purifyDate(b.deadline);
+					var sorted = Helpy.mergeSort(usedArr, (a, b) => {
+						a = purifyDate(a.deadline);
+						b = purifyDate(b.deadline);
 
-					return a.toLowerCase() < b.toLowerCase();
-				});
+						return a.toLowerCase() < b.toLowerCase();
+					});
 
-				usedArr = Helpy.binArr(sorted, (job) => {
-					job = purifyDate(job.deadline);
+					usedArr = Helpy.binArr(sorted, (job) => {
+						job = purifyDate(job.deadline);
 
-					//You can also compare the numbers in the string, so this should be fine
-					if (job.toUpperCase().includes(args[1].toUpperCase())) return 0;
-					//if (job.includes(args[1].substring(0, args[1].length - 5))) return 0; //Try getting rid of the year and " "
-					if (job.toUpperCase() < args[1].toUpperCase()) return -1;
-					if (job.toUpperCase() > args[1].toUpperCase()) return 1;
-				})
+						//You can also compare the numbers in the string, so this should be fine
+						if (job.toUpperCase().includes(filter.toUpperCase())) return 0;
+						//if (job.includes(args[1].substring(0, args[1].length - 5))) return 0; //Try getting rid of the year and " "
+						if (job.toUpperCase() < filter.toUpperCase()) return -1;
+						if (job.toUpperCase() > filter.toUpperCase()) return 1;
+					});
+				break;
+			}
 
-				filter = `Deadline Filter: ${Helpy.capFirst(args[1])}`;
-			break;
-
-			default:
-				usedArr = jobsJSON;
-				filter = "Filters: None";
-			break;
+			stepArr += `${Helpy.capFirst(key)} = ${Helpy.capFirst(filter)}, `;
 		}
 
+		stepArr = stepArr.substring(0, stepArr.length - 2);
+
 		const jobsSnapshot = await dataSnapshot(0, Math.min(2, usedArr.length - 1), usedArr);
-		const embed = jobEmbed(jobsSnapshot, filter);
-		message.channel.send(embed).then(sent => {
-			manageReactions(0, 2, sent, message, usedArr, filter);
+		const embed = jobEmbed(jobsSnapshot, stepArr);
+		interaction.reply({embeds: [embed], fetchReply: true}).then(sent => {
+			manageReactions(0, 2, sent, interaction, usedArr, stepArr);
 		});
 	} 
 }
 
 //--------------------------------------JOBS CLASS---------------------------------------------------
 //Constructor for job class - will probs be useful when we do data science on this after the SAT
-function Job()
+function Job(name, provider, desc, link, location, contact, categories, deadline)
 {
-	//Info key and currKey are universal and depends on how Ashley formats the sheet/whether it changes
-	//This goes by columns
-	this.infoKey = ["name", "provider", "desc", "link", "location", "contact", "categories", "deadline"];
-	this.currKey = 0;
-
-	this.name = "";
-	this.provider = "";
-	this.desc = "";
-	this.link = "";
-	this.location = "";
-	this.contact = "";
-	this.categories = "";
-	this.deadline = "ONGOING";
-}
-
-//Checks whether all categories are filled
-Job.prototype.checkSet = function() {
-	for (var key of this.infoKey)
-	{
-		if (this[key] == undefined) return false;
-	}
-
-	return true;
-}
-
-//Adds the next field data
-Job.prototype.add = function(txt) {
-
-	if (this.currKey > this.infoKey.length) //Err checking :P
-	{
-		//Wow more descriptive error than JS will ever give me lmao
-		console.error(`JustinWare Error: At jobs.js jobs class with this.name = ${this.name} the currKey(${this.currKey}) is > than the infoKey`);
-	}
-	else
-	{
-		var trimmed = txt.length > 700 ? txt.substring(0, 701) + "..." : txt;
-		this[this.infoKey[this.currKey]] = trimmed.replace(/(?:\\[rn]|[\r\n]+)+/g, " ").trim();
-		this.currKey++;
-	}
+	this.name = name;
+	this.provider = provider;
+	this.desc = desc.replace(/(?:\\[rn]|[\r\n]+)+/g, " ").trim();
+	if (desc.length > 700) this.desc = this.desc.substring(0, 695) + "...";
+	this.link = link;
+	this.location = location;
+	this.contact = contact;
+	this.categories = categories;
+	this.deadline = deadline == undefined ? "ONGOING" : deadline;
 }
 
 //----------------------------------Helper Methods----------------------------------------------
@@ -159,14 +157,24 @@ Job.prototype.add = function(txt) {
 const fetchData = async () => new Promise((resolve, reject) => {
 	let data = "";
 	let jobsData = [];
-	https.get("https://spreadsheets.google.com/feeds/cells/1l97Q-9_HMcvcxslNsG8XfWKkC4ehBYecvE7x_cqTRPs/1/public/full?alt=json", response => {
+	https.get("https://docs.google.com/spreadsheets/d/1l97Q-9_HMcvcxslNsG8XfWKkC4ehBYecvE7x_cqTRPs/gviz/tq?tqx=out:json", response => {
 		response.on("data", pkg => {
 			data += pkg;
 		});
 
 		response.on("end", () => {
-			let entries = JSON.parse(data);
+			let entries = JSON.parse(data.substring(47, data.length - 2)).table.rows;
+			const modify = (x => x == undefined ? "" : x.v);
 
+			for (var r = 4; r < entries.length; r++)
+			{
+				let el = entries[r].c;
+				jobsData.push(new Job(modify(el[0]), modify(el[1]), modify(el[2]), modify(el[3]), modify(el[4]), modify(el[5]), modify(el[6]), modify(el[7])));
+			}
+
+			resolve(jobsData);
+
+			/* Deprecated version - google updated this JSON formayt in august 2021
 			for (let currCol = 10, currRow = -1; currCol < entries.feed.entry.length; currCol++)
 			{
 				//incremement when new row + check rows = the first entry will also default to a new row
@@ -178,8 +186,7 @@ const fetchData = async () => new Promise((resolve, reject) => {
 				
 				jobsData[currRow].add(entries.feed.entry[currCol].content['$t']);
 			}
-
-			resolve(jobsData);
+			*/
 		});
 	});
 });
@@ -191,22 +198,18 @@ const dataSnapshot = async (start, end, data) => {
 	var arr = [];
 	for (var i = start; i <= end; i++)
 	{
-		//console.log(data[i].checkSet());
-		if (data[i].checkSet())
-		{
-			var yoy = {
-				name: `${data[i].name}`,
-				value: `**Provider**: ${data[i].provider} \n` +
-					`**Link**: ${data[i].link} \n` +
-					`**Location**: ${data[i].location}\n` +
-					`**Contacts**: ${data[i].contact} \n` +
-					`**Deadline**: ${data[i].deadline} \n` +
-					`**Categories**: ${data[i].categories} \n` +
-					`${data[i].desc}`
-			};
+		var yoy = {
+			name: `${data[i].name}`,
+			value: `**Provider**: ${data[i].provider} \n` +
+				`**Link**: ${data[i].link} \n` +
+				`**Location**: ${data[i].location}\n` +
+				`**Contacts**: ${data[i].contact} \n` +
+				`**Deadline**: ${data[i].deadline} \n` +
+				`**Categories**: ${data[i].categories} \n` +
+				`${data[i].desc}`
+		};
 
-			arr.push(yoy);
-		}
+		arr.push(yoy);
 	}
 
 	return arr;
@@ -229,7 +232,7 @@ const jobEmbed = (fields, filters) => {
 
 //Toggles the start end index and does the embed swapping thingy
 //Idk I don't have discord on PS4 or Switch
-const prevNextToggle = async(isBackwards, currStart, currEnd, sent, message, jobsJSON, filter) => {
+const prevNextToggle = async(isBackwards, currStart, currEnd, sent, interaction, jobsJSON, filter) => {
 	var newStart = currStart;
 	var newEnd = currEnd;
 
@@ -254,26 +257,26 @@ const prevNextToggle = async(isBackwards, currStart, currEnd, sent, message, job
 	const snap = await dataSnapshot(newStart, newEnd, jobsJSON);
 	const newEmbed = jobEmbed(snap, filter);
 	sent.reactions.removeAll();
-	sent.edit(newEmbed);
+	sent.edit({embeds: [newEmbed]});
 
-	manageReactions(newStart, newEnd, sent, message, jobsJSON, filter);
+	manageReactions(newStart, newEnd, sent, interaction, jobsJSON, filter);
 }
 
 //Manages reactions
 //Start + End are pointers for the data snapshot
-const manageReactions = (start, end, sent, message, jobsJSON, filter) => {
+const manageReactions = (start, end, sent, interaction, jobsJSON, filter) => {
     if (start - 3 >= 0) sent.react('⏮️'); // prev
     if (start + 3 < jobsJSON.length) sent.react('⏭️'); // next
 
-   	let pwomise = sent.awaitReactions((reaction, user) => user.id == message.author.id && (['⏭️', '⏮️'].includes(reaction.emoji.name)), 
-   	{max: 1, time: 60000, errors: ['time'] })
+    let x = (reaction, user) => user.id == interaction.user.id && (['⏭️', '⏮️'].includes(reaction.emoji.name));
+    let pwomise = sent.awaitReactions({filter: x, time: 60000, errors:['time'], max: 1});
     	
     pwomise.then(async collected => {
 		const reaction = collected.first();	
 		//Detects whether we're moving backwards
 		var isBackwards = reaction.emoji.name == '⏮️';
 
-		prevNextToggle(isBackwards, start, end, sent, message, jobsJSON, filter);
+		prevNextToggle(isBackwards, start, end, sent, interaction, jobsJSON, filter);
 	}).catch(collected => {
     	sent.reactions.removeAll();
     });

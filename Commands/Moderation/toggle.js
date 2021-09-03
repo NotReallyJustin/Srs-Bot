@@ -1,10 +1,10 @@
 module.exports = {
 	name: "toggle",
-	description: "Toggles wacky text in current channel\n`srs toggle`",
-	execute: (message, args, toolkit, currentChannel) => {
+	description: "No cap on a stack fr fr yeet that wacky text sirrrrr",
+	execute: (interaction, toolkit, currentChannel) => {
 		currentChannel.replyMsg = !currentChannel.replyMsg;
 
 		var replyMsg = currentChannel.replyMsg ? "ok wacky text is on" : "ok wacky text is off";
-		message.channel.send(replyMsg);
+		interaction.reply(replyMsg);
 	}
 }

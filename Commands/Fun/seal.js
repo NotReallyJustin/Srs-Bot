@@ -5,7 +5,7 @@ const https = require("https");
 module.exports = {
 	name: "seal",
 	description: "Seal the seal goes on r/seal to see a seal with a seal sealing the seal with a seal under a seal!",
-	execute: (message, args) => {
+	execute: (interaction) => {
 
 		https.get("https://www.reddit.com/r/seals/new.json?limit=15", response => {
 
@@ -25,17 +25,13 @@ module.exports = {
 				{
 					redditImg = post.data.url_overridden_by_dest;
 				}
-				else if (post.data.secure_media != undefined)
-				{
-					redditImg = post.data.secure_media.oembed.thumbnail_url;
-				}
 				else
 				{
 					redditImg = post.data.thumbnail;
 				}
 
 				var x = sealEmbed(post.data.title, post.data.author, redditImg);
-				message.channel.send(x);
+				interaction.reply({embeds: [x]});
 			})
 		})
 	}
@@ -45,7 +41,7 @@ const sealEmbed = (text, author, image) => {
 	let embed = new Discord.MessageEmbed();
 	embed.setTitle(text);
 	embed.setDescription("u/" + author);
-	embed.setColor("GOLD");
+	embed.setColor("AQUA");
 
 	embed.setImage(image);
 

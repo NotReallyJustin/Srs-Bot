@@ -9,8 +9,8 @@ const sleeeeep = [
 module.exports = {
     name: "sleep",
     description: "If you're looking at this, you might need sleep.",
-    execute : (message, args, toolkit) => {
+    execute : (interaction) => {
         let x = Helpy.randomResp(sleeeeep);
-        message.channel.send(x);
+        interaction.reply(x);
     }
 }

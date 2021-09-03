@@ -7,14 +7,26 @@ const cmdDesc = "The executive privilege is the ability for someone to control s
 
 //Yes this is very secret (this is exploit but pls don't remove my rights)
 module.exports = {
-	name: "executivePrivilege",
-	description: cmdDesc,
-	execute: (message, args) => {
-		if (message.author.id == justinId)
+	name: "executiveprivilege",
+	description: "UNLEASH THE POWER OF THE TRUE SUN GOD! WRECK HAVOC ON DISCORD MODS!",
+	options: [
 		{
-			let txt = Helpy.returnUnbound(message.content, "executivePrivilege");
-			message.channel.send(txt);
-			message.delete();
+            name: "blast",
+            description: "Turn that Trumpet up to sfffz!",
+            required: true,
+            type: "STRING"
+        }
+	],
+	execute: (interaction) => {
+		if (interaction.user.id == justinId)
+		{
+			var txt = interaction.options.getString('blast', true);
+			interaction.channel.send(txt);
+			//interaction.reply({content: 'Done!', ephemeral: true});
+		}
+		else
+		{
+			interaction.reply("@staff @staff @staff @staff @staff");
 		}
 	}
 }

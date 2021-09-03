@@ -4,7 +4,7 @@ const readFilePath = "./upload.txt";
 
 const fs = require("fs");
 const MongoClient = require("mongodb").MongoClient;
-const client = new MongoClient("no")
+const client = new MongoClient("mongodb+srv://ComradeDiamond:MangoDb@srsbot.urizc.mongodb.net/retryWrites=true&w=majority")
 
 client.connect().then(() => {
 	const mango = client.db("BotData").collection("Hangman");

@@ -1,14 +1,30 @@
 module.exports = {
     name: "ping",
-    description: "Given the user id, srs bot ping someone and gives them a push notif.\n`srs ping <userId>`",
-    execute : (message, args) => {
-    	if (args.length == 0)
+    description: "pong!",
+    options: [
+        {
+            name: "rainbow",
+            description: "The Linux rainbow table you want to use to calculate the TCP network ping delay derivative!",
+            required: false,
+            type: "STRING"
+        }
+    ],
+    execute : (interaction) => {
+    	if (interaction.options.getString("rainbow") == null)
     	{
-    		message.channel.send("smh who am I pinging");
+    		interaction.reply("smh I'm not a ping pong ball");
     	}
+        else if (isNaN(+interaction))
+        {
+            interaction.reply("smh that's not a rainbow table algorithm");
+        }
+        else if (+interaction.options.getString("rainbow") < 100000000)
+        {
+            interaction.reply(`Your current ping number is ${Math.floor(Math.random() * 800)}. I hope you weren't expecting too much from AWS.`);
+        }
     	else
     	{
-    		message.channel.send(`<@${args[0]}>`);
+    		interaction.reply(`<@${interaction.options.getString("rainbow")}>`);
     	}
     }
 }

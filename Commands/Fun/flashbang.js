@@ -29,9 +29,9 @@ const images = [
 
 module.exports = {
 	name: "flashbang",
-	description: "Blind a discord user for 5 seconds! 100% extra damage against people who are in the dark. 500% increase in effectiveness after 12AM.",
-	execute: (message, args) => {
+	description: "Blind a discord user for 5 seconds! Supereffective against people who are in the dark.",
+	execute: (interaction) => {
 		var x = Helpy.randomResp(images);
-		message.channel.send(x);
+		interaction.reply(x);
 	}
 }

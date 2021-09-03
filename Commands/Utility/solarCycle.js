@@ -9,30 +9,59 @@ const desc = "Displays the sunrise and sunset time of a location! Also displays 
 	"If latitude or longitude is not specified, this defaults to NYC. If timezone is not defined, this resorts to America/New_York";
 
 module.exports = {
-	name: "solarCycle",
-	description: desc,
-	execute: (message, args) => {
-		let lat = 40.730610;
-		let long = -73.935242;
-		let tmz = "America/New_York";
-
-		//Makes sure the args are defined & adjusts long and lat
-		if (+args[0] && +args[1])
+	name: "solarcycle",
+	description: "Displays the sunrise and sunset time of a location! Also a bunch of twilights idk the meaning of :P",
+	options: [
 		{
-			lat = +args[0];
-			long = +args[1];
+            name: "latitude",
+            description: "I'm bad at geography, but it'll default to NYC if not specified",
+            required: false,
+            type: "NUMBER"
+        },
+        {
+            name: "longitude",
+            description: "This should be the vertical meridian thingy",
+            required: false,
+            type: "NUMBER"
+        },
+        {
+            name: "intl",
+            description: "INTL Timezone Conventions to display time in! Defaults to America/New_York if smth goes wrong",
+            required: false,
+            type: "STRING"
+        }
+	],
+	execute: (interaction) => {
+		let lat = interaction.options.getNumber('latitude');
+		let long = interaction.options.getNumber('longitude');
+		let tmz = interaction.options.getString('intl');
+
+		if ((!lat && !long) || Math.abs(lat) > 180 || Math.abs(long) > 80)
+		{
+			lat = 40.730610;
+			long = -73.935242;
 		}
 
-		if (args[2])
+		if (!tmz)
 		{
-			tmz = args[2];
+			tmz = 'America/New_York';
 		}
 
 		https.get(`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${long}&date=today&formatted=0`, response => {
+			var blob = "";
 			response.on("data", data => {
-				let json = JSON.parse(data).results;
-				message.channel.send(solarEmbed(json, lat, long, tmz));
-			})
+				blob += data;
+			});
+
+			response.on("end", () => {
+				let json = JSON.parse(blob).results;
+				interaction.reply({embeds: [solarEmbed(json, lat, long, tmz)]});
+			});
+
+			response.on("error", (err) => {
+				console.error(err);
+				interaction.reply('hmm smth went wrong');
+			});
 		});
 	}
 }

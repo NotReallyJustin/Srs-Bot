@@ -13,9 +13,9 @@ const phil = [
 
 module.exports = {
     name: "philip",
-    description: "It's an inside joke from the OG Gang days with Beesha 🥳",
-    execute : (message) => {
+    description: "Cmonnnnnn it's just an inside joke from the OG Gang days with Beesha 🥳",
+    execute : (interaction) => {
         let x = Helpy.randomResp(phil);
-        message.channel.send(x);
+        interaction.reply(x);
     }
 }

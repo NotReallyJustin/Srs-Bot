@@ -84,13 +84,13 @@ module.exports.binArr = (arr, comparison) => {
 	let toOut = [];
 	let found;
 
-	for (var left = 0, right = arr.length, middle = Math.floor(arr.length / 2); left < right; middle = Math.floor((left + right) / 2))
+	for (var left = 0, right = arr.length, middle = Math.floor(arr.length / 2); left <= right; middle = Math.floor((left + right) / 2))
 	{
 		switch(comparison(arr[middle]))
 		{
 			case 0:
 				found = middle;
-				left = right; //Halt the loop
+				left = right + 1; //Halt the loop
 			break;
 
 			case -1:
@@ -102,7 +102,7 @@ module.exports.binArr = (arr, comparison) => {
 			break;
 
 			case 2:
-				left = right;
+				left = right + 1;
 			break;
 		}
 	}

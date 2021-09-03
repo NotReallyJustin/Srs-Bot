@@ -18,9 +18,9 @@ const smh = [
 
 module.exports = {
     name: "cat",
-    description: "meow",
-    execute : (message) => {
+    description: "Infect your computer with meoware!",
+    execute : (interaction) => {
         let x = Helpy.randomResp(smh);
-        message.channel.send(x);
+        interaction.reply(x);
     }
 }

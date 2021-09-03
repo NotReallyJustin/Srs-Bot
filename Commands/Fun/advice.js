@@ -44,70 +44,58 @@ const response = [
 
 module.exports = {
 	name : "advice",
-	description : "Ask srs bot a question, and he'll give a yes or no answer like a 8ball!\n`srs advice <insert statement>`\n" +
-		"Remember, light theme best theme and no illegal chars",
-	execute: (message, args) => {
-		let status = rateStatus(args);
-
-		switch (status)
+	description : "Consult the wisdom of the noble alumni with 2x more life experience than you!",
+	options: [
 		{
-			case 200:
-				var x = Helpy.randomResp(eightWheel);
-				message.channel.send(x);
-			break;
+			name: "request",
+			description: "Remember light theme best theme and no illegal chars!",
+			type: "STRING",
+			required: true
+		}
+	],
+	execute: (interaction) => {
+		let request;
 
-			case 200.1:
-				var b1 = /light\b|white\b|justin\b/gmi.test(message.content);
-				var b2 = /dark\b|black\b|amoled\b/gmi.test(message.content);
+		try
+		{
+			request = interaction.options.getString("request", true);
+			if (!request) throw "smh what am I giving advice on?";
+			if (/[^\w\d, .;'@#<>!:?]/ig.test(request)) throw Helpy.randomResp(response);
+		}
+		catch(err)
+		{
+			interaction.reply(err);
+			console.error(err);
+		}
 
-				if (b1 || b2)
+		if (/\btheme\b|\bmode\b|\bdiscord\b|\bthemes\b|\bmodes\b/gmi.test(request))
+		{
+			var b1 = /light\b|white\b|justin\b/gmi.test(request);
+			var b2 = /dark\b|black\b|amoled\b/gmi.test(request);
+
+			if (b1 || b2)
+			{
+				let x = Rate.rateAlg(request, b1);
+
+				if (x)
 				{
-					let x = Rate.rateAlg(message.content, b1);
-
-					if (x)
-					{
-						var e = Helpy.randomResp(seeNoEvil);
-						message.channel.send("hell no \n" + e);
-					}
-					else
-					{
-						message.channel.send("yes");
-					}
+					interaction.reply('Yes!');
 				}
 				else
 				{
-					message.channel.send("If it's for light mode, yes. If it's not, then no.");
+					var e = Helpy.randomResp(seeNoEvil);
+					interaction.reply("hell no \n" + e);
 				}
-			break;
-
-			case 400:
-				var x = Helpy.randomResp(response);
-				message.channel.send(x);
-			break;
-
-			default:
-				message.channel.send("Uh... you should probably ping Justin. Send him this number: " + status);
-			break;
+			}
+			else
+			{
+				interaction.reply("If it's for light mode, yes. If it's not, then no.");
+			}
+		}
+		else
+		{
+			var x = Helpy.randomResp(eightWheel);
+			interaction.reply(x);
 		}
 	}
-}
-
-//Status codes! These will tell us the status of the message input and divert the response appropriately!
-const rateStatus = (args) => {
-	if (args.length == 0)
-	{
-		return 404; //Missing args
-	}
-
-	if (/[^\w\d, .;'@#<>!:?]/ig.test(args))
-	{
-		return 400; //Illegal Chars
-	}
-
-	if (/\btheme\b|\bmode\b|\bdiscord\b|\bthemes\b|\bmodes\b/gmi.test(args))
-	{
-		return 200.1;
-	}
-
-	return 200;
 }

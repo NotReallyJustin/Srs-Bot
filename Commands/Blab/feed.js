@@ -1,14 +1,22 @@
 module.exports = {
     name: "feed",
-    description: "Feed the college student!",
-    execute : (message, args) => {
-    	if (args.length == 0)
-    	{
-    		message.channel.send("smh there's no food");
-    	}
+    description: "smh couldn't you have invited me to boba or smth",
+    options: [
+        {
+            name: "food",
+            description: "what are you feeding srs bot",
+            required: false,
+            type: "STRING"
+        }
+    ],
+    execute : (interaction) => {
+        if (interaction.options.getString("food") == null)
+        {
+            interaction.reply("smh there's no food"); 
+        }
     	else
     	{
-    		message.channel.send("smh I'm not eating on my keeb");
+    	   interaction.reply("smh I'm not eating on my keeb");
     	}
     }
 }

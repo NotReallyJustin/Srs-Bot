@@ -1,8 +1,8 @@
 module.exports = {
     name: "profile",
-    description: "Make profile command useful again, and returns a copy of your pfp.",
-    execute : (message) => {
-    	let url = message.author.defaultAvatarURL;
-    	message.channel.send(url);
+    description: "whaddaya mean you want a profile picture? Just use the inspect element you lazy donut",
+    execute : (interaction) => {
+    	let url = interaction.user.displayAvatarURL({dynamic: true});
+    	interaction.reply(url);
     }
 }

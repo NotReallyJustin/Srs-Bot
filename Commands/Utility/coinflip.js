@@ -1,17 +1,17 @@
 module.exports = {
     name: "coinflip",
-    description: "Does a coinflip, in case srs advice isn't giving you that definitive answer :P\nIf you use this in a debate round, always pick 2nd",
-    execute : (message) => {
+    description: "Did you know that the coinflip is not a 50-50% chance because of the weight of the coin?",
+    execute : (interaction) => {
     	//Autoconverts to boolean
     	//ahh I love loose typing
     	//Plus < and > are a pain to work with
-        if ((Math.random() *2))
+        if (Math.floor(Math.random() * 2))
         {
-        	message.channel.send("Heads");
+        	interaction.reply("Heads");
         }
         else
         {
-        	message.channel.send("Tails");
+        	interaction.reply("Tails");
         }
     }
 }

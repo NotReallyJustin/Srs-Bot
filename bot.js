@@ -1,30 +1,27 @@
 //---------------------INIT----------------------------------------
 //Backend
-const prefix = "srs";
 const Database = require("./database.js");
 const Helpy = require("./Commands/Helpy.js");
+const Rate = require("./Commands/Fun/rate.js");
 
 const fs = require("fs");
 const Discord = require("discord.js");
-const bot = new Discord.Client();
+const INTENT = Discord.Intents.FLAGS;
+const bot = new Discord.Client({intents:[
+	INTENT.GUILDS, 
+	INTENT.GUILD_MEMBERS, 
+	INTENT.GUILD_BANS, 
+	INTENT.GUILD_EMOJIS_AND_STICKERS, 
+	INTENT.GUILD_MESSAGES, 
+	INTENT.GUILD_MESSAGE_REACTIONS,
+	INTENT.GUILD_MESSAGE_TYPING,
+	INTENT.DIRECT_MESSAGES,
+	INTENT.DIRECT_MESSAGE_REACTIONS,
+	INTENT.DIRECT_MESSAGE_TYPING
+]});
 
+//Not mongodb
 Database.initialize(bot);
-bot.commands = new Discord.Collection();
-
-const commandPaths = [
-	"./Commands/Events",
-	"./Commands/Fun",
-	"./Commands/Moderation",
-	"./Commands/Blab",
-	"./Commands/Utility"
-];
-
-commandPaths.forEach(path => {
-	fs.readdirSync(path).filter(files => files.endsWith(".js")).forEach(fileName => {
-		let command = require(`${path}/${fileName}`);
-		bot.commands.set(command.name, command);
-	});
-});
 
 //Cloud
 const Mango = new require("mongodb").MongoClient;
@@ -50,31 +47,55 @@ connectionPromise.catch(err => {
 
 //---------------------BOT LOGIN & CMDS---------------------
 bot.login(process.env.BOT_TOKEN);
+bot.once("ready", () => {
 
-bot.on("ready", () => {
-	console.log("I'm clearly confused");
-
-	let botPromise = bot.generateInvite(["ADMINISTRATOR"]);
-
-	botPromise.then(link => {
-		console.log(link);
+	let botPromise = bot.generateInvite({
+		scopes: ["bot", "applications.commands"],
+		permissions: [Discord.Permissions.FLAGS.ADMINISTRATOR]
 	});
-
-	botPromise.catch(err => {
-		console.log(err.stack);
-	});
+	console.info(botPromise);
 
 	//Discord custom status for bots when lol
 	bot.user.setPresence({
 	 	status: "online",  
-	    activity: {
+	    activities: [{
 	        name: "PlagueINC Cure Mode - Eliminating the Dark Mode virus",  
 	        type: "PLAYING"
-	    }
+	    }]
+	});
+
+	bot.commands = new Discord.Collection();
+	const commandPaths = [
+		"./Commands/Blab",
+		"./Commands/Utility",
+		"./Commands/Moderation",
+		"./Commands/Fun"
+	];
+	
+	let commandData = [];
+
+	commandPaths.forEach(path => {
+		fs.readdirSync(path).filter(files => files.endsWith(".js")).forEach(fileName => {
+			let command = require(`${path}/${fileName}`);
+			bot.commands.set(command.name, command);
+			commandData.push(command);
+		});
+	});
+
+	//Upon holding the attack button, Ayaka will perform a frontal slash, dealing high physical damage
+	let setSlash = bot.application.commands.set(commandData);
+
+	setSlash.then(() => {
+		console.log("Loading done - ready to roll!");
+	});
+	setSlash.catch(err => {
+		console.error(err);
 	});
 });
 
-bot.on('message', async message => {
+//----------------------Functionalities Begin----------------------------------------
+
+bot.on('messageCreate', async message => {
 
 	if (message.author.bot) return;
 
@@ -109,7 +130,7 @@ bot.on('message', async message => {
 
 	if (currentChannel.inSlowmode)
 	{
-		currentChannel.messageCount += 1;
+		currentChannel.messageCount++;
 	}
 
 	//------------------Alternate Move Pathway-------------------------------
@@ -134,11 +155,6 @@ bot.on('message', async message => {
 		{matches: /\bseal hunting\b/gmi, 
 			f1: () => {}, 
 			f2: (message) => {message.channel.send("you better run before I put you in char siu fan")}, 
-			f2a: ""
-		},
-		{matches: /\blight theme best theme\b/gmi, 
-			f1: () => {}, 
-			f2: (message) => {message.channel.send("Correct!")}, 
 			f2a: ""
 		},
 		{matches: /\bbths\b|\bbtech\b|\bbrooklyn tech\b/gmi, 
@@ -215,28 +231,6 @@ bot.on('message', async message => {
 				"smh the probability of a green blob attacking you is small, but never 0 (he's very lucky)" //Dream reference >:)
 			]
 		},
-		{matches: /\bmaclean\b/gmi, 
-			f1: (message) => {message.react("🤮")}, 
-			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
-			f2a: [
-				"smh since you like democracy so much, democracy this into the hall of shame",
-				"free speech doesn't mean you can keep yappping",
-				"🤮🤮🤮",
-				"when we say think critically we don't mean sentence your transcript to death",
-				"I thought we live in a society",
-				"I am only loyal to Lord Silverman!",
-				"ew smh the only god I worship is silverman",
-				"it's called ma-clean because your transcript average will be power washed into oblivon",
-				"smh go kermit read 5 chapters of the American Yawp",
-				"freeze for the good of society",
-				"everyone has life, liberty, and pursuit of happiness - well until maclean pulls a last minute grade upload",
-				"are your grades the articles of confederation? Because they look like they're about to fall apart",
-				"liberate me from my 89% smh",
-				"are you bri ish? Cause we're about to throw your king's 'T' into the harbor",
-				"call this a second great awakening, I need that for my next LEQ",
-				"<Insert angry cliff emote here>"
-			]
-		},
 		{matches: /\bsilverman\b/gmi, 
 			f1: (message) => {message.react("⭐")}, 
 			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
@@ -258,21 +252,45 @@ bot.on('message', async message => {
 		!currentChannel.replyMsg || matchRes.f2(message, matchRes.f2a);
 	}
 
-	//----------------ACTUAL SRS COMMANDS----------------------
-
-	messageArray = message.content.split(" ");
-	command = messageArray[1];
-	args = messageArray.slice(2);
-
-	if (messageArray[0] == prefix) //Entering Srs bot prefix code section
+	//-----------------LIGHT MODE FIGHTS BACK------------------
+	if (/\btheme\b|\bmode\b|\bdiscord\b|\bthemes\b|\bmodes\b/gmi.test(message.content))
 	{
-		if (bot.commands.has(command))
+		var b1 = /light\b|white\b|justin\b/gmi.test(message.content);
+		var b2 = /dark\b|black\b|amoled\b/gmi.test(item);
+		let rating = Rate.rateAlg(message.content, b1);
+
+		let goodRe = currentChannel.replyMsg ? () => {message.channel.send(Helpy.randomResp(Rate.response.slightLM));} : () => {message.react('⭐');}; 
+		let badRe = currentChannel.replyMsg ? () => {message.channel.send(Helpy.randomResp(Rate.response.slightDM));} : () => {message.react('🤮');};
+
+		if (b1 || b2) //else false alarm
 		{
-			bot.commands.get(command).execute(message, args, toolkit, currentChannel);
+			if (rating)
+			{
+				goodRe();
+			}
+			else
+			{
+				badRe();
+			}
+			return;
+		}
+	}
+});
+
+//----------------COMMANDS------------------------------------
+
+bot.on('interactionCreate', async interaction => {
+	if (interaction.isCommand())
+	{
+		if (interaction.inGuild())
+		{
+			let currentChannel = bot.database.getServer(interaction.guildId, interaction.guild).getChannel(interaction.channelId, interaction.channel);
+			bot.commands.get(interaction.commandName).execute(interaction, toolkit, currentChannel);
+			//interaction.command.execute(interaction, toolkit, currentChannel);
 		}
 		else
 		{
-			message.channel.send("Buddy that command does not exist");
+			interaction.reply("smh don't pretend that you have hotseat");
 		}
 	}
 });

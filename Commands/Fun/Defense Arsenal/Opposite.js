@@ -1,0 +1,25 @@
+//Compiled list of opposites
+module.exports.negations = [
+	"not",
+	"anti",
+	"opposite",
+	"reverse",
+	"no",
+	"none",
+	"nothing",
+	"never",
+	"hardly",
+	"barely",
+	"rarely",
+	"infrequently",
+	"seldom",
+	"nay",
+	"but",
+	"nowhere",
+	"ne'er",
+	"noways",
+	"nowise",
+	"unlike",
+	"unrelated",
+	"counter"
+]

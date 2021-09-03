@@ -1,32 +1,39 @@
 module.exports = {
 	name: "mention",
-	description: "Mention a group and unleash the mass ping! You just need to also be part of the group.\n`srs mention <groupname>`",
-	execute: (message, args) => {
-		if (args.length == 0)
+	description: "Mention a group and unleash the mass ping! We don't cover deaths by riots 🐸",
+	options: [
 		{
-			message.channel.send("smh what am I mentioning?");
-		}
-		else
-		{
-			const filtered = mentionJSON[args[0].toLowerCase()];
+            name: "group",
+            description: "which poor soul is getting a ping blast today?",
+            required: true,
+            type: "STRING"
+        }
+	],
+	execute: (interaction) => {
+		let filtered;
 
-			if (filtered)
+		try
+		{
+			var g = interaction.options.getString("group", true);
+			if (!g) throw "wtf how did you manage to not add a group";
+			
+			filtered = mentionJSON[g.toLowerCase()];
+			if (!filtered) throw "smh that group doesn't exist, what are you pinging";
+
+			if (filtered.indexOf(interaction.user.id + "") == -1)
 			{
-				if (filtered.indexOf(message.author.id + "") == -1)
-				{
-					message.channel.send("smh don't be a rulebreaker, you're not in that group to ping");
-				}
-				else
-				{
-					let x = filtered.reduce((cumL, curr) => cumL + ` <@${curr}>`, `From ${message.author}: `);
-					message.channel.send(x);
-				}
-			}
-			else
-			{
-				message.channel.send("smh that group doesn't exist, what are you pinging");
+				throw "smh don't be a rulebreaker, you're not in that group to ping";
 			}
 		}
+		catch(err)
+		{
+			interaction.reply(err);
+			return;
+		}
+
+		let x = filtered.reduce((cumL, curr) => cumL + `<@${curr}>`, `From ${interaction.user}: `);
+		interaction.channel.send(x);
+		interaction.reply({content: 'Done! Here comes the woogPing emotes!', ephemeral: true});
 	}
 }
 

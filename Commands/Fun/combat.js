@@ -115,7 +115,6 @@ const moves = [
 		faction: "Light",
 		images: [
 			"https://i.ytimg.com/vi/HSBvu7R85pI/maxresdefault.jpg",
-			"blob:https://imgur.com/4c21d2ed-6277-4c6e-8a5e-b5a432fc0e96",
 			"https://i.imgur.com/uxvTJVZ.png"
 		],
 		use: (you, opponent, log, pRef) => {
@@ -246,15 +245,37 @@ const moves = [
 		}
 	},
 	{
+		name: "Musou no Hitotachi", //No Genshin is not weeb :triumph:
+		faction: "Light",
+		images: [
+			"https://c.tenor.com/qzqq5KFO1vkAAAAC/raiden-shogun.gif",
+			"https://64.media.tumblr.com/1c3f512442d6c3828bcec5c516d4ce85/2aa58976797313e9-39/s540x810/6b0110a3469ea87cac4a16fa5e0b763ed5761b33.gif",
+			"https://c.tenor.com/1Ol-gaCy2N0AAAAM/baal-genshin-baal.gif",
+			"https://64.media.tumblr.com/4d636fa9f542d214b2892c4613315f18/a9e6882081b242c6-70/s540x810/5197fdea1a153bb0cd6a063d1ae43b53167fe807.gif",
+			"https://64.media.tumblr.com/ebd2fb69f82d78bdf4405020de011923/ec31d15ca0be6877-23/s500x750/eb0883b3b9694ab299ae30c369bb1811fd21eb55.gif",
+			"https://64.media.tumblr.com/da545e6b0d2658390e17987124d974fb/a9e6882081b242c6-91/s540x810/59417f1f53a1b9ba33cf10b4e70013ff7f7f1950.gif",
+			"https://media.giphy.com/media/3ZMVeP272bDLI31Av5/giphy.gif",
+			"https://media.giphy.com/media/EZrhFkvJ01DKQ6R1uq/giphy.gif"
+		],
+		use: (you, opponent, log, pRef) => {
+			var txt = pRef ? "Light mode calls upon the powers of the Raiden Shogun." : "You summon the Raiden Shogun with your freemogems.";
+			txt += " Booba sword will now deal an additional lightning slash every time you attack.";
+			log.push(txt);
+
+			opponent.baal++;
+		}
+	},
+	{
 		name: "Ripoff Pokemon",
 		faction: "Light",
 		pRef: true,
 		images: [
-			"http://qqpublic.qpic.cn/qq_public/0/0-3160735218-8E8696C02992809377699516E4FA57B3/0?fmt=jpg&size=98&h=706&w=839&ppv=1",
+			"https://qqpublic.qpic.cn/qq_public/0/0-3160735218-8E8696C02992809377699516E4FA57B3/0?fmt=jpg&size=98&h=706&w=839&ppv=1",
 			"https://img.newyx.net/news_img/201304/09/1365488156.jpg",
-			"http://n.7k7kimg.cn/2015/0510/1431224356756.gif",
-			"http://n.7k7kimg.cn/2015/0601/1433140350714.jpg",
-			"http://n.7k7kimg.cn/2015/0601/1433140350714.jpg"
+			"https://n.7k7kimg.cn/2015/0510/1431224356756.gif",
+			"https://n.7k7kimg.cn/2015/0601/1433140350714.jpg",
+			"https://n.7k7kimg.cn/2015/0601/1433140350714.jpg",
+			"https://n.7k7kimg.cn/2015/0601/1433140350714.jpg"
 		],
 		use: (you, opponent, log) => {
 
@@ -381,16 +402,40 @@ const moves = [
 module.exports = {
 	name: "combat",
 	description: "Light mode vs Dark Mode. I swear it's not rigged.\nSyntax: `srs combat <start | end | rules>`",
-	execute: (message, args, toolkit, currentChannel) => {
-		switch (args[0])
+	type: "SUB_COMMAND_GROUP",
+	options: [
+		{
+			name: "start",
+			type: "SUB_COMMAND",
+			description: "Starts a game of srs combat!"
+		},
+		{
+			name: "dark",
+			type: "SUB_COMMAND",
+			description: "You either die a hero, or you live to become the villain. Difficulty: Expert"
+		},
+		{
+			name: "end",
+			type: "SUB_COMMAND",
+			description: "End the srs combat game! Remember you can only have 1 minigame at a time."
+		},
+		{
+			name: "help",
+			type: "SUB_COMMAND",
+			description: "Stuck on how to play the minigame? Use this command for instructions."
+		}
+	],
+	execute: (interaction, toolkit, currentChannel) => {
+		const subCmd = interaction.options.getSubcommand(true);
+		switch (subCmd)
 		{
 			case "start":
 			case "dark":
-				let hasOtherGame = currentChannel.hasValidMoves(message.author.id);
-				let gameTrack = [{hp: 100, defense: 0, attack: 1, name: "Light Mode", blocked: 0}, {hp: 100, defense: 0, attack: 1, name: "Dark Mode", blocked: 0, tdf: 0, tof: 0}];
+				let hasOtherGame = currentChannel.hasValidMoves(interaction.user.id);
+				let gameTrack = [{hp: 100, defense: 0, attack: 1, name: "Light Mode", blocked: 0}, {hp: 100, defense: 0, attack: 1, name: "Dark Mode", blocked: 0, tdf: 0, tof: 0, baal: 0}];
 
 				//These 4 variables determine light mode/dark mode
-				let isLight = args[0] == "start";
+				let isLight = subCmd == "start";
 				let botMove = isLight ? darkModeAI : lightModeAI;
 				let player = isLight ? gameTrack[0] : gameTrack[1];
 				let bot = isLight ? gameTrack[1] : gameTrack[0];
@@ -398,11 +443,19 @@ module.exports = {
 
 				if (hasOtherGame)
 				{
-					message.channel.send("You have other games going on. You can't start this new game.");
+					interaction.reply("You have other games going on. You can't start this new game.");
 					return;
 				}
 
-				message.channel.send(combatEmbed(gameTrack, "N/A", Helpy.randomResp(emotePhotos), isLight))
+				//Rig battle for dark mode ig
+				if (isLight)
+				{
+					bot.hp = Math.round(Math.random() * 150) + 100;
+					bot.defense = Math.round(Math.random() * 8);
+					bot.attack = Math.round(Math.random() * 5);
+				}
+
+				interaction.reply({embeds: [combatEmbed(gameTrack, "N/A", Helpy.randomResp(emotePhotos), isLight)], fetchReply: true})
 					.then(msgObj => {
 						//Do your magic!
 						function playMove(messageContent, message)
@@ -420,6 +473,16 @@ module.exports = {
 								}
 								else
 								{
+									if (bot.baal)
+									{
+										for (var i=0; i < bot.baal; i++)
+										{
+											var det = Math.floor(Math.random() * 5 + 10);
+											bot.hp -= det;
+											log.push(`The Raiden Shogun casts down a slash of lightning, dealing ${det} damage!`);
+										}
+									}
+
 									attacks[0].use(player, bot, log, pRef);
 								}
 
@@ -435,6 +498,16 @@ module.exports = {
 								}
 								else
 								{
+									if (player.baal)
+									{
+										for (var i=0; i < player.baal; i++)
+										{
+											var det = Math.floor(Math.random() * 5 + 10);
+											player.hp -= det;
+											log.push(`The Raiden Shogun casts down a slash of lightning, dealing ${det} damage!`);
+										}
+									}
+
 									//AI just picks a random thing to use
 									botPhoto = botMove(player, bot, log, attacks[0]);
 
@@ -461,7 +534,7 @@ module.exports = {
 								}
 								var displayImg = boolDet ? botPhoto : Helpy.randomResp(attacks[0].images);
 
-								msgObj.edit(combatEmbed(gameTrack, log.join("\n➡  "), displayImg, isLight));
+								msgObj.edit({embeds: [combatEmbed(gameTrack, log.join("\n➡  "), displayImg, isLight)]});
 
 								if (gameEnd)
 								{
@@ -470,37 +543,37 @@ module.exports = {
 							}
 							else
 							{
-								msgObj.edit(combatEmbed(gameTrack, "smh that move doesn't exist", Helpy.randomResp(emotePhotos), isLight));
+								msgObj.edit({embeds: [combatEmbed(gameTrack, "smh that move doesn't exist", Helpy.randomResp(emotePhotos), isLight)]});
 							}
 
 							message.delete();
 						}
 
-						currentChannel.addMoves(message.author.id, playMove);
+						currentChannel.addMoves(interaction.user.id, playMove);
 					});
 			break;
 
 			case "end":
 				//This will end up deleting any valid games that are running, and this is intentional.
 				//There's a 102% chance I will forget which game I have running currently so this is a workaround lol
-				if (currentChannel.hasValidMoves(message.author.id))
+				if (currentChannel.hasValidMoves(interaction.user.id))
 				{
-					currentChannel.deleteMoves(message.author.id);
-					message.channel.send("done!");
+					currentChannel.deleteMoves(interaction.user.id);
+					interaction.reply("done!");
 				}
 				else
 				{
-					message.channel.send("buddy you don't have a running game going on.");
+					interaction.reply("buddy you don't have a running game going on.");
 				}
 			break;
 
 			case "help":
 				var x = gameHelp();
-				message.channel.send(x);
+				interaction.reply({embeds: [x]});
 			break;
 
 			default:
-				message.channel.send("smh do you want to start or end combat?");
+				interaction.reply("I have no idea how you got here, but that's not a valid argument");
 			break;
 		}
 	}
@@ -521,7 +594,8 @@ const combatEmbed = (gameTrack, gameLog, img, isLight) => {
 				"6. Perfect Armor - Equip a brand new set of the armor that grants you the most defense in all of Hypixel Skyblock!\n" +
 				"7. Ground Zero - If you can't beat 'em, nuke 'em.\n" +
 				"8. Holy Water - Splash yerself before you elf yourself.\n" +
-				"9. Seal Team 6 - Take your emergency dial and tell Justin to do something";
+				"9. Musou no Hitotachi - There will always be those that dare to brave the *light*ning's glow.\n" +
+				"10. Seal Team 6 - Take your emergency dial and tell Justin to do something.";
 	}
 	else
 	{
@@ -537,7 +611,7 @@ const combatEmbed = (gameTrack, gameLog, img, isLight) => {
 	let embed = new Discord.MessageEmbed();
 	embed.setColor("GOLD");
 	embed.setTitle("Light Mode vs Dark Mode Combat");
-	embed.setDescription("Help light mode defeat dark mode! Type the move name to attack!\nIf you're unfamiliar with the rules, use `srs combat end` and then `srs combat rules`");
+	embed.setDescription("Help light mode defeat dark mode! Type the move name to attack!\nIf you're unfamiliar with the rules, end combat and use /combat help !");
 	embed.addFields(
 		{
 			name: "Light Mode HP",
@@ -657,7 +731,8 @@ function lightModeAI(playerObj, botObj, log)
 			"Attack",
 			"Sword of Revealing Light",
 			"Sun",
-			"Ripoff Pokemon"
+			"Ripoff Pokemon",
+			"Musou no Hitotachi"
 		];
 
 		atk = Helpy.randomResp(possible);

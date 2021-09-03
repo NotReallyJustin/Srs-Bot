@@ -3,12 +3,10 @@ const Discord = require("discord.js");
 const Helpy = require("../Helpy.js");
 
 module.exports = {
-	name: "foodporn",
-	description: "Imma be frank with you - this is porn. Well, foodporn. Don't HOS me pls",
+	name: "headpat",
+	description: "smh I am not giving you weeb headpats smh",
 	execute: (interaction) => {
-
-		https.get("https://www.reddit.com/r/FoodPorn/new.json?limit=50", response => {
-
+		https.get("https://www.reddit.com/r/headpats/new.json?limit=50", response => {
 			var packets = "";
 
 			response.on("data", data => {
@@ -30,18 +28,18 @@ module.exports = {
 					redditImg = post.data.thumbnail;
 				}
 
-				var x = foodpornEmbed(post.data.title, post.data.author, redditImg);
+				var x = headpatEmbed(post.data.title, post.data.author, redditImg);
 				interaction.reply({embeds: [x]});
 			});
 		});
 	}
 }
 
-const foodpornEmbed = (text, author, image) => {
+const headpatEmbed = (text, author, image) => {
 	let embed = new Discord.MessageEmbed();
 	embed.setTitle(text);
 	embed.setDescription("u/" + author);
-	embed.setColor("BROWN");
+	embed.setColor("GREEN");
 
 	embed.setImage(image);
 

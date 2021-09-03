@@ -1,6 +1,7 @@
 const Helpy = require("../Helpy.js");
 const bdayId = "";
 const justinId = "348208769941110784";
+const channelId = "701858995299942482";
 
 //A nickname list for Justin lmao
 const justinNicknames = [
@@ -14,70 +15,73 @@ const justinNicknames = [
 
 module.exports = {
 	name : "dm",
-	description : "Use srs bot to send an anonymous message to someone!\n`srs dm <userID> <message to send>`\nIf it's your bday it becomes anon",
-	execute: async (message, args, toolbox) => {
+	description : "Send a secret dm to someone - OK IT USED TO BE A SECRET DM PLS DON'T HOS ME",
+	options: [
+        {
+            name: "snowflake",
+            description: "Le person you're sending",
+            required: true,
+            type: "USER"
+        },
+        {
+            name: "message",
+            description: "Super secret message - we promise this is totally hashed and encrypted by RapidSSL",
+            required: true,
+            type: "STRING"
+        }
+    ],
+	execute: async (interaction, toolbox) => {
 		const bot = toolbox.bot;
-		let status = dmStatus(args);
 
-		switch (status)
+		//Discord *should* be parsing the arguments normally but Justin Case we'll do something
+		let username;
+		let message;
+		let user;
+
+		try
 		{
-			case 200:
-				let sendTxt = Helpy.returnUnbound(message.content, args[0]);
+			user = interaction.options.getUser("snowflake", true);
+			if (!user) throw "smh the user doesn't even exist";
 
-				//Add different easter egg endings depending on who is sending the message :P
-				switch (message.author.id)
-				{
-					//Bday anon message send which will send the log to Justin's workshop for accountability purposes :hype:
-					//Also if this happens, we don't add the author's name to sendTxt
-					case bdayId:
-						bot.channels.fetch(bdayId)
-							.then(channel => {
-								channel.send(`Birthday user has sent "${newArgs}" to ${bot.users.get(args[0]).username}!`);
-							});
-					break;
+			username = user.id;
 
-					case justinId:
-						var x = Helpy.randomResp(justinNicknames);
-						sendTxt += `  (frum ${x})`;
-					break;
+			message = interaction.options.getString("message", true);
+			if (!message) throw "smh what am I supposed to say?";
+		}
+		catch(err)
+		{
+			interaction.reply(err);
+			return;
+		}
 
-					default:
-						sendTxt += ` (frum ${message.author.username})`;
-					break;
-				}
-
-				message.guild.members.fetch(args[0]).then((user) => { //Sends the message!
-					user.send(sendTxt);
-					message.channel.send("If all goes well, message is sent!");
-				}); 
+		switch(interaction.user.id)
+		{
+			case bdayId:
+				bot.channels.fetch(bdayId)
+					.then(channel => {
+						channel.send(`Birthday user <@${bdayId}> has sent "${message}" to <@${username}> !`)
+					});
 			break;
 
-			case 404:
-				message.channel.send("smh what am I supposed to say");
-			break;
-
-			case 800:
-				message.channel.send("Give me a user ID smh");
+			case justinId:
+				var x = Helpy.randomResp(justinNicknames);
+				message += `	(frum ${x})`;
 			break;
 
 			default:
-				message.channel.send("Woah what happened here?");
+				message += `	(frum ${interaction.user.username})`;
 			break;
 		}
-	}
-}
 
-//All status functions are set so we can expand the number of errors in the future
-const dmStatus = (args) => {
-	if (isNaN(args[0]))
-	{
-		return 800; //Not an ID. Also happens to catch null indexes for args 0
+		var promise = user.send(message);
+		promise.then(() => {
+			interaction.reply('Message sent successfully!');
+			setTimeout(() => {
+				interaction.deleteReply();
+			}, 3000);
+		});
+		promise.catch(() => {
+			interaction.reply('whoops smth went wrong - maybe ping Justin');
+		});
 	}
-
-	if (!args[1])
-	{
-		return 404; //Missing args in args[1], aka missing statement to send
-	}
-
-	return 200;
 }

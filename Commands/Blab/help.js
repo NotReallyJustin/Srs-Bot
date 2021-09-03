@@ -7,9 +7,10 @@ const helpResp = [
 
 module.exports = {
     name: "help",
-    description: "Get some help with command tinkering!\n`srs help <insert command name>`",
-    execute : (message, args, toolkit) => {
-        let cmds = toolkit.bot.commands;
+    description: "404 ERROR: Command has been outsourced by discord.js",
+    execute : (interaction, toolkit) => {
+        interaction.reply("dis feature is broken.... yeah");
+        /*let cmds = toolkit.bot.commands;
 
         if (cmds.has(args[0]))
         {
@@ -20,6 +21,6 @@ module.exports = {
         {
         	let x = Helpy.randomResp(helpResp);
         	message.channel.send(x);
-        }
+        }*/
     }
 }

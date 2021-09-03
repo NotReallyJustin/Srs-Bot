@@ -3,144 +3,172 @@ const Helpy = require("../Helpy.js");
 const Discord = require("discord.js");
 
 //Keyword array basically is just a collection of shortcuts because I'm lazy
-const keywordArray = [
-	{"keyword" : "english", "kw1" : "auto", "kw2" : "en"},
-	{"keyword" : "spanglish", "kw1" : "en", "kw2" : "es"}
-];
+const keywordArray = {
+	english: ["auto", "es"],
+	spanglish: ["en", "es"],
+	help: ["help", "help"]
+};
 
 const languageArray = [ //Makes sure the translation language is currently supported
-	"en", "es", "de", "fr", "pt", "it", "nl", "pl", "ru", "ja", "zh", "el", "ko", "la", "sv", "auto"
+	"en", "es", "de", "fr", "pt", "it", "nl", "pl", "ru", "ja", "zh-CN", "el", "ko", "la", "sv", "auto", "help"
+];
+
+const langArray = [
+	{"lang" : "Spanish", "shortcut" : "es"},
+	{"lang" : "German", "shortcut" : "de"},
+	{"lang" : "French", "shortcut" : "fr"},
+	{"lang" : "Portugese", "shortcut" : "pt"},
+	{"lang" : "Italian", "shortcut" : "it"},
+	{"lang" : "Dutch", "shortcut" : "nl"},
+	{"lang" : "Polish", "shortcut" : "pl"},
+	{"lang" : "Russian", "shortcut" : "ru"},
+	{"lang" : "Japanese", "shortcut" : "ja"},
+	{"lang" : "Chinese", "shortcut" : "zh"},
+	{"lang" : "Swedish", "shortcut" : "sv"},
+	{"lang" : "Latin", "shortcut" : "la"},
+	{"lang" : "Greek", "shortcut" : "el"},
+	{"lang" : "Korean", "shortcut" : "ko"},
+	{"lang" : "English", "shortcut" : "en"}
 ];
 
 module.exports = {
 	name: "translate",
-	description: "Translates a piece of text\n`srs translate <from> <to> <message to translate>",
-	execute: (message, args) => {
-		let transStatus = translateStatus(args);
-
-		switch (transStatus)
+	description: "Cheat vos modo durch Español 三. Necesitas avere preset || (from && to) pls thx",
+	options: [
+	    {
+            name: "translatetext",
+            description: "The parola che vuoi traddure 🗿 Grazie my 3 years of italian in middle school paid off",
+            required: true,
+            type: "STRING"
+        },
 		{
-			case 200:
+            name: "preset",
+            description: "✨ elige un preset especial que hay from y to pre-selected para ti ✨",
+            required: false,
+            type: "STRING",
+            choices: [
+            	{name: "Help", value: "help"},
+            	{name: "English", value: "english"},
+            	{name: "Spanglish", value: "spanglish"}
+            ]
+        },
+        {
+            name: "from",
+            description: "ℹ️ ❌️ 🗣️ 😀",
+            required: false,
+            type: "STRING",
+            choices: [
+            	{name: 'en', value: 'en'},
+            	{name: 'es', value: 'es'},
+            	{name: 'de', value: 'de'},
+            	{name: 'fr', value: 'fr'},
+            	{name: 'pt', value: 'pt'},
+            	{name: 'it', value: 'it'},
+            	{name: 'nl', value: 'nl'},
+            	{name: 'pl', value: 'pl'},
+            	{name: 'ru', value: 'ru'},
+            	{name: 'ja', value: 'ja'},
+            	{name: 'zh', value: 'zh-CN'},
+            	{name: 'el', value: 'el'},
+            	{name: 'ko', value: 'ko'},
+            	{name: 'la', value: 'la'},
+            	{name: 'sv', value: 'sv'},
+            	{name: 'auto', value: 'auto'}
+            ]
+        },
+        {
+            name: "to",
+            description: "你想翻译成哪个语言 蛋布丁 汤饺子🥟 饭蛋糕 王朋是垃圾",
+            required: false,
+            type: "STRING",
+            choices: [
+            	{name: 'en', value: 'en'},
+            	{name: 'es', value: 'es'},
+            	{name: 'de', value: 'de'},
+            	{name: 'fr', value: 'fr'},
+            	{name: 'pt', value: 'pt'},
+            	{name: 'it', value: 'it'},
+            	{name: 'nl', value: 'nl'},
+            	{name: 'pl', value: 'pl'},
+            	{name: 'ru', value: 'ru'},
+            	{name: 'ja', value: 'ja'},
+            	{name: 'zh', value: 'zh-CN'},
+            	{name: 'el', value: 'el'},
+            	{name: 'ko', value: 'ko'},
+            	{name: 'la', value: 'la'},
+            	{name: 'sv', value: 'sv'},
+            	{name: 'auto', value: 'auto'}
+            ]
+        }
+	],
+	execute: (interaction) => {
+		//Trans-statis! PLAGUEINC EVOLVED!!!
+		let k1;
+		let k2;
+		let translateText;
 
-				var txt = Helpy.returnUnbound(message.content, args[1]);
-				var x = translate(args[0].replace("zh", "zh-CN"), args[1].replace("zh", "zh-CN"), txt);
+		try
+		{
+			if ((!interaction.options.getString("from") || !interaction.options.getString("to")) && !interaction.options.getString("preset"))
+			{
+				throw "smh either give me a preset or give me the from and to."
+			}
 
-				x.then(response => {
-					message.channel.send(translateEmbed(response));
-				});
+			//These come after because we need to make sure one of these 2 are valid before we seperate + verify it at the same time
+			if (interaction.options.getString("preset"))
+			{
+				var pset = interaction.options.getString("preset"); //MIT pun not intended LOL - can someone do my AP Calc HW pls
+				k1 = keywordArray[pset][0];
+				k2 = keywordArray[pset][1];
+			}
+			else
+			{
+				k1 = interaction.options.getString("from");
+				k2 = interaction.options.getString("to");
+			}
 
-				x.catch(err => {
-					console.log(err);
-					message.channel.send("hmm something went wrong... maybe ping a dwerpy seal about it .-.");
-				});
+			if (languageArray.indexOf(k1) == -1)
+			{
+				throw "smh your from argument is more undefined than my spanish vocab";
+			}
 
-			break;
+			if (languageArray.indexOf(k2) == -1)
+			{
+				throw "Tu vai a l'hopital? Because your 'to' is undefined."
+			}
 
-			case 300:
-				const langArray = [
-					{"lang" : "Spanish", "shortcut" : "es"},
-					{"lang" : "German", "shortcut" : "de"},
-					{"lang" : "French", "shortcut" : "fr"},
-					{"lang" : "Portugese", "shortcut" : "pt"},
-					{"lang" : "Italian", "shortcut" : "it"},
-					{"lang" : "Dutch", "shortcut" : "nl"},
-					{"lang" : "Polish", "shortcut" : "pl"},
-					{"lang" : "Russian", "shortcut" : "ru"},
-					{"lang" : "Japanese", "shortcut" : "ja"},
-					{"lang" : "Chinese", "shortcut" : "zh"},
-					{"lang" : "Swedish", "shortcut" : "sv"},
-					{"lang" : "Latin", "shortcut" : "la"},
-					{"lang" : "Greek", "shortcut" : "el"},
-					{"lang" : "Korean", "shortcut" : "ko"},
-					{"lang" : "English", "shortcut" : "en"}
-				];
+			translateText = interaction.options.getString("translatetext", true);
+			if (!translateText)
+			{
+				throw "smh give me a text to translate";
+			}
+		}
+		catch(err)
+		{
+			console.error(err)
+			interaction.reply(interaction);
+			interaction.followUp("If you need help, fill in 'help' as the preset");
+			return;
+		}
 
-				message.channel.send(translateHelpEmbed(langArray));
-			break;
+		if (k1 == "help")
+		{
+			interaction.reply({embeds: [translateHelpEmbed(langArray)]});
+		}
+		else
+		{
+			//Transtasis! Now we can grab zoonotic shift without giving 40 DNA to Genetic Drift!
+			var transStatus = translate(k1, k2, translateText);
 
-			case 400.1:
-				message.channel.send("smh specify the language for the 1st input language");
-				message.channel.send("use `srs help` for a full guide, or check `srs translate help` for syntax");
-			break;
-
-			case 400.2:
-				message.channel.send("smh specify the language for the 2nd input language");
-				message.channel.send("use `srs help` for a full guide, or check `srs help translate` for syntax");
-			break;
-
-			case 400.3:
-				message.channel.send("smh what am I translating?");
-			break;
-
-			case 404.1:
-				message.channel.send("Looks like your 1st input language does not exist or isn't supported yet, or you just oofed up");
-			break;
-
-			case 404.2:
-				message.channel.send("Looks like your 2nd input language does not exist or isn't supported yet, or you just oofed up");
-			break;
-
-			//Hey, sometimes your eyes lie to you and js does not behave like js
-			//This default is controlled. The only way you get here is if keywordArray gets returned as a staus
-			default:
-
-				var txt = Helpy.returnUnbound(message.content, args[0]);
-				var x = translate(transStatus[0].kw1, transStatus[0].kw2, txt);
-
-				x.then(response => {
-					message.channel.send(translateEmbed(response));
-				});
-
-				x.catch(err => {
-					console.log(err);
-					message.channel.send("hmm something went wrong... maybe ping a dwerpy seal about it .-.");
-				});
-			break;
+			transStatus.then(response => {
+				interaction.reply({embeds: [translateEmbed(response)]});
+			});
+			transStatus.catch(err => {
+				console.log(err);
+				interaction.reply("hmm something went wrong... maybe ping a dwerpy seal about it .-.");
+			});
 		}
 	}
-}
-
-const translateStatus = (args) => {
-
-	if (args.length == 0)
-	{
-		return 400.1; //Lang 1 and/or keyword not filled in
-	}
-
-	if (args[0] == "help")
-	{
-		return 300; //Help
-	}
-
-	//Checks to see if there is a keyword
-	const kwMatch = keywordArray.filter(item => item.keyword == args[0]);
-	if (kwMatch.length != 0)
-	{
-		//If there is a keyword, the rest of the checks are meaningless. This is the only time the switch statement later will default as intended
-		return args.length == 1 ? 400.3 : kwMatch; 
-	}
-
-	if (args.length == 1)
-	{
-		return 400.2; //Lang 2 not filled in
-	}
-
-	if (args.length == 2)
-	{
-		return 400.3; //Nothing to translate
-	}
-
-	if (!languageArray.includes(args[0]))
-	{
-		return 404.1; //Language for first not found
-	}
-
-	if (!languageArray.includes(args[1]))
-	{
-		return 404.2; //Language for second not found. Both 404 errors should not happen if we use shortcut
-	}
-
-	return 200;
 }
 
 const translateHelpEmbed = (jsonArray) => {

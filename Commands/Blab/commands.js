@@ -1,7 +1,7 @@
 module.exports = {
     name: "commands",
-    description: "hmm if you think about it... how would people know to use srs commands if they don't know srs comm- nvm",
-    execute : (message) => {
-        message.channel.send("https://github.com/ComradeDiamond/Srs-Bot/wiki");
+    description: "smh why are you pulling up the wiki when we have slash- you know what nvm 😤",
+    execute : (interaction) => {
+    	interaction.reply("https://github.com/ComradeDiamond/Srs-Bot/wiki");
     }
 }
