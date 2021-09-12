@@ -1,6 +1,6 @@
 # Srs-Bot
 Srs bot is a fun bot that does wacky stuff on your discord server and will defend light mode from whatever the discord developer team is trying to do to promote dark mode hegemony. <br />
-<img src="https://i.imgur.com/rqq7uQL.png" />
+<img src="https://i.imgur.com/rqq7uQL.png"/>
 <br />
 To install Srs bot on your server, click this: https://discordapp.com/oauth2/authorize?client_id=670060147846152205&permissions=3468374&scope=bot%20applications.commands. <br><br>
 To view current development, click here: https://github.com/ComradeDiamond/Srs-Bot/projects <br>
