@@ -31,6 +31,8 @@ module.exports = {
 
 				channel = await bot.channels.fetch(id);
 				if (!channel.isText() || !channel.guild) throw "smh this isn't a text channel";
+				if (!channel.viewable) throw "smh I can't view this channel";
+				if (!channel.permissionsFor(bot.user.id).has(Discord.Permissions.FLAGS.SEND_MESSAGES)) throw "smh I don't have write perms";
 
 				guildUser = await channel.guild.members.fetch(interaction.user.id);
 				if (!guildUser) throw "smh you're not even in that guild";
@@ -52,7 +54,15 @@ module.exports = {
 			}
 
 			const writeToStream = (messageContent, message) => {
-				channel.send(messageContent);
+				try
+				{
+					channel.send(messageContent);
+					message.react("❄️"); //lol pun on snowflake data type
+				}
+				catch(err)
+				{
+					message.channel.send("smh I don't have write perms or that channel doesn't exist anymore");
+				}
 			}
 			currentChannel.addMoves(interaction.user.id, writeToStream);
 
@@ -64,7 +74,6 @@ module.exports = {
 			{
 				currentChannel.deleteMoves(interaction.user.id);
 				interaction.reply("Write stream closed!");
-				message.react("❄️"); //lol pun on snowflake data type
 			}
 			else
 			{
