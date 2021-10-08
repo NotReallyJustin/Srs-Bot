@@ -10,5 +10,6 @@ To view documentation and changelog, run `srs commands`. You can probs do this f
 srs-bot-running runs actual version of srs bot (in a seperate private repo)<br>
 srs-bot-testing runs guinea pig version of srs bot testing
 <br /> <br />
-UWU Bot is very disgwaceful >:(
-<img src="https://i.imgur.com/8wRv5th.png" />
+UWU Bot is very disgwaceful >:( <br />
+How does this have 2 stars illegal illegal illegal <br />
+<img src="https://i.imgur.com/8wRv5th.png" style="width: 60%"/>
