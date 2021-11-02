@@ -9,11 +9,24 @@ const leScan = require('readline').createInterface({
 let output = "";
 let lastTxt = "";
 
+var lastLine = "";
 leScan.on('line', txt => {
 	//formalize(txt);
-	ridThird(txt);
+	//ridThird(txt);
 	//ridSecond(txt);
 	//correctAdjective(txt);
+
+	if (lastLine.split("\t")[1] == "IS")
+	{
+		var splito = txt.split("\t");
+		if (splito[0].indexOf("ing") == -1 && splito[1] == "VERB")
+		{
+			output += `$${splito[0]}\tVERBPP\n`; 
+			return;
+		}
+	}
+
+	output += `${txt}\n`;
 });
 
 leScan.on('close', () => {

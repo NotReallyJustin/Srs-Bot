@@ -60,37 +60,43 @@ class AutoMap extends Map
 const wordMap = new AutoMap(Word);
 const posMap = new AutoMap(POS);
 
-let previousPOS = 'SPACE';
+let basesLoaded = false;
+const loadData = () => new Promise((resolve, reject) => {
+	if (basesLoaded) resolve();
 
-leScan.on('line', txt => {
-	if (txt == '')
-	{
-		previousPOS = 'SPACE';
-	}
-	else
-	{
-		let arr = txt.split('\t');
-		wordMap.get(arr[0].toLowerCase()).addProb(arr[1]);
-		posMap.get(previousPOS).addProb(arr[1]);
-		previousPOS = arr[1];
-	}
-});
+	let previousPOS = 'SPACE';
+	leScan.on('line', txt => {
+		if (txt == '')
+		{
+			previousPOS = 'SPACE';
+		}
+		else
+		{
+			let arr = txt.split('\t');
+			wordMap.get(arr[0].toLowerCase()).addProb(arr[1]);
+			posMap.get(previousPOS).addProb(arr[1]);
+			previousPOS = arr[1];
+		}
+	});
 
-leScan.on('close', () => {
-	/*let e = fs.readFileSync('./PosInput.txt', {encoding: 'utf8'});
-	let data = "";
+	leScan.on('close', () => {
+		/*let e = fs.readFileSync('./PosInput.txt', {encoding: 'utf8'});
+		let data = "";
 
-	for (var item of e.split(". "))
-	{
-		var toRet = calculate(item);
-		let str = toRet.reduce((cumL, curr) => cumL + `${curr[0]}\t${curr[1]}\n`, "") + '\n';
-		data += str;
-	}
+		for (var item of e.split(". "))
+		{
+			var toRet = calculate(item);
+			let str = toRet.reduce((cumL, curr) => cumL + `${curr[0]}\t${curr[1]}\n`, "") + '\n';
+			data += str;
+		}
 
-	fs.writeFileSync('./PosTrained.txt', data);*/
+		fs.writeFileSync('./PosTrained.txt', data);*/
 
-	let calc = calculate("Flashbangs have been more effective in blinding people than dark mode.");
-	console.dir(chunk(calc));
+		//let calc = calculate("Light mode is better than dark mode because it is not complete trash");
+		//console.dir(chunk(calc));
+		basesLoaded = true;
+		resolve();
+	});
 });
 
 //Use these as a temporary substitute against new words
@@ -106,7 +112,11 @@ const standardKeys = {
 	NUMBER: null,
 	ADPOSITION: null,
 	SCONJ: null,
-	CONJUNCTION: null
+	CONJUNCTION: null,
+	IS: null,
+	COMPARISON: null,
+	PUNCTUATION: null,
+	PUNCTUATIONEND: null
 };
 
 const calculate = (wordSentence) => {
@@ -239,14 +249,16 @@ This triggers both <ADJ> <PNOUN> <NOUN> <SCONJ> <VERB> <NOUN> and <ADJ> <PNOUN> 
 
 For the regEx arrays -->
 0) Annoying, angry cat that has been scratching, ripping, and tearing my new couch
+0) The cute, adorable, and chonky seal, cat, and sad frog that jumped, slowly climbed, and quietly, stealthily, and carefully walked on the soft, concrete, and wet grass, dirt path, and bridge
 0) Heathenous dark mode user that shames and attacks light mode users
+0) Spicy, hot sauce I ate today --> There *should* be a not but we all know Discord users don't talk like this
 0) Turtle Bot that likes to meme on moderators, be annoying, and waste precious bot slots
 1) Random yellow cat
-1) Cat
+1) Random cat, chonky seal, and cute sandwich
 */
 const chunkNoun = chunkItem.bind(null, [
-	/(ADJECTIVE |ADJECTIVE PUNCTUATION )*(NOUN |PNOUN |PRONOUN )+SCONJ ((AUX |PRONOUN )*((PART )?VERB PUNCTUATION |(PART )?VERB CONJUNCTION |(PART )?VERB |CONJUNCTION (PART )?VERB )+(DETERMINER |PRONOUN |ADPOSITION )*(ADJECTIVE |ADJECTIVE PUNCTUATION )*(PRONOUN |NOUN |PNOUN )*(PUNCTUATION |CONJUNCTION )*)+/gmi,
-	/(ADJECTIVE |ADJECTIVE PUNCTUATION )*(NOUN |PNOUN |PRONOUN )+/gmi
+	/((PUNCTUATION CONJUNCTION |DETERMINER |PUNCTUATION |CONJUNCTION )*(ADJECTIVE |ADJECTIVE PUNCTUATION |CONJUNCTION ADJECTIVE )*(\bNOUN |PNOUN |PRONOUN ))+((SCONJ AUX |SCONJ IS |SCONJ AUX IS |(SCONJ )?PRONOUN |(SCONJ )?\bNOUN |SCONJ )+((PART )?(ADVERB |ADVERB PUNCTUATION |ADVERB CONJUNCTION |ADVERB PUNCTUATION CONJUNCTION )*(\bVERB PUNCTUATION CONJUNCTION |\bVERB PUNCTUATION |\bVERB CONJUNCTION |\bVERB )((PUNCTUATION |CONJUNCTION )*(DETERMINER |PRONOUN |ADPOSITION )*(ADJECTIVE |ADJECTIVE PUNCTUATION |CONJUNCTION ADJECTIVE )*(\bNOUN |PNOUN |PRONOUN ))*)+)+/gmi,
+	/((PUNCTUATION |CONJUNCTION |PUNCTUATION CONJUNCTION )*(ADJECTIVE |ADJECTIVE PUNCTUATION |CONJUNCTION ADJECTIVE )*(NOUN |PNOUN |PRONOUN ))+/gmi
 ], "NOUN");
 
 /*
@@ -263,20 +275,40 @@ regEx target examples -->
 0) Is less complicated than
 0) Is way less dangerous compared to
 0) Is drastically more important because
-0) Is worse due to 
+0) Was way worse compared with
+1) Is nicer towards
 1) Is better for blinding
 1) Is better used for eating
-2) Looks really cute, extremely happy, and really energetic
-2) Has been extremely friendly
 */
 const chunkComp = chunkItem.bind(null, [
-	/(AUX |AUX VERB )+(ADVERB )*COMPARISON (.*)SCONJ/gmi,
-	/(AUX |AUX VERB )+(ADVERB )*COMPARISON (ADPOSITION VERB |VERB ADPOSITION VERB )*/gmi,
+	/(PART )*COMPARISON ((.?)SCONJ |(.?)VERB-COMP )/gmi,
+	/(PART )*COMPARISON (ADPOSITION VERB |VERB ADPOSITION VERB )*/gmi,
 ], "COMPARISON");
 
+/*
+0) Looks really cute, extremely happy, and really energetic
+0) Has been extremely friendly
+0) Is extremely chonky
+0) Is not chonky
+*/
 const chunkAdj = chunkItem.bind(null, [
-	/(AUX )+((ADVERB |VERB )*ADJECTIVE |(ADVERB |VERB )*ADJECTIVE PUNCTUATION |(ADVERB |VERB )*ADJECTIVE CONJUNCTION |(ADVERB |VERB )*CONJUNCTION ADJECTIVE )+/gmi
+	/(AUX |IS |NOT )+((ADVERB |VERB |PART )*ADJECTIVE |(ADVERB |VERB )*ADJECTIVE PUNCTUATION |(ADVERB |VERB )*ADJECTIVE CONJUNCTION |(ADVERB |VERB )*CONJUNCTION ADJECTIVE )+/gmi
 ], "ADJECTIVE");
+
+/*
+0) Wants desperately to be seen
+0) Savagely, brutally, and angrily punched
+1) Has attacked
+1) Has viciously, aggressively, and painfully attacked
+1) Will be granted
+1) Would have been freed
+1) To be seen
+1) To see
+*/
+const chunkVerb = chunkItem.bind(null, [
+	/(AUX IS |AUX |PART IS |PART )*(ADVERB |PUNCTUATION CONJUNCTION ADVERB |PUNCTUATION ADVERB )*(IS |PART IS )?(\bVERB\b |PUNCTUATION CONJUNCTION \bVERB\b |PUNCTUATION \bVERB\b )+/gmi,
+	/(AUX |AUX IS |PART IS |PART )*(ADVERB |PUNCTUATION ADVERB |(PUNCTUATION )?CONJUNCTION ADVERB )*\bVERB\b/gmi
+], "VERB");
 
 //Chunk, then returns in form of a tree
 //Since the chunkItem method works from left to right, the noun and comp chunk is already sorted by index. This makes things easier.
@@ -284,16 +316,20 @@ const chunkAdj = chunkItem.bind(null, [
 const chunk = (posSorted) => {
 	let nounChunk = chunkNoun(posSorted);
 	let compChunk = chunkComp(posSorted);
+	let adjChunk = chunkAdj(posSorted);
+	let verbChunk = chunkVerb(posSorted);
 
 	//console.log(nounChunk)
 	let sorted = [];
 	var nounIdx = 0;
 	var compIdx = 0;
+	var adjIdx = 0;
+	var verbIdx = 0;
 	var imHungry = -1; //Tracks which idx we stopped at. If < imHungry don't add any text
 
 	for (var i = 0; i < posSorted.length; i++)
 	{
-		if (compChunk[compIdx][0][2] == i)
+		if (compChunk.length > 0 && compChunk[compIdx][0][2] == i)
 		{
 			if (imHungry < i)
 			{
@@ -303,7 +339,7 @@ const chunk = (posSorted) => {
 			if (compIdx + 1 < compChunk.length) compIdx++;
 		}
 		
-		if (nounChunk[nounIdx][0][2] == i)
+		if (nounChunk.length > 0 && nounChunk[nounIdx][0][2] == i)
 		{
 			if (imHungry < i)
 			{
@@ -311,6 +347,26 @@ const chunk = (posSorted) => {
 				imHungry = nounChunk[nounIdx][nounChunk[nounIdx].length -1][2];
 			}
 			if (nounIdx + 1 < nounChunk.length) nounIdx++;
+		}
+
+		if (adjChunk.length > 0 && adjChunk[adjIdx][0][2] == i)
+		{
+			if (imHungry < i)
+			{
+				sorted.push(adjChunk[adjIdx]);
+				imHungry = adjChunk[adjIdx][adjChunk[adjIdx].length - 1][2];
+			}
+			if (adjIdx + 1 < adjChunk.length) adjIdx++;
+		}
+
+		if (verbChunk.length > 0 && verbChunk[verbIdx][0][2] == i)
+		{
+			if (imHungry < i)
+			{
+				sorted.push(verbChunk[verbIdx]);
+				imHungry = verbChunk[verbIdx][verbChunk[verbIdx].length - 1][2];
+			}
+			if (verbIdx + 1 < verbChunk.length) verbIdx++;
 		}
 
 		if (imHungry < i)
@@ -322,3 +378,21 @@ const chunk = (posSorted) => {
 
 	return sorted;
 }
+
+module.exports.calculate = (x) => new Promise((resolve, reject) => {
+	loadData().then(() => {
+		resolve(calculate(x));
+	}).catch(err => {
+		console.error(err);
+		reject(err);
+	});
+});
+
+module.exports.chunk = (x) => new Promise((resolve, reject) => {
+	loadData().then(() => {
+		resolve(chunk(x));
+	}).catch(err => {
+		console.error(err);
+		reject(err);
+	});
+});
