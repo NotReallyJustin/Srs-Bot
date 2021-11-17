@@ -5,8 +5,8 @@ const Helpy = require("../Helpy.js");
 module.exports = {
 	name: "foodporn",
 	description: "Imma be frank with you - this is porn. Well, foodporn. Don't HOS me pls",
-	execute: (interaction) => {
-
+	execute: async (interaction) => {
+		await interaction.deferReply();
 		https.get("https://www.reddit.com/r/FoodPorn/new.json?limit=50", response => {
 
 			var packets = "";
@@ -31,8 +31,13 @@ module.exports = {
 				}
 
 				var x = foodpornEmbed(post.data.title, post.data.author, redditImg);
-				interaction.reply({embeds: [x]});
+				interaction.editReply({embeds: [x]});
 			});
+
+			response.on("error", (err) => {
+				console.error(err);
+				interaction.editReply("there was an error :think:");
+			})
 		});
 	}
 }

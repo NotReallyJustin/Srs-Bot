@@ -157,16 +157,19 @@ module.exports = {
 		}
 		else
 		{
-			//Transtasis! Now we can grab zoonotic shift without giving 40 DNA to Genetic Drift!
-			var transStatus = translate(k1, k2, translateText);
+			interaction.deferReply()
+				.then(() => {
+					//Transtasis! Now we can grab zoonotic shift without giving 40 DNA to Genetic Drift!
+					var transStatus = translate(k1, k2, translateText);
 
-			transStatus.then(response => {
-				interaction.reply({embeds: [translateEmbed(response)]});
-			});
-			transStatus.catch(err => {
-				console.log(err);
-				interaction.reply("hmm something went wrong... maybe ping a dwerpy seal about it .-.");
-			});
+					transStatus.then(response => {
+						interaction.editReply({embeds: [translateEmbed(response)]});
+					});
+					transStatus.catch(err => {
+						console.log(err);
+						interaction.editReply("hmm something went wrong... maybe ping a dwerpy seal about it .-.");
+					});
+				});
 		}
 	}
 }

@@ -1,6 +1,6 @@
 const POS = require('./POS.js');
 const Coreference = require('./Coreference.js');
-const Sentiment = require('./SentimentAnalysis.js');
+const sentiment = require('./SentimentAnalysis.js');
 const Helpy = require('../../Helpy.js');
 
 class Relation
@@ -18,19 +18,19 @@ class Relation
 		//arr[0] would be string/number if it's only 1 arr, but object if it's a noun/comp/adj chunk
 		if (this.hasAlternatePOS)
 		{
-			this.string = alternatePOS;
+			this.string = alternatePOS.toLowerCase();
 			this.type = alternatePOS;
 			this.pos = alternatePOS;
 		}
 		else if (this.isChunk) //and is not alternatePOS
 		{
-			this.string = arr.map(x => x[0]).join(" ");
+			this.string = arr.map(x => x[0]).join(" ").toLowerCase();
 			this.type = arr[0][3];
 			this.pos = arr.map(x => x[1]).join(" ") + " ";
 		}
 		else
 		{
-			this.string = arr[0]
+			this.string = arr[0].toLowerCase();
 			this.pos = arr[1];
 			this.type = arr[1] + " ";
 		}
@@ -67,9 +67,9 @@ class Relation
 }
 
 const lookAhead = (relationArr, posType, wantChunk, idx) => {
-	for (var i = idx; i < relationArr.length; i++)
+	for (var i = idx + 1; i < relationArr.length; i++)
 	{
-		if (relationArr[i].type == posType && relationArr[i].isChunk == wantChunk) 
+		if (new RegExp(posType, 'gmi').test(relationArr[i].type) && relationArr[i].isChunk == wantChunk)
 		{
 			return relationArr[i];
 		}
@@ -78,9 +78,9 @@ const lookAhead = (relationArr, posType, wantChunk, idx) => {
 }
 
 const lookBehind = (relationArr, posType, wantChunk, idx) => {
-	for (var i = idx; i >= 0; i--)
+	for (var i = idx - 1; i >= 0; i--)
 	{
-		if (relationArr[i].type == posType && relationArr[i].isChunk == wantChunk)
+		if (new RegExp(posType, 'gmi').test(relationArr[i].type) && relationArr[i].isChunk == wantChunk)
 		{
 			return relationArr[i];
 		}
@@ -138,7 +138,7 @@ const extractRelation = (posArr) => {
 						break;
 					}
 
-					if (relationArr[c].type == "IS" || /get|gets|got|gotten/.test(relationArr[c].type)) hasIs = true;
+					if (relationArr[c].type.trim() == "IS" || /has|had|have|be|become|became/.test(relationArr[c].type)) hasIs = true;
 
 					if (hasIs && (relationArr[c].type == "NOUN" || relationArr[c].type == "PRONOUN"))
 					{
@@ -146,13 +146,91 @@ const extractRelation = (posArr) => {
 						break;
 					}
 				}
+
+				if (!hasIs)
+				{
+					if (rel.isChunk)
+					{
+						var isChain = false;
+						for (var i = 0; i < rel.children.length; i++)
+						{
+							if (rel.children[i].pos == "IS")
+							{
+								isChain = true;
+							}
+							//See comment in SentimentAnalysis.js, but it says to save computing time, we won't parse verbs under NPs
+							//That's bc we can manipulate them to always be pro light mode, and the people know that lol
+							//ie. The theme that blinded me --> Oh nice dark mode made you blind
+							if (rel.children[i].pos == "ADJECTIVE")
+							{
+								if (isChain)
+								{
+									for (var c = i - 1; c >= 0; c--)
+									{
+										if (rel.children[c].pos == "NOUN")
+										{
+											rel.children[i].subject = rel.children[c];
+										}
+									}
+								}
+								else
+								{
+									for (var c = i + 1; c < rel.children.length; c++)
+									{
+										if (rel.children[c].pos == "NOUN")
+										{
+											rel.children[i].subject = rel.children[c];
+										}
+									}
+								}
+							}
+							else if (rel.children[i].pos == "VERB")
+							{
+								for (var c = i - 1, d = i + 1; c >= 0 || d < rel.children.length; c--, d++)
+								{
+									if (c >= 0 && /PRONOUN|NOUN|PNOUN/mi.test(rel.children[c].pos))
+									{
+										if (isChain) //was used by Justin
+										{
+											if (!rel.children[i].object)
+												rel.children[i].object = rel.children[c];
+										}
+										else
+										{
+											if (!rel.children[i].subject)
+												rel.children[i].subject = rel.children[c];
+										}
+									}
+									
+									if (d < rel.children.length && /PRONOUN|NOUN|PNOUN/mi.test(rel.children[c].pos))
+									{
+										if (isChain)
+										{
+											if (!rel.children[i].subject)
+												rel.children[i].subject = rel.children[d];
+										}
+										else
+										{
+											if (!rel.children[i].object)
+												rel.children[i].object = rel.children[d];
+										}
+									}
+								}
+							}
+							else if (rel.children[i].pos != "CONJUNCTION" && rel.children[i].pos != "PUNCTUATION")
+							{
+								isChain = false;
+							}
+						}
+					}
+				}
 			break;
 
 			case "COMPARISON":
-				rel.subject = lookBehind(relationArr, "NOUN", true, idx);
+				rel.subject = lookBehind(relationArr, "NOUN|PNOUN|PRONOUN", true, idx);
 				if (/SCONJ |VERB-COMP /gmi.test(rel.pos))
 				{
-					rel.object = lookAhead(relationArr, "NOUN", true, idx);
+					rel.object = lookAhead(relationArr, "NOUN|PNOUN|PRONOUN", true, idx);
 				}
 			break;
 
@@ -186,6 +264,7 @@ const extractRelation = (posArr) => {
 				}
 			break;
 
+			case "ADJECTIVE ":
 			case "ADJECTIVE":
 				//Adjectives that come before noun are in NP because *Light* in light mode is adj, but it's cruicial info to know the theme
 				rel.subject = lookBehind(relationArr, "NOUN", true, idx);
@@ -240,20 +319,9 @@ const extractRelation = (posArr) => {
 	return root;
 }
 
-POS.calculate("Light mode is awesome!")
-	.then(arr => {
-		POS.chunk(arr)
-			.then(chunkRay => {
-				//console.log(chunkRay)
-				let root = extractRelation(chunkRay);
-				hobbsAlgorithm(root);
-				Sentiment.sentimentAnalysis(root);
-			});
-	});
-
 /*
-Determines pronoun anaphora using Hobb's Naive Algortihm
-It's Naive but it's getting better results than the supervised learning one so what can I say
+Determines pronoun anaphora using Hobb
+It's kinda naive but it's getting better results than the supervised learning I spent a month fiddling with so what can I say
 */
 const hobbsAlgorithm = (root) => {
 	let pronounRef;
@@ -530,6 +598,25 @@ const proposeAntecedent = (antecedent, pronoun) => {
 	pronoun.subject = antecedent;
 	//console.log('yay!')
 	return true;
+}
+
+//Uncomment me to test the Defense Arsenal without going on Discord.js
+/*POS.calculate("I use light mode. It was bad.")
+	.then(arr => {
+		POS.chunk(arr)
+			.then(chunkRay => {
+				//console.log(chunkRay)
+				let root = this.autoExtract(chunkRay);
+				console.log(sentiment(root));
+			});
+	});
+*/
+module.exports.extractRelation = extractRelation;
+module.exports.hobbsAlgorithm = hobbsAlgorithm;
+module.exports.autoExtract = chunkRay => {
+	let root = extractRelation(chunkRay);
+	hobbsAlgorithm(root);
+	return root;
 }
 
 //https://www.usna.edu/Users/cs/nchamber/courses/nlp/s15/slides/set14-coreference.pdf

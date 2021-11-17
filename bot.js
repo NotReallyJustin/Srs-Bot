@@ -2,7 +2,7 @@
 //Backend
 const Database = require("./database.js");
 const Helpy = require("./Commands/Helpy.js");
-const Rate = require("./Commands/Fun/rate.js");
+const Advice = require("./Commands/Fun/advice.js");
 
 const fs = require("fs");
 const Discord = require("discord.js");
@@ -93,6 +93,113 @@ bot.once("ready", () => {
 	});
 });
 
+//----------------------------------EXTRANEOUS EASTER EGG DATA--------------------------------------------
+
+//Easter egg array
+//f1 - currply is true, f2 - currply is false, f2a - extra arguments we might need to send
+const easterEggs = [
+	{matches: /\bmy grade is\b/gmi, 
+		f1: () => {}, 
+		f2: (message) => {message.channel.send("smh be quiet and study for your 1520")}, 
+		f2a: ""
+	},
+	{matches: /\bmiku\b/gmi, 
+		f1: () => {}, 
+		f2: (message) => {message.channel.send("congrats you earned a one way ticket to #wastebin")}, 
+		f2a: ""
+	},
+	{matches: /\bseal hunting\b/gmi, 
+		f1: () => {}, 
+		f2: (message) => {message.channel.send("you better run before I put you in char siu fan")}, 
+		f2a: ""
+	},
+	{matches: /\bbths\b|\bbtech\b|\bbrooklyn tech\b/gmi, 
+		f1: () => {}, 
+		f2: (message) => {message.channel.send("smh bths")}, 
+		f2a: ""
+	},
+	{matches: /\bchizu\b|\bcheez\b|\bcheese\b/gmi, 
+		f1: (message) => {message.react("🧀")}, 
+		f2: (message) => {message.react("🧀")}, 
+		f2a: ""
+	},
+	{matches: /\blas\b/gmi, 
+		f1: (message) => {message.react("🤮")}, 
+		f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
+		f2a: [
+			"Software Major is superior kek",
+			"ok sir now go Pheniox Wright yourself into the Hall of Shame",
+			":shut: you discount SSR ripoff",
+			"ok kiddo that's three strikes. Go sit in the time out corner for 20 years", //idk much about 3 strikes law but iirc it goes like dis
+			"i suggest you use your right to remain silent"
+		]
+	},
+	{matches: /\bew light\b/gmi, 
+		f1: (message) => {message.react("🤮")}, 
+		f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
+		f2a: [
+			"Smh at least he can read in the sun",
+			"no u",
+			"Smh how can you meme on eye strain when you're reading in the dark",
+			"It's let there be light, not let there be heathens",
+			"You dare oppose me with that dark mode",
+			"smh how are you going to say that and then call Justin the brainlet",
+			"You have yeed your last haw",
+			"There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them",
+			"smh I would insult your intelligence, but that would mean you had some to begin with",
+			`You just earned a one way ticket to the Hall of Shame`,
+			"I suggest you use your right to remain silent",
+			"Ding Dong your brainlet opinion is wrong",
+			"smh how can you be more wrong than people who try to meme on Justin's variables",
+			"Go turn yourself into a JavaDerp function",
+			"Go commit the NRG command"
+		]
+	},
+	//Smh when will the AP Sex meme die :(
+	{matches: /\bsex\b/gmi, 
+		f1: (message) => {message.react("🤮")}, 
+		f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
+		f2a: [
+			"congrats you earned yourself a one way ticket to the hall of shame",
+			"🤮",
+			"oh mercy me",
+			"for the love of democracy, get that thing in the hall of shame",
+			"wym you failed at that subject the last time you tried it in the 7th floor staircase",
+			"When we say people like vanilla, we don't mean this stuff 🤮"
+		]
+	},
+	{matches: /\bbill diffrenly\b/gmi, 
+		f1: (message) => {message.react("🤮")}, 
+		f2: (message, f2a) => {message.channel.send("IDK bub you're also made out of DNA")}, 
+		f2a: ""
+	},
+	{matches: /\bjava\b/gmi, 
+		f1: (message) => {message.react("🤮")}, 
+		f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
+		f2a: [
+			"Which bored person invented strict type 🤮",
+			"smh say that word again and I'll overload you",
+			"Yandere Dev has more understandable code than college board",
+			"system.out.print(\"Say Sike Right Now\");",
+			"smh go kermit use jgrasp",
+			"public class YourPost extends HallOfShame",
+			"smh go slap a private access modifier on youself",
+			"smh the probability of a green blob attacking you is small, but never 0 (he's very lucky)" //Dream reference >:)
+		]
+	},
+	{matches: /\bsilverman\b/gmi, 
+		f1: (message) => {message.react("⭐")}, 
+		f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
+		f2a: [
+			"whomst have summoned the lord ⭐",
+			"wow that's some SPICEy hot take",
+			"there's a myriad of different way to exploit this bot if you think about it",
+			"that's almost as wonderful as the almighty board notes uwu",
+			"i heard someone summoning the king of apwh and sociology"
+		]
+	}
+];
+
 //----------------------Functionalities Begin----------------------------------------
 
 bot.on('messageCreate', async message => {
@@ -137,112 +244,7 @@ bot.on('messageCreate', async message => {
 	server.getMoves(message.author.id)(message.content, message);
 	currentChannel.getMoves(message.author.id)(message.content, message);
 
-	//-----------------------SRS EASTER EGG SECTION------------------------------------
-
-	//Easter egg array
-	//f1 - currply is true, f2 - currply is false, f2a - extra arguments we might need to send
-	const easterEggs = [
-		{matches: /\bmy grade is\b/gmi, 
-			f1: () => {}, 
-			f2: (message) => {message.channel.send("smh be quiet and study for your 1520")}, 
-			f2a: ""
-		},
-		{matches: /\bmiku\b/gmi, 
-			f1: () => {}, 
-			f2: (message) => {message.channel.send("congrats you earned a one way ticket to #wastebin")}, 
-			f2a: ""
-		},
-		{matches: /\bseal hunting\b/gmi, 
-			f1: () => {}, 
-			f2: (message) => {message.channel.send("you better run before I put you in char siu fan")}, 
-			f2a: ""
-		},
-		{matches: /\bbths\b|\bbtech\b|\bbrooklyn tech\b/gmi, 
-			f1: () => {}, 
-			f2: (message) => {message.channel.send("smh bths")}, 
-			f2a: ""
-		},
-		{matches: /\bchizu\b|\bcheez\b|\bcheese\b/gmi, 
-			f1: (message) => {message.react("🧀")}, 
-			f2: (message) => {message.react("🧀")}, 
-			f2a: ""
-		},
-		{matches: /\blas\b/gmi, 
-			f1: (message) => {message.react("🤮")}, 
-			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
-			f2a: [
-				"Software Major is superior kek",
-				"ok sir now go Pheniox Wright yourself into the Hall of Shame",
-				":shut: you discount SSR ripoff",
-				"ok kiddo that's three strikes. Go sit in the time out corner for 20 years", //idk much about 3 strikes law but iirc it goes like dis
-				"i suggest you use your right to remain silent"
-			]
-		},
-		{matches: /\bew light\b/gmi, 
-			f1: (message) => {message.react("🤮")}, 
-			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
-			f2a: [
-				"Smh at least he can read in the sun",
-				"no u",
-				"Smh how can you meme on eye strain when you're reading in the dark",
-				"It's let there be light, not let there be heathens",
-				"You dare oppose me with that dark mode",
-				"smh how are you going to say that and then call Justin the brainlet",
-				"You have yeed your last haw",
-				"There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them",
-				"smh I would insult your intelligence, but that would mean you had some to begin with",
-				`You just earned a one way ticket to the Hall of Shame`,
-				"I suggest you use your right to remain silent",
-				"Ding Dong your brainlet opinion is wrong",
-				"smh how can you be more wrong than people who try to meme on Justin's variables",
-				"Go turn yourself into a JavaDerp function",
-				"Go commit the NRG command"
-			]
-		},
-		//Smh when will the AP Sex meme die :(
-		{matches: /\bsex\b/gmi, 
-			f1: (message) => {message.react("🤮")}, 
-			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
-			f2a: [
-				"congrats you earned yourself a one way ticket to the hall of shame",
-				"🤮",
-				"oh mercy me",
-				"for the love of democracy, get that thing in the hall of shame",
-				"wym you failed at that subject the last time you tried it in the 7th floor staircase",
-				"When we say people like vanilla, we don't mean this stuff 🤮"
-			]
-		},
-		{matches: /\bbill diffrenly\b/gmi, 
-			f1: (message) => {message.react("🤮")}, 
-			f2: (message, f2a) => {message.channel.send("IDK bub you're also made out of DNA")}, 
-			f2a: ""
-		},
-		{matches: /\bjava\b/gmi, 
-			f1: (message) => {message.react("🤮")}, 
-			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
-			f2a: [
-				"Which bored person invented strict type 🤮",
-				"smh say that word again and I'll overload you",
-				"Yandere Dev has more understandable code than college board",
-				"system.out.print(\"Say Sike Right Now\");",
-				"smh go kermit use jgrasp",
-				"public class YourPost extends HallOfShame",
-				"smh go slap a private access modifier on youself",
-				"smh the probability of a green blob attacking you is small, but never 0 (he's very lucky)" //Dream reference >:)
-			]
-		},
-		{matches: /\bsilverman\b/gmi, 
-			f1: (message) => {message.react("⭐")}, 
-			f2: (message, f2a) => {message.channel.send(Helpy.randomResp(f2a))}, 
-			f2a: [
-				"whomst have summoned the lord ⭐",
-				"wow that's some SPICEy hot take",
-				"there's a myriad of different way to exploit this bot if you think about it",
-				"that's almost as wonderful as the almighty board notes uwu",
-				"i heard someone summoning the king of apwh and sociology"
-			]
-		}
-	];
+	//-----------------Srs Bot Easter Eggs - Add more after Christmas update----------------
 
 	//Takes the first match (bc if we spam all 10 easter eggs, it would be rly weird) and execute functions attached with it
 	let matchRes = easterEggs.filter((item) => item.matches.test(message.content))[0];
@@ -250,30 +252,14 @@ bot.on('messageCreate', async message => {
 	{
 		currentChannel.replyMsg || matchRes.f1(message);
 		!currentChannel.replyMsg || matchRes.f2(message, matchRes.f2a);
+		return;
 	}
 
 	//-----------------LIGHT MODE FIGHTS BACK------------------
+	return;
 	if (/\btheme\b|\bmode\b|\bdiscord\b|\bthemes\b|\bmodes\b/gmi.test(message.content))
 	{
-		var b1 = /light\b|white\b|justin\b/gmi.test(message.content);
-		var b2 = /dark\b|black\b|amoled\b/gmi.test(item);
-		let rating = Rate.rateAlg(message.content, b1);
-
-		let goodRe = currentChannel.replyMsg ? () => {message.channel.send(Helpy.randomResp(Rate.response.slightLM));} : () => {message.react('⭐');}; 
-		let badRe = currentChannel.replyMsg ? () => {message.channel.send(Helpy.randomResp(Rate.response.slightDM));} : () => {message.react('🤮');};
-
-		if (b1 || b2) //else false alarm
-		{
-			if (rating)
-			{
-				goodRe();
-			}
-			else
-			{
-				badRe();
-			}
-			return;
-		}
+		Advice.chatDefender(message);
 	}
 });
 

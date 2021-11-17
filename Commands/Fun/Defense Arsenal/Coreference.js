@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const Helpy = require('../../Helpy.js');
 
 //https://www.comp.nus.edu.sg/~kanmy/courses/6101_1810/w9-coref.pdf
@@ -35,8 +36,8 @@ const pronouns = {
 	yours: {plural: false, gender: "n"}
 };
 
-const boyNames = fs.readFileSync('./BoyNames.txt').toString().split("\n");
-const girlNames = fs.readFileSync('./GirlNames.txt').toString().split("\n");
+const boyNames = fs.readFileSync(path.resolve(`${__dirname}`, './BoyNames.txt')).toString().split("\n");
+const girlNames = fs.readFileSync(path.resolve(`${__dirname}`, './BoyNames.txt')).toString().split("\n");
 
 const scout = (fileName, name) => {
 	for (var l = 0, r = fileName.length - 1, mid = Math.floor((l + r)/2); l <= r; mid = Math.floor((l + r)/2))

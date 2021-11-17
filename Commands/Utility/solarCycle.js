@@ -47,6 +47,8 @@ module.exports = {
 			tmz = 'America/New_York';
 		}
 
+		interaction.deferReply();
+		
 		https.get(`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${long}&date=today&formatted=0`, response => {
 			var blob = "";
 			response.on("data", data => {
@@ -55,12 +57,12 @@ module.exports = {
 
 			response.on("end", () => {
 				let json = JSON.parse(blob).results;
-				interaction.reply({embeds: [solarEmbed(json, lat, long, tmz)]});
+				interaction.editReply({embeds: [solarEmbed(json, lat, long, tmz)]});
 			});
 
 			response.on("error", (err) => {
 				console.error(err);
-				interaction.reply('hmm smth went wrong');
+				interaction.editReply('hmm smth went wrong');
 			});
 		});
 	}

@@ -1,7 +1,8 @@
 const fs = require('fs');
+const path = require('path');
 const readline = require('readline');
 const leScan = readline.createInterface({
-	input: fs.createReadStream('./LemmaData.txt'),
+	input: fs.createReadStream(path.resolve(__dirname,'./LemmaData.txt')),
 	output: process.stdout,
 	clrfDelay: Infinity,
 	terminal: false

@@ -12,24 +12,25 @@ module.exports = {
             type: "BOOLEAN"
         }
     ],
-    execute : (interaction) => {
+    execute : async (interaction) => {
+    	await interaction.deferReply()
         let prom = weatherFind();
 
         prom.then(nycJSON => {
         	if (interaction.options.getBoolean("realtime"))
         	{
-        		interaction.reply({embeds: [weatherEmbed(nycJSON)]});
+        		interaction.editReply({embeds: [weatherEmbed(nycJSON)]});
         	}
         	else
         	{
-        		interaction.reply(`wtf it's ${nycJSON.forecast[1].low} lowest and ${nycJSON.forecast[1].high} highest with ${nycJSON.forecast[1].precip}% chance to get wet 👀`);
-        		interaction.reply({embeds: [weatherRec(nycJSON.forecast[1].high)]});
+        		interaction.editReply(`wtf it's ${nycJSON.forecast[1].low} lowest and ${nycJSON.forecast[1].high} highest with ${nycJSON.forecast[1].precip}% chance to get wet 👀` +
+        			`\n\n${weatherRec(nycJSON.forecast[1].high)}`);
         	}
         });
 
         prom.catch(err => {
-        	interaction.reply("hmm something went wrong");
-        })
+        	interaction.editReply("hmm something went wrong");
+        });
     }
 }
 

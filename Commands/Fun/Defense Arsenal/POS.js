@@ -1,10 +1,10 @@
 //PART == infinitive particle, SCONJ == Subordinating Conjunction
 const fs = require('fs');
+const path = require('path');
 const readline = require('readline');
-const { findSTEM, cleanseContractions } = require('../rate.js');
 
 const leScan = readline.createInterface({
-	input: fs.createReadStream('./PosData.txt'),
+	input: fs.createReadStream(path.resolve(__dirname,'./PosData.txt')),
 	output: process.stdout,
 	clrfDelay: Infinity,
 	terminal: false
@@ -80,20 +80,6 @@ const loadData = () => new Promise((resolve, reject) => {
 	});
 
 	leScan.on('close', () => {
-		/*let e = fs.readFileSync('./PosInput.txt', {encoding: 'utf8'});
-		let data = "";
-
-		for (var item of e.split(". "))
-		{
-			var toRet = calculate(item);
-			let str = toRet.reduce((cumL, curr) => cumL + `${curr[0]}\t${curr[1]}\n`, "") + '\n';
-			data += str;
-		}
-
-		fs.writeFileSync('./PosTrained.txt', data);*/
-
-		//let calc = calculate("Light mode is better than dark mode because it is not complete trash");
-		//console.dir(chunk(calc));
 		basesLoaded = true;
 		resolve();
 	});
@@ -221,17 +207,40 @@ const chunkItem = (chunkArr, posWord, posTags) => {
 				}
 				else
 				{
-					np.push([]);
+					let npEntry = [];
 					var cdx = 0;
+					let initialCdx = 0; //Initial cdxof this curent np chunk
 					for (var chartDex of positions.keys())
 					{
 						if (+chartDex >= idx && +chartDex < idx + matchRes.length)
 						{		
-							//Weknow idx = 68s
 							positions.get(chartDex).occupied = true;
-							np[np.length - 1].push([...posTags[positions.get(chartDex).k], cdx, posWord]);
+
+							npEntry.push([...posTags[positions.get(chartDex).k], cdx, posWord]);
+							if (npEntry.length == 1)
+							{
+								initialCdx = cdx;
+							}
 						}
 						cdx++;
+					}
+
+					//We're doing like an insertion sort - because unless there is an edge case, the indexes should already be in order in the "arraylist"
+					np.push("");
+					for (var c = np.length - 1; c >= 0; c--)
+					{
+						//np[c - 1][0][2] gives us the cdx of the first item in the np chunk
+						if (c - 1 >= 0 && np[c - 1][0][2] > initialCdx)
+						{
+							var curr = np[c];
+							np[c] = np[c - 1];
+							np[c - 1] = curr;
+						}
+						else
+						{
+							np[c] = npEntry;
+							break;
+						}
 					}
 					break;
 				}
@@ -253,12 +262,13 @@ For the regEx arrays -->
 0) Heathenous dark mode user that shames and attacks light mode users
 0) Spicy, hot sauce I ate today --> There *should* be a not but we all know Discord users don't talk like this
 0) Turtle Bot that likes to meme on moderators, be annoying, and waste precious bot slots
+0) The mode that Justin does not use
 1) Random yellow cat
 1) Random cat, chonky seal, and cute sandwich
 */
 const chunkNoun = chunkItem.bind(null, [
-	/((PUNCTUATION CONJUNCTION |DETERMINER |PUNCTUATION |CONJUNCTION )*(ADJECTIVE |ADJECTIVE PUNCTUATION |CONJUNCTION ADJECTIVE )*(\bNOUN |PNOUN |PRONOUN ))+((SCONJ AUX |SCONJ IS |SCONJ AUX IS |(SCONJ )?PRONOUN |(SCONJ )?\bNOUN |SCONJ )+((PART )?(ADVERB |ADVERB PUNCTUATION |ADVERB CONJUNCTION |ADVERB PUNCTUATION CONJUNCTION )*(\bVERB PUNCTUATION CONJUNCTION |\bVERB PUNCTUATION |\bVERB CONJUNCTION |\bVERB )((PUNCTUATION |CONJUNCTION )*(DETERMINER |PRONOUN |ADPOSITION )*(ADJECTIVE |ADJECTIVE PUNCTUATION |CONJUNCTION ADJECTIVE )*(\bNOUN |PNOUN |PRONOUN ))*)+)+/gmi,
-	/((PUNCTUATION |CONJUNCTION |PUNCTUATION CONJUNCTION )*(ADJECTIVE |ADJECTIVE PUNCTUATION |CONJUNCTION ADJECTIVE )*(NOUN |PNOUN |PRONOUN ))+/gmi
+	/(((PART )*DETERMINER |PUNCTUATION CONJUNCTION |DETERMINER |PUNCTUATION |CONJUNCTION )*(ADJECTIVE |ADJECTIVE PUNCTUATION |CONJUNCTION ADJECTIVE )*(\bNOUN |PNOUN |PRONOUN ))+((SCONJ AUX |SCONJ IS |SCONJ AUX IS |(SCONJ )?PRONOUN |(SCONJ )?\bNOUN |(SCONJ )?PNOUN |SCONJ )+((AUX PART |PART )?(ADVERB |ADVERB PUNCTUATION |ADVERB CONJUNCTION |ADVERB PUNCTUATION CONJUNCTION )*(\bVERB PUNCTUATION CONJUNCTION |\bVERB PUNCTUATION |\bVERB CONJUNCTION |\bVERB )((PUNCTUATION |CONJUNCTION )*(DETERMINER |PRONOUN |ADPOSITION )*(ADJECTIVE |ADJECTIVE PUNCTUATION |CONJUNCTION ADJECTIVE )*(\bNOUN |PNOUN |PRONOUN |PNOUN ))*)+)+/gmi,
+	/(((PART )*DETERMINER |PUNCTUATION CONJUNCTION |CONJUNCTION |PUNCTUATION )*(ADJECTIVE |ADJECTIVE PUNCTUATION |CONJUNCTION ADJECTIVE )*(NOUN |PNOUN |PRONOUN ))+/gmi
 ], "NOUN");
 
 /*
@@ -281,8 +291,8 @@ regEx target examples -->
 1) Is better used for eating
 */
 const chunkComp = chunkItem.bind(null, [
-	/(PART )*COMPARISON ((.?)SCONJ |(.?)VERB-COMP )/gmi,
-	/(PART )*COMPARISON (ADPOSITION VERB |VERB ADPOSITION VERB )*/gmi,
+	/(PART |AUX |IS )*COMPARISON ((.?)SCONJ |(.?)VERB-COMP )/gmi,
+	/(PART |AUX |IS )*COMPARISON (ADPOSITION VERB |VERB ADPOSITION VERB )*/gmi,
 ], "COMPARISON");
 
 /*
@@ -292,11 +302,11 @@ const chunkComp = chunkItem.bind(null, [
 0) Is not chonky
 */
 const chunkAdj = chunkItem.bind(null, [
-	/(AUX |IS |NOT )+((ADVERB |VERB |PART )*ADJECTIVE |(ADVERB |VERB )*ADJECTIVE PUNCTUATION |(ADVERB |VERB )*ADJECTIVE CONJUNCTION |(ADVERB |VERB )*CONJUNCTION ADJECTIVE )+/gmi
+	/((?<!^)AUX |(?<!^)IS |(?<!^)PART )+((ADVERB |VERB )*ADJECTIVE PUNCTUATION |(ADVERB |VERB )*ADJECTIVE CONJUNCTION |(ADVERB |VERB )*CONJUNCTION ADJECTIVE |(ADVERB |VERB |PART )*ADJECTIVE )+/gmi
 ], "ADJECTIVE");
 
 /*
-0) Wants desperately to be seen
+0) Wants desperately to be partying
 0) Savagely, brutally, and angrily punched
 1) Has attacked
 1) Has viciously, aggressively, and painfully attacked
@@ -319,7 +329,6 @@ const chunk = (posSorted) => {
 	let adjChunk = chunkAdj(posSorted);
 	let verbChunk = chunkVerb(posSorted);
 
-	//console.log(nounChunk)
 	let sorted = [];
 	var nounIdx = 0;
 	var compIdx = 0;
@@ -378,6 +387,33 @@ const chunk = (posSorted) => {
 
 	return sorted;
 }
+
+const cleanseContractions = (sentence) => {
+	const patterns = {
+		"won't": "will not",
+		"can't": "can not",
+		"n't": " not",
+		"'s": "",
+		"'re": " are",
+		"'d": " would",
+		"'ll": " will",
+		"'ve": " have",
+		"'m": " am"
+	};
+
+	for (var pattern of Object.keys(patterns))
+	{
+		sentence = sentence.replace(new RegExp(pattern, 'gmi'), patterns[pattern]);
+	}
+
+	return sentence;
+}
+
+loadData().then(() => {
+	console.log("POS data loaded!");
+})
+
+module.exports.cleanseContractions = cleanseContractions;
 
 module.exports.calculate = (x) => new Promise((resolve, reject) => {
 	loadData().then(() => {

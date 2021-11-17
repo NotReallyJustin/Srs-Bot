@@ -1,6 +1,7 @@
 const fs = require('fs');
+const path = require('path');
 const leScan = require('readline').createInterface({
-	input: fs.createReadStream('./PosInput.txt'),
+	input: fs.createReadStream(path.resolve(__dirname, './PosData.txt')),
 	output: process.stdout,
 	clrfDelay: Infinity,
 	terminal: false
@@ -15,8 +16,9 @@ leScan.on('line', txt => {
 	//ridThird(txt);
 	//ridSecond(txt);
 	//correctAdjective(txt);
+	convertIs(txt);
 
-	if (lastLine.split("\t")[1] == "IS")
+	/*if (lastLine.split("\t")[1] == "IS")
 	{
 		var splito = txt.split("\t");
 		if (splito[0].indexOf("ing") == -1 && splito[1] == "VERB")
@@ -26,13 +28,24 @@ leScan.on('line', txt => {
 		}
 	}
 
-	output += `${txt}\n`;
+	output += `${txt}\n`;*/
 });
 
 leScan.on('close', () => {
-	fs.writeFileSync('./PosTrained.txt', output);
+	fs.writeFileSync(path.resolve(__dirname, './PosTrained.txt'), output);
 });
 
+const convertIs = (txt) => {
+	var splito = txt.split("\t");
+	if (/\bis\b|\bare\b|\bwere\b|\bwas\b|\bbeen\b|\bbe\b/gmi.test(splito[0]))
+	{
+		output += `${splito[0]}\tIS\n`;
+	}
+	else
+	{
+		output += txt + "\n";
+	}
+}
 const formalize = (txt) => {
 	if (txt.indexOf('USR') != -1)
 	{

@@ -75,6 +75,28 @@ module.exports.mergeSort = (arr, comparison) => {
 	return arr;
 }
 
+module.exports.binarySearch = (arr, item) => {
+	var found = -1;
+	for (var left = 0, right = arr.length, middle = Math.floor(arr.length / 2); left <= right; middle = Math.floor((left + right) /2))
+	{
+		if (arr[middle] < item)
+		{
+			left = middle + 1;
+		}
+		else if (arr[middle] > item)
+		{
+			right = middle - 1;
+		}
+		else if (arr[middle] == item)
+		{
+			found = middle;
+			break;
+		}
+	}
+
+	return found;
+}
+
 //THIS IS NOT A TRADITIONAL BINARY SEARCH!! DO NOT USE IT THAT WAY!!!
 //If comparison(item) returns 0, then the function will shove that in an array. -1 is too small, 1 is too big.
 //Return case 2 to stop the search
@@ -150,3 +172,122 @@ module.exports.lexico = (word) => {
 
 //Lexicographuc ordering, but make sure that we're doing it by lowercase
 module.exports.lexicoComparison = (a, b) => a.toLowerCase() < b.toLowerCase();
+
+//Adapted version of kuwamoto's pluralize algorithm
+String.plural = {
+    '(quiz)$'               : "$1zes",
+    '^(ox)$'                : "$1en",
+    '([m|l])ouse$'          : "$1ice",
+    '(matr|vert|ind)ix|ex$' : "$1ices",
+    '(x|ch|ss|sh)$'         : "$1es",
+    '([^aeiouy]|qu)y$'      : "$1ies",
+    '(hive)$'               : "$1s",
+    '(?:([^f])fe|([lr])f)$' : "$1$2ves",
+    '(shea|lea|loa|thie)f$' : "$1ves",
+    'sis$'                  : "ses",
+    '([ti])um$'             : "$1a",
+    '(tomat|potat|ech|her|vet)o$': "$1oes",
+    '(bu)s$'                : "$1ses",
+    '(alias)$'              : "$1es",
+    '(octop)us$'            : "$1i",
+    '(ax|test)is$'          : "$1es",
+    '(us)$'                 : "$1es",
+    '([^s]+)$'              : "$1s"
+};
+
+String.singular = {
+    '(quiz)zes$'             : "$1",
+    '(matr)ices$'            : "$1ix",
+    '(vert|ind)ices$'        : "$1ex",
+    '^(ox)en$'               : "$1",
+    '(alias)es$'             : "$1",
+    '(octop|vir)i$'          : "$1us",
+    '(cris|ax|test)es$'      : "$1is",
+    '(shoe)s$'               : "$1",
+    '(o)es$'                 : "$1",
+    '(bus)es$'               : "$1",
+    '([m|l])ice$'            : "$1ouse",
+    '(x|ch|ss|sh)es$'        : "$1",
+    '(m)ovies$'              : "$1ovie",
+    '(s)eries$'              : "$1eries",
+    '([^aeiouy]|qu)ies$'     : "$1y",
+    '([lr])ves$'             : "$1f",
+    '(tive)s$'               : "$1",
+    '(hive)s$'               : "$1",
+    '(li|wi|kni)ves$'        : "$1fe",
+    '(shea|loa|lea|thie)ves$': "$1f",
+    '(^analy)ses$'           : "$1sis",
+    '((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$': "$1$2sis",        
+    '([ti])a$'               : "$1um",
+    '(n)ews$'                : "$1ews",
+    '(h|bl)ouses$'           : "$1ouse",
+    '(corpse)s$'             : "$1",
+    '(us)es$'                : "$1",
+    's$'                     : ""
+};
+
+String.irregular = {
+    'move'   : 'moves',
+    'foot'   : 'feet',
+    'goose'  : 'geese',
+    'sex'    : 'sexes',
+    'child'  : 'children',
+    'man'    : 'men',
+    'tooth'  : 'teeth',
+    'person' : 'people'
+};
+
+String.uncountable = [
+    'sheep', 
+    'fish',
+    'deer',
+    'moose',
+    'series',
+    'species',
+    'money',
+    'rice',
+    'information',
+    'equipment'
+];
+
+module.exports.pluralize = (str, revert) => {
+	if (String.uncountable.indexOf(str.toLowerCase()) >= 0)
+	{
+		return 404;
+	}
+
+	for (word in String.irregular)
+	{
+		if (revert)
+		{
+            var pattern = new RegExp(irregular[word]+'$', 'i');
+            var replace = word;
+      	} 
+      	else
+      	{ 
+      		var pattern = new RegExp(word+'$', 'i');
+            var replace = irregular[word];
+      	}
+      	if (pattern.test(str)) return this.replace(pattern, replace);
+	}
+
+	var array = revert ? singular : plural;
+	for (reg in array)
+	{
+		var pattern = new RegExp(reg, 'i');
+
+		if (pattern.test(str)) return str.replace(pattern, array[reg]);
+	}
+
+	return str;
+}
+//-------------------------- Easy Classes---------------------------------
+
+//Shortcut to construct a JSON "map" with all values set to true to denote that they exist
+//Has limited map functions because, well, it's made to be a shortcut tool
+module.exports.SimpleMap = function(itemArr) {
+	for (var item of itemArr)
+	{
+		this[item] = true;
+	}
+};
