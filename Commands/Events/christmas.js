@@ -48,129 +48,129 @@ const christmasGreetings = [
 
 //---------------------------------Christmas Playlist - For MangoDb upload only-------------------------------------
 const christmasPlaylist = [
-	"https://www.youtube.com/watch?v=yXQViqx6GMY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=E8gmARGvPlI&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=5vyMuxxLsD0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=KmddeUJJEuU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=lD1fa8KJHdY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=EM2Fnp_qnE8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=BgdLdl60EMA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=DkXIJe8CaIc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=76WFkKp8Tjs&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=vqv0ge_5Nsw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=CxQlwEokeuo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=oZ5cmrz-mrU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=sE3uRRFVsmc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=r1uJPGRfO5Y&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=haFHrfmfHbc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=s4J1JXnBDFk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=cHzeTKPlbJg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=INxgntXkXhU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=wKj92352UAE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=lylWDAo9hFw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=b9XNyeeJZ2k&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=WaNwEkCeZrE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=iCiEHrexjvg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=qlWp9B7hr3A&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=_MzumcY3lpk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=JlqoVScLhe8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=oVVdNWX_5Go&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=Mk_GmhD053E&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=W_b7GRoBMMk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=J-8VCL4uSUc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=N-PyWfVkjZc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=ifCWN5pJGIE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=TLl7BtV0FJ4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=9vu4AN2bc-M&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=AN_R4pR1hck&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=Iuewgu8z4Rc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=dyaP_i0xFgs&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=QJ5DOWPGxwg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=5QFKKap5V3U&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=2P8RU_dHyi4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=CLr1AYRBS0A&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=9LVWsXau1BU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=xvZ2pbEQkFo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=O9N4CjQs6a4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=CquXc3kMurg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=E8_TvLkM-zo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=HZNShYZjjWk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=OjPm0o04lGE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=w9QLn7gM-hY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=JyVEKsNFDjw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=j-_1-uJ6Ml4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=XMcTQveNdnw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=Rk-gTW_m2po&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=IhGuAJUumHk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=Q63O54RuL-o&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=QjsjIXCrwgA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=U_simrq_9M8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=5fOpBMk50d8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=eHMT89J6Pos&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=wtgGBgpNcIo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=73-mmd7RyS0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=J_QGZspO4gg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=4PzetPqepXA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=_KWFEdqTrmw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=cB66Xn7yvec&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=BEJmP8T07JU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=AbgxDgVmMF0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=pFjdfjrtf1Q&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=LUjn3RpkcKY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=BWTHptfwXjY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=XO7Cubs4zVw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=fppHWum93sA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=ZCqhX89WV_0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=SaEedtRHklg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=amK4U4pCTB8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=IbRtGMm96F8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=94t-kNqOQu8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=o10drRI3VQ0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=CziCidR4KcY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=-w7jyVHocTk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=z8Vfp48laS8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=eObZbLhbMH8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=6KPoDbO4JV0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=iEWFhzFWtkM&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=q6JN64KVSwk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=HSgGWDyFZKI&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=BFOVIAMNIxM&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=pL8k7wLQ_Rc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=IippcraBPKA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=anuggCrmdAw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=Mj7Pr42rliI&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=dNCTL9Gz-xw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=S-9gxB8kY2I&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=7oTp71aY80I&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=xjLTDaCUYuQ&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=Rx8DeYDY-0A&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=L1nQpoAvTSg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=2I0DON1eVvk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=0bdOlkibtAw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=RN24vMAFz3c&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=rPlYReRGEhA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=NT8pIpzDX0g&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=_wr9_yDXxH0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=ZkWSAgR4J24&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=jdm123WYV9k&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=Si3iXE3FUIE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=dVtcBEjbR8g&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=eSEaBe9zqlg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=JXVh-wwiwNg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=IYwCdREfv88&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=nx30HzgjFOA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=OR07r0ZMFb8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=ogZaStZP2HU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=y7PPB2bIu7U&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=j9jbdgZidu8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=2HkJHApgKqw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=r89CjMZDQpQ&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=apoFZv5J6xo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
-	"https://www.youtube.com/watch?v=NJ6kJ7GWtv0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi"
+	"https://www.youtube.com/watch?v=yXQViqx6GMY",
+	"https://www.youtube.com/watch?v=E8gmARGvPlI",
+	"https://www.youtube.com/watch?v=5vyMuxxLsD0",
+	"https://www.youtube.com/watch?v=KmddeUJJEuU",
+	"https://www.youtube.com/watch?v=lD1fa8KJHdY",
+	"https://www.youtube.com/watch?v=EM2Fnp_qnE8",
+	"https://www.youtube.com/watch?v=BgdLdl60EMA",
+	"https://www.youtube.com/watch?v=DkXIJe8CaIc",
+	"https://www.youtube.com/watch?v=76WFkKp8Tjs",
+	"https://www.youtube.com/watch?v=vqv0ge_5Nsw",
+	"https://www.youtube.com/watch?v=CxQlwEokeuo",
+	"https://www.youtube.com/watch?v=oZ5cmrz-mrU",
+	"https://www.youtube.com/watch?v=sE3uRRFVsmc",
+	"https://www.youtube.com/watch?v=r1uJPGRfO5Y",
+	"https://www.youtube.com/watch?v=haFHrfmfHbc",
+	"https://www.youtube.com/watch?v=s4J1JXnBDFk",
+	"https://www.youtube.com/watch?v=cHzeTKPlbJg",
+	"https://www.youtube.com/watch?v=INxgntXkXhU",
+	"https://www.youtube.com/watch?v=wKj92352UAE",
+	"https://www.youtube.com/watch?v=lylWDAo9hFw",
+	"https://www.youtube.com/watch?v=b9XNyeeJZ2k",
+	"https://www.youtube.com/watch?v=WaNwEkCeZrE",
+	"https://www.youtube.com/watch?v=iCiEHrexjvg",
+	"https://www.youtube.com/watch?v=qlWp9B7hr3A",
+	"https://www.youtube.com/watch?v=_MzumcY3lpk",
+	"https://www.youtube.com/watch?v=JlqoVScLhe8",
+	"https://www.youtube.com/watch?v=oVVdNWX_5Go",
+	"https://www.youtube.com/watch?v=Mk_GmhD053E",
+	"https://www.youtube.com/watch?v=W_b7GRoBMMk",
+	"https://www.youtube.com/watch?v=J-8VCL4uSUc",
+	"https://www.youtube.com/watch?v=N-PyWfVkjZc",
+	"https://www.youtube.com/watch?v=ifCWN5pJGIE",
+	"https://www.youtube.com/watch?v=TLl7BtV0FJ4",
+	"https://www.youtube.com/watch?v=9vu4AN2bc-M",
+	"https://www.youtube.com/watch?v=AN_R4pR1hck",
+	"https://www.youtube.com/watch?v=Iuewgu8z4Rc",
+	"https://www.youtube.com/watch?v=dyaP_i0xFgs",
+	"https://www.youtube.com/watch?v=QJ5DOWPGxwg",
+	"https://www.youtube.com/watch?v=5QFKKap5V3U",
+	"https://www.youtube.com/watch?v=2P8RU_dHyi4",
+	"https://www.youtube.com/watch?v=CLr1AYRBS0A",
+	"https://www.youtube.com/watch?v=9LVWsXau1BU",
+	"https://www.youtube.com/watch?v=xvZ2pbEQkFo",
+	"https://www.youtube.com/watch?v=O9N4CjQs6a4",
+	"https://www.youtube.com/watch?v=CquXc3kMurg",
+	"https://www.youtube.com/watch?v=E8_TvLkM-zo",
+	"https://www.youtube.com/watch?v=HZNShYZjjWk",
+	"https://www.youtube.com/watch?v=OjPm0o04lGE",
+	"https://www.youtube.com/watch?v=w9QLn7gM-hY",
+	"https://www.youtube.com/watch?v=JyVEKsNFDjw",
+	"https://www.youtube.com/watch?v=j-_1-uJ6Ml4",
+	"https://www.youtube.com/watch?v=XMcTQveNdnw",
+	"https://www.youtube.com/watch?v=Rk-gTW_m2po",
+	"https://www.youtube.com/watch?v=IhGuAJUumHk",
+	"https://www.youtube.com/watch?v=Q63O54RuL-o",
+	"https://www.youtube.com/watch?v=QjsjIXCrwgA",
+	"https://www.youtube.com/watch?v=U_simrq_9M8",
+	"https://www.youtube.com/watch?v=5fOpBMk50d8",
+	"https://www.youtube.com/watch?v=eHMT89J6Pos",
+	"https://www.youtube.com/watch?v=wtgGBgpNcIo",
+	"https://www.youtube.com/watch?v=73-mmd7RyS0",
+	"https://www.youtube.com/watch?v=J_QGZspO4gg",
+	"https://www.youtube.com/watch?v=4PzetPqepXA",
+	"https://www.youtube.com/watch?v=_KWFEdqTrmw",
+	"https://www.youtube.com/watch?v=cB66Xn7yvec",
+	"https://www.youtube.com/watch?v=BEJmP8T07JU",
+	"https://www.youtube.com/watch?v=AbgxDgVmMF0",
+	"https://www.youtube.com/watch?v=pFjdfjrtf1Q",
+	"https://www.youtube.com/watch?v=LUjn3RpkcKY",
+	"https://www.youtube.com/watch?v=BWTHptfwXjY",
+	"https://www.youtube.com/watch?v=XO7Cubs4zVw",
+	"https://www.youtube.com/watch?v=fppHWum93sA",
+	"https://www.youtube.com/watch?v=ZCqhX89WV_0",
+	"https://www.youtube.com/watch?v=SaEedtRHklg",
+	"https://www.youtube.com/watch?v=amK4U4pCTB8",
+	"https://www.youtube.com/watch?v=IbRtGMm96F8",
+	"https://www.youtube.com/watch?v=94t-kNqOQu8",
+	"https://www.youtube.com/watch?v=o10drRI3VQ0",
+	"https://www.youtube.com/watch?v=CziCidR4KcY",
+	"https://www.youtube.com/watch?v=-w7jyVHocTk",
+	"https://www.youtube.com/watch?v=z8Vfp48laS8",
+	"https://www.youtube.com/watch?v=eObZbLhbMH8",
+	"https://www.youtube.com/watch?v=6KPoDbO4JV0",
+	"https://www.youtube.com/watch?v=iEWFhzFWtkM",
+	"https://www.youtube.com/watch?v=q6JN64KVSwk",
+	"https://www.youtube.com/watch?v=HSgGWDyFZKI",
+	"https://www.youtube.com/watch?v=BFOVIAMNIxM",
+	"https://www.youtube.com/watch?v=pL8k7wLQ_Rc",
+	"https://www.youtube.com/watch?v=IippcraBPKA",
+	"https://www.youtube.com/watch?v=anuggCrmdAw",
+	"https://www.youtube.com/watch?v=Mj7Pr42rliI",
+	"https://www.youtube.com/watch?v=dNCTL9Gz-xw",
+	"https://www.youtube.com/watch?v=S-9gxB8kY2I",
+	"https://www.youtube.com/watch?v=7oTp71aY80I",
+	"https://www.youtube.com/watch?v=xjLTDaCUYuQ",
+	"https://www.youtube.com/watch?v=Rx8DeYDY-0A",
+	"https://www.youtube.com/watch?v=L1nQpoAvTSg",
+	"https://www.youtube.com/watch?v=2I0DON1eVvk",
+	"https://www.youtube.com/watch?v=0bdOlkibtAw",
+	"https://www.youtube.com/watch?v=RN24vMAFz3c",
+	"https://www.youtube.com/watch?v=rPlYReRGEhA",
+	"https://www.youtube.com/watch?v=NT8pIpzDX0g",
+	"https://www.youtube.com/watch?v=_wr9_yDXxH0",
+	"https://www.youtube.com/watch?v=ZkWSAgR4J24",
+	"https://www.youtube.com/watch?v=jdm123WYV9k",
+	"https://www.youtube.com/watch?v=Si3iXE3FUIE",
+	"https://www.youtube.com/watch?v=dVtcBEjbR8g",
+	"https://www.youtube.com/watch?v=eSEaBe9zqlg",
+	"https://www.youtube.com/watch?v=JXVh-wwiwNg",
+	"https://www.youtube.com/watch?v=IYwCdREfv88",
+	"https://www.youtube.com/watch?v=nx30HzgjFOA",
+	"https://www.youtube.com/watch?v=OR07r0ZMFb8",
+	"https://www.youtube.com/watch?v=ogZaStZP2HU",
+	"https://www.youtube.com/watch?v=y7PPB2bIu7U",
+	"https://www.youtube.com/watch?v=j9jbdgZidu8",
+	"https://www.youtube.com/watch?v=2HkJHApgKqw",
+	"https://www.youtube.com/watch?v=r89CjMZDQpQ",
+	"https://www.youtube.com/watch?v=apoFZv5J6xo",
+	"https://www.youtube.com/watch?v=NJ6kJ7GWtv0"
 ];
 //--------------------Command to Upload-------------------------------------------------------------
 /*const Mango = new require("mongodb").MongoClient;
-const mango = new Mango('REDACTED lmao I'm not open sourcing this again');
+const mango = new Mango('REDACTED');
 let connectionPromise = mango.connect()
 connectionPromise.then(() => {
 	mangoDatabase = mango.db("BotData").collection("Christmas Playlist");
@@ -286,10 +286,11 @@ module.exports = {
 
 							const recursive = () => {
 								toolkit.mangoDatabase.collection("Christmas Playlist").aggregate([{"$sample":{size: 1}}]).next()
-								.then(song => {
+								.then(async song => {
 									if (ytdl.validateURL(song.link))
 									{
-										christmasPlayer.play(VC.createAudioResource(ytdl(song.link, {quality: 'highestaudio', filter: 'audioonly'})));
+										var dl = await ytdl(song.link, {quality: 'highestaudio'});
+										christmasPlayer.play(VC.createAudioResource(dl));
 									}
 									else
 									{
@@ -298,9 +299,11 @@ module.exports = {
 								});
 							}
 
-							christmasPlayer.on(VC.AudioPlayerStatus.AutoPaused, () => christmasPlayer.stop(true));
 							christmasPlayer.on(VC.AudioPlayerStatus.Idle, () => {
-								recursive();
+								if (dbRef.vcSubscription)
+								{
+									recursive();
+								}
 							});
 
 							christmasPlayer.on('error', error => {
@@ -308,6 +311,7 @@ module.exports = {
 							});
 
 							dbRef.vcSubscription = dbRef.vcConnection.subscribe(christmasPlayer);
+							dbRef.christmasPlayer = christmasPlayer;
 							recursive();
 						});
 
@@ -387,15 +391,14 @@ function destroyConnection(dbRef)
 {
 	try
 	{
-		dbRef.vcSubscription.removeAllListeners();
+		dbRef.christmasPlayer.removeAllListeners();
 		dbRef.vcSubscription.unsubscribe();
 		dbRef.vcSubscription.stop();
-		dbRef.vcSubscription = null;
 		dbRef.vcConnection.destroy(); //This is a known bug documented in discord.js issues; the command will work but it just throws an error for no reason. Ignore it.
 	}
 	catch(err)
 	{
-		//console.error(err);
+		console.error(err);
 	}
 
 	dbRef.vcSubscription = null;
