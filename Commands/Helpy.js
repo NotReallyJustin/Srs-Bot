@@ -25,8 +25,8 @@ module.exports.returnUnbound = (message, lastBoundArg) => message.substring(mess
 //Combines discord attachments and the message content to form one huge msg blob that we can just send a once o.o
 module.exports.messageCompile = (msgContent, attachArray) => attachArray.reduce((acc, attachment) => acc + attachment.url + "\n", msgContent).replace("@everyone", "No you can't tag everyone.");
 
-//Date 1 is current date, date 2 is target date
-module.exports.dateDistance = (date1, date2) => dateFrom0(-1, date2.getMonth(), date2.getDate()) - dateFrom0(-1, date1.getMonth(), date1.getDate());
+//Date 1 is current date, date 2 is target date - 1000ms in a sec, 3600s in an hr, 24hr in a day
+module.exports.dateDistance = (date1, date2) => Math.floor((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
 
 //Adjusts the timezones. Time is in UTC. TMZ follows the INTL Conventions
 module.exports.tmzConvert = (time, tmz) => {

@@ -17,7 +17,8 @@ const bot = new Discord.Client({intents:[
 	INTENT.GUILD_MESSAGE_TYPING,
 	INTENT.DIRECT_MESSAGES,
 	INTENT.DIRECT_MESSAGE_REACTIONS,
-	INTENT.DIRECT_MESSAGE_TYPING
+	INTENT.DIRECT_MESSAGE_TYPING,
+	INTENT.GUILD_VOICE_STATES
 ]});
 
 //Not mongodb
@@ -30,7 +31,6 @@ const mango = new Mango(process.env.MANGO_CONNECTION);
 let connectionPromise = mango.connect()
 connectionPromise.then(() => {
 	console.log("Let that mango, we connected to someone else's computer");
-
 	mangoDatabase = mango.db("BotData");
 
 	//Toolkit to be parsed around
@@ -69,7 +69,8 @@ bot.once("ready", () => {
 		"./Commands/Blab",
 		"./Commands/Utility",
 		"./Commands/Moderation",
-		"./Commands/Fun"
+		"./Commands/Fun",
+		"./Commands/Events"
 	];
 	
 	let commandData = [];
@@ -84,6 +85,7 @@ bot.once("ready", () => {
 
 	//Upon holding the attack button, Ayaka will perform a frontal slash, dealing high physical damage
 	let setSlash = bot.application.commands.set(commandData);
+	//bot.guilds.fetch("476749001912221706").then(justinLand => justinLand.commands.set(commandData));
 
 	setSlash.then(() => {
 		console.log("Loading done - ready to roll!");

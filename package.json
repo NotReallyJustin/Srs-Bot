@@ -9,14 +9,15 @@
   "author": "Justin",
   "license": "ISC",
   "engines": {
-    "node": "16.x"
+    "node": "16.6.x"
   },
   "dependencies": {
-    "@danke77/google-translate-api": "^1.0.0",
+    "@discordjs/voice": "^0.7.5",
     "@vitalets/google-translate-api": "^7.0.0",
     "discord.js": "^13.1.0",
-    "jsdom": "^16.4.0",
+    "libsodium-wrappers": "^0.7.9",
     "mongodb": "^3.6.0",
-    "weather-js": "^2.0.0"
+    "weather-js": "^2.0.0",
+    "ytdl-core": "^4.9.2"
   }
 }

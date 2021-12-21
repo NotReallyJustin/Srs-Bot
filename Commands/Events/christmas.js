@@ -1,10 +1,15 @@
 //Christmas 2020
 //YES WE ARE MAKING STEVEN ANGRY BY ... WEB SCRAPING OFF REDDIT!
-//const ytdl = require("ytdl-core");
-const { JSDOM } = require("jsdom");
 const Discord = require("discord.js");
+const VC = require("@discordjs/voice");
+const ytdl = require("ytdl-core");
 const Helpy = require("../Helpy.js");
+const https = require("https");
+const justinId = "348208769941110784";
 
+//console.log(VC.generateDependencyReport())
+
+//------------------------CHRISTMAS GREETINGS--------------------------
 const christmasGreetings = [
 	"Merry Christmas!",
 	"Wishing you a Merry Christmas!",
@@ -18,17 +23,15 @@ const christmasGreetings = [
 	'May the magic and thrill of the holiday season stretch on!',
 	"feliz navidad!",
 	"Grab your eggnog folks, because it's CHRISTMAS TIME",
-	"Hey, have you tried `srs christmas`?",
+	"Hey, have you tried `srs christmas`? - wait we got rid of that",
 	"CHRISTMAS GANG UNITE!",
 	"Dyker Christmas Tree Time!",
-	"Light the candle! Parse the wand! Watch the fire glow!!!!!!",
-	"Hell yea! Mariah Carey time!",
+	"Mariah Carey is probably trending again",
 	"Have a holly jolly Christmas!",
 	"It's Christmas Charlie Brown!",
-	"Here's to 2020!",
+	"Here's to 2021!",
 	"smh where's my present",
 	"hey what did you get your fellow college alum for christmas this year?",
-	"cheers from my college!",
 	"IT'S BEGINNING TO LOOK ALOT LIKE CHRISTMAS!!!",
 	"I hope you get as lit as a tree this year",
 	"Let’s enjoy the Christmas season until our credit card bills arrive",
@@ -40,248 +43,377 @@ const christmasGreetings = [
 	"I’m dreaming of a white Christmas… but if the white runs outs, I’ll drink red",
 	"Dear Santa, just leave your credit card under the tree",
 	"Christmas is magical — all my money magically disappears!",
-	"Dear Santa, I was good yesterday… that should count!!!",
-	"I'm just a mouse at this point, but even Jerry celebrates Christmas!"
+	"Dear Santa, I was good yesterday… that should count!!!"
 ];
 
-//Only used to upload this insane playlist to mongoDb lmao
+//---------------------------------Christmas Playlist - For MangoDb upload only-------------------------------------
 const christmasPlaylist = [
-	"https://www.youtube.com/watch?v=KC4ohcVJ7K0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=1",
-	"https://www.youtube.com/watch?v=yXQViqx6GMY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=2",
-	"https://www.youtube.com/watch?v=E8gmARGvPlI&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=3",
-	"https://www.youtube.com/watch?v=5vyMuxxLsD0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=4",
-	"https://www.youtube.com/watch?v=KmddeUJJEuU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=5",
-	"https://www.youtube.com/watch?v=lD1fa8KJHdY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=6",
-	"https://www.youtube.com/watch?v=EM2Fnp_qnE8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=7",
-	"https://www.youtube.com/watch?v=BgdLdl60EMA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=8",
-	"https://www.youtube.com/watch?v=DkXIJe8CaIc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=9",
-	"https://www.youtube.com/watch?v=76WFkKp8Tjs&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=10",
-	"https://www.youtube.com/watch?v=vqv0ge_5Nsw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=11",
-	"https://www.youtube.com/watch?v=CxQlwEokeuo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=12",
-	"https://www.youtube.com/watch?v=oZ5cmrz-mrU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=13",
-	"https://www.youtube.com/watch?v=sE3uRRFVsmc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=14",
-	"https://www.youtube.com/watch?v=r1uJPGRfO5Y&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=15",
-	"https://www.youtube.com/watch?v=haFHrfmfHbc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=16",
-	"https://www.youtube.com/watch?v=s4J1JXnBDFk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=17",
-	"https://www.youtube.com/watch?v=cHzeTKPlbJg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=18",
-	"https://www.youtube.com/watch?v=INxgntXkXhU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=19",
-	"https://www.youtube.com/watch?v=wKj92352UAE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=20",
-	"https://www.youtube.com/watch?v=lylWDAo9hFw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=21",
-	"https://www.youtube.com/watch?v=b9XNyeeJZ2k&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=22",
-	"https://www.youtube.com/watch?v=WaNwEkCeZrE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=23",
-	"https://www.youtube.com/watch?v=iCiEHrexjvg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=24",
-	"https://www.youtube.com/watch?v=qlWp9B7hr3A&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=25",
-	"https://www.youtube.com/watch?v=_MzumcY3lpk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=26",
-	"https://www.youtube.com/watch?v=JlqoVScLhe8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=27",
-	"https://www.youtube.com/watch?v=oVVdNWX_5Go&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=28",
-	"https://www.youtube.com/watch?v=Mk_GmhD053E&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=29",
-	"https://www.youtube.com/watch?v=W_b7GRoBMMk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=30",
-	"https://www.youtube.com/watch?v=J-8VCL4uSUc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=31",
-	"https://www.youtube.com/watch?v=N-PyWfVkjZc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=32",
-	"https://www.youtube.com/watch?v=ifCWN5pJGIE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=33",
-	"https://www.youtube.com/watch?v=TLl7BtV0FJ4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=34",
-	"https://www.youtube.com/watch?v=9vu4AN2bc-M&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=35",
-	"https://www.youtube.com/watch?v=AN_R4pR1hck&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=36",
-	"https://www.youtube.com/watch?v=Iuewgu8z4Rc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=37",
-	"https://www.youtube.com/watch?v=dyaP_i0xFgs&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=38",
-	"https://www.youtube.com/watch?v=QJ5DOWPGxwg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=39",
-	"https://www.youtube.com/watch?v=5QFKKap5V3U&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=40",
-	"https://www.youtube.com/watch?v=2P8RU_dHyi4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=41",
-	"https://www.youtube.com/watch?v=CLr1AYRBS0A&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=42",
-	"https://www.youtube.com/watch?v=9LVWsXau1BU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=43",
-	"https://www.youtube.com/watch?v=xvZ2pbEQkFo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=44",
-	"https://www.youtube.com/watch?v=O9N4CjQs6a4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=45",
-	"https://www.youtube.com/watch?v=CquXc3kMurg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=46",
-	"https://www.youtube.com/watch?v=E8_TvLkM-zo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=47",
-	"https://www.youtube.com/watch?v=HZNShYZjjWk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=48",
-	"https://www.youtube.com/watch?v=OjPm0o04lGE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=49",
-	"https://www.youtube.com/watch?v=w9QLn7gM-hY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=50",
-	"https://www.youtube.com/watch?v=JyVEKsNFDjw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=51",
-	"https://www.youtube.com/watch?v=j-_1-uJ6Ml4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=52",
-	"https://www.youtube.com/watch?v=XMcTQveNdnw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=53",
-	"https://www.youtube.com/watch?v=Rk-gTW_m2po&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=54",
-	"https://www.youtube.com/watch?v=IhGuAJUumHk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=55",
-	"https://www.youtube.com/watch?v=Q63O54RuL-o&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=56",
-	"https://www.youtube.com/watch?v=QjsjIXCrwgA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=57",
-	"https://www.youtube.com/watch?v=U_simrq_9M8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=58",
-	"https://www.youtube.com/watch?v=5fOpBMk50d8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=59",
-	"https://www.youtube.com/watch?v=eHMT89J6Pos&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=60",
-	"https://www.youtube.com/watch?v=wtgGBgpNcIo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=61",
-	"https://www.youtube.com/watch?v=73-mmd7RyS0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=62",
-	"https://www.youtube.com/watch?v=J_QGZspO4gg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=63",
-	"https://www.youtube.com/watch?v=4PzetPqepXA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=64",
-	"https://www.youtube.com/watch?v=_KWFEdqTrmw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=65",
-	"https://www.youtube.com/watch?v=cB66Xn7yvec&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=66",
-	"https://www.youtube.com/watch?v=BEJmP8T07JU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=67",
-	"https://www.youtube.com/watch?v=AbgxDgVmMF0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=68",
-	"https://www.youtube.com/watch?v=pFjdfjrtf1Q&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=69",
-	"https://www.youtube.com/watch?v=LUjn3RpkcKY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=70",
-	"https://www.youtube.com/watch?v=BWTHptfwXjY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=71",
-	"https://www.youtube.com/watch?v=XO7Cubs4zVw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=72",
-	"https://www.youtube.com/watch?v=fppHWum93sA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=73",
-	"https://www.youtube.com/watch?v=ZCqhX89WV_0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=74",
-	"https://www.youtube.com/watch?v=SaEedtRHklg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=75",
-	"https://www.youtube.com/watch?v=amK4U4pCTB8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=76",
-	"https://www.youtube.com/watch?v=IbRtGMm96F8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=77",
-	"https://www.youtube.com/watch?v=94t-kNqOQu8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=78",
-	"https://www.youtube.com/watch?v=o10drRI3VQ0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=79",
-	"https://www.youtube.com/watch?v=CziCidR4KcY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=80",
-	"https://www.youtube.com/watch?v=-w7jyVHocTk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=81",
-	"https://www.youtube.com/watch?v=z8Vfp48laS8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=82",
-	"https://www.youtube.com/watch?v=eObZbLhbMH8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=83",
-	"https://www.youtube.com/watch?v=6KPoDbO4JV0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=84",
-	"https://www.youtube.com/watch?v=iEWFhzFWtkM&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=85",
-	"https://www.youtube.com/watch?v=q6JN64KVSwk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=86",
-	"https://www.youtube.com/watch?v=HSgGWDyFZKI&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=87",
-	"https://www.youtube.com/watch?v=BFOVIAMNIxM&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=88",
-	"https://www.youtube.com/watch?v=pL8k7wLQ_Rc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=89",
-	"https://www.youtube.com/watch?v=IippcraBPKA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=90",
-	"https://www.youtube.com/watch?v=anuggCrmdAw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=91",
-	"https://www.youtube.com/watch?v=Mj7Pr42rliI&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=92",
-	"https://www.youtube.com/watch?v=dNCTL9Gz-xw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=93",
-	"https://www.youtube.com/watch?v=S-9gxB8kY2I&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=94",
-	"https://www.youtube.com/watch?v=7oTp71aY80I&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=95",
-	"https://www.youtube.com/watch?v=xjLTDaCUYuQ&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=96",
-	"https://www.youtube.com/watch?v=Rx8DeYDY-0A&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=97",
-	"https://www.youtube.com/watch?v=L1nQpoAvTSg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=98",
-	"https://www.youtube.com/watch?v=2I0DON1eVvk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=99",
-	"https://www.youtube.com/watch?v=0bdOlkibtAw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=100",
-	"https://www.youtube.com/watch?v=RN24vMAFz3c&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=101",
-	"https://www.youtube.com/watch?v=rPlYReRGEhA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=102",
-	"https://www.youtube.com/watch?v=NT8pIpzDX0g&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=103",
-	"https://www.youtube.com/watch?v=_wr9_yDXxH0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=104",
-	"https://www.youtube.com/watch?v=ZkWSAgR4J24&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=105",
-	"https://www.youtube.com/watch?v=jdm123WYV9k&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=106",
-	"https://www.youtube.com/watch?v=Si3iXE3FUIE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=107",
-	"https://www.youtube.com/watch?v=dVtcBEjbR8g&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=108",
-	"https://www.youtube.com/watch?v=eSEaBe9zqlg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=109",
-	"https://www.youtube.com/watch?v=JXVh-wwiwNg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=110",
-	"https://www.youtube.com/watch?v=IYwCdREfv88&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=111",
-	"https://www.youtube.com/watch?v=nx30HzgjFOA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=112",
-	"https://www.youtube.com/watch?v=OR07r0ZMFb8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=113",
-	"https://www.youtube.com/watch?v=ogZaStZP2HU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=114",
-	"https://www.youtube.com/watch?v=y7PPB2bIu7U&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=115",
-	"https://www.youtube.com/watch?v=j9jbdgZidu8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=116",
-	"https://www.youtube.com/watch?v=2HkJHApgKqw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=117",
-	"https://www.youtube.com/watch?v=r89CjMZDQpQ&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=118",
-	"https://www.youtube.com/watch?v=apoFZv5J6xo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=119",
-	"https://www.youtube.com/watch?v=NJ6kJ7GWtv0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi&index=120"
+	"https://www.youtube.com/watch?v=yXQViqx6GMY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=E8gmARGvPlI&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=5vyMuxxLsD0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=KmddeUJJEuU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=lD1fa8KJHdY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=EM2Fnp_qnE8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=BgdLdl60EMA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=DkXIJe8CaIc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=76WFkKp8Tjs&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=vqv0ge_5Nsw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=CxQlwEokeuo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=oZ5cmrz-mrU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=sE3uRRFVsmc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=r1uJPGRfO5Y&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=haFHrfmfHbc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=s4J1JXnBDFk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=cHzeTKPlbJg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=INxgntXkXhU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=wKj92352UAE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=lylWDAo9hFw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=b9XNyeeJZ2k&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=WaNwEkCeZrE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=iCiEHrexjvg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=qlWp9B7hr3A&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=_MzumcY3lpk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=JlqoVScLhe8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=oVVdNWX_5Go&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=Mk_GmhD053E&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=W_b7GRoBMMk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=J-8VCL4uSUc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=N-PyWfVkjZc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=ifCWN5pJGIE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=TLl7BtV0FJ4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=9vu4AN2bc-M&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=AN_R4pR1hck&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=Iuewgu8z4Rc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=dyaP_i0xFgs&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=QJ5DOWPGxwg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=5QFKKap5V3U&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=2P8RU_dHyi4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=CLr1AYRBS0A&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=9LVWsXau1BU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=xvZ2pbEQkFo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=O9N4CjQs6a4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=CquXc3kMurg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=E8_TvLkM-zo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=HZNShYZjjWk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=OjPm0o04lGE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=w9QLn7gM-hY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=JyVEKsNFDjw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=j-_1-uJ6Ml4&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=XMcTQveNdnw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=Rk-gTW_m2po&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=IhGuAJUumHk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=Q63O54RuL-o&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=QjsjIXCrwgA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=U_simrq_9M8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=5fOpBMk50d8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=eHMT89J6Pos&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=wtgGBgpNcIo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=73-mmd7RyS0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=J_QGZspO4gg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=4PzetPqepXA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=_KWFEdqTrmw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=cB66Xn7yvec&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=BEJmP8T07JU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=AbgxDgVmMF0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=pFjdfjrtf1Q&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=LUjn3RpkcKY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=BWTHptfwXjY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=XO7Cubs4zVw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=fppHWum93sA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=ZCqhX89WV_0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=SaEedtRHklg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=amK4U4pCTB8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=IbRtGMm96F8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=94t-kNqOQu8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=o10drRI3VQ0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=CziCidR4KcY&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=-w7jyVHocTk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=z8Vfp48laS8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=eObZbLhbMH8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=6KPoDbO4JV0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=iEWFhzFWtkM&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=q6JN64KVSwk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=HSgGWDyFZKI&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=BFOVIAMNIxM&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=pL8k7wLQ_Rc&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=IippcraBPKA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=anuggCrmdAw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=Mj7Pr42rliI&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=dNCTL9Gz-xw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=S-9gxB8kY2I&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=7oTp71aY80I&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=xjLTDaCUYuQ&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=Rx8DeYDY-0A&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=L1nQpoAvTSg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=2I0DON1eVvk&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=0bdOlkibtAw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=RN24vMAFz3c&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=rPlYReRGEhA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=NT8pIpzDX0g&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=_wr9_yDXxH0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=ZkWSAgR4J24&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=jdm123WYV9k&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=Si3iXE3FUIE&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=dVtcBEjbR8g&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=eSEaBe9zqlg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=JXVh-wwiwNg&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=IYwCdREfv88&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=nx30HzgjFOA&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=OR07r0ZMFb8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=ogZaStZP2HU&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=y7PPB2bIu7U&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=j9jbdgZidu8&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=2HkJHApgKqw&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=r89CjMZDQpQ&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=apoFZv5J6xo&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi",
+	"https://www.youtube.com/watch?v=NJ6kJ7GWtv0&list=PLs_BtJUr-PzQQLWIg82WdIOyYs0An9jzi"
 ];
+//--------------------Command to Upload-------------------------------------------------------------
+/*const Mango = new require("mongodb").MongoClient;
+const mango = new Mango('REDACTED lmao I'm not open sourcing this again');
+let connectionPromise = mango.connect()
+connectionPromise.then(() => {
+	mangoDatabase = mango.db("BotData").collection("Christmas Playlist");
+	mangoDatabase.insertMany(christmasPlaylist.map(x => {
+		return {"link": x};
+	}), { ordered: false });
+});
 
-//This module export is no longer available until 12/21/2021
-//When that time comes I'll be a senior doing college apps owo
-//Time passes rly fast :cri:
+return;*/
+//-------------------------------CHRISTMAS CMD---------------------------------------------------
 module.exports = {
 	name: "christmas",
-	description: "Merry Christmas! The hub for everything christmas!\nCheck `srs commands` for hub commands!",
-	execute: (message) => {
-		message.channel.send("this holiday event is locked until 12/21/2021");
-	}
-
-	/*execute: (message, args, toolkit) => {
-		//Determines a nice christmas thing!
-		let christmasStatus = christmasStatus(args, Math.ceil(Math.random() * 1));
-		let server = toolkit.bot.database.get(message.guild.id);
-
-		switch(christmasStatus)
+	description: "IT'S A 2021 CHRISTMAS!!! Access the go-to Christmas hub here!",
+	type: "SUB_COMMAND_GROUP",
+	options: [
 		{
-			case 200.1:
-				var fetchDOM = await JSDOM.fromURL("https://old.reddit.com/r/christmas/");
-				var fetchPage = await JSDOM.fromURL(christmasRedditLink(fetchDOM))
-				let redditJSON = christmasRedditParse(fetchPage);
-				let imgEmbed = christmasRedditEmbed(Discord.MessageEmbed, redditJSON, Math.round(Math.random()));
+			name: "greeting",
+			type: "SUB_COMMAND",
+			description: "WE WISH YOU A MERRY CHRISTMAS!"
+		},
+		{
+			name: "countdown",
+			type: "SUB_COMMAND",
+			description: "🎄 START THE CHRISTMAS COUNTDOWN!!! 🎄"
+		},
+		{
+			name: "radio",
+			type: "SUB_COMMAND",
+			description: "Designate a Christmas radio channel where Srs Bot will play forever. Only accessible by Justin 🔔",
+			options: [
+				{
+				    name: "snowflake",
+				    description: "Channel snowflake",
+				    required: true,
+				    type: "STRING"
+				},
+				{
+					name: "toggle",
+					description: "Are you turning the radio on or off?",
+					required: true,
+					type: "BOOLEAN"
+				}
+			]
+		},
+		{
+			name: "snapshot",
+			type: "SUB_COMMAND",
+			description: "❄️ It's the most wonderful time of the year ❄️"
+		}
+	],
+	execute: async (interaction, toolkit) => {
+		const subName = interaction.options.getSubcommand(true);
+		if (!subName)
+		{
+			interaction.reply("smh you have an invalid subcommand");
+			return;
+		}
 
-				message.channel.send(imgEmbed);
+		const subCmd = interaction.options.data[0];
+		switch(subName)
+		{
+			case "greeting":
+				interaction.reply(Helpy.randomResp(christmasGreetings));
 			break;
 
-			case 200.2:
-				let vc = message.member.voice.channel;
-				if (vc && !server.vcConnection)
-				{
-					let vcConnection = await vc.join();
-					server.vcConnection = vcConnection;
-					playSong(vcConnection, toolkit.mangoDatabase.collection("Christmas Playlist"), server, message.channel);
-				}
-				else
-				{
-					message.channel.send("smh either you're not in a vc or I'm already in a vc");
-				}
+			case "countdown":
+				let merryChristmas = new Date(2021, 11, 25);
+				interaction.reply(`${Helpy.dateDistance(new Date(), merryChristmas)} days until Christmas! ❄️`);
 			break;
 
-			case 200.3:
-				var collection = toolkit.mangoDatabase.collection("Christmas Playlist");
-				let playlistStatus = playlistStatus(messageArray);
-
-				switch (playlistStatus)
+			case "radio":
+				var toggle = subCmd.options[1].value;
+				if (interaction.user.id != justinId)
 				{
-					case 200.1:
-						//Send a random christmas music
-						collection.aggregate([{"$sample":{size: 1}}]).next()
-							.then(item => {
-								message.channel.send(item.link);
+					interaction.reply("smh you're not Justin");
+					return;
+				}
+
+				//subCmd.options[0].value is the vc snowflake
+				toolkit.bot.channels.fetch(subCmd.options[0].value).then(async (vcChannel) => {
+					let dbRef = toolkit.bot.database.getServer(interaction.guildId);
+					if (!vcChannel.isVoice())
+					{
+						interaction.reply("smh this is not a VC");
+						return;
+					}
+
+					if (toggle)
+					{
+						if (dbRef.vcConnection || dbRef.vcSubscription)
+						{
+							interaction.reply("buddy there is already an active VC in this server");
+							return;
+						}
+
+						await interaction.deferReply();
+						dbRef.vcConnection = VC.joinVoiceChannel({
+							channelId: subCmd.options[0].value,
+							guildId: interaction.guildId,
+							adapterCreator: interaction.guild.voiceAdapterCreator
+						});
+
+						dbRef.vcConnection.on(VC.VoiceConnectionStatus.Ready, () => {
+							interaction.editReply("Logged into VC!");
+
+							//Audio Player - radio will be exclusive to each server so people don't go crazy listening to the same song in all servers
+
+							let christmasPlayer = VC.createAudioPlayer({
+								behaviors: {
+									noSubscriber: VC.NoSubscriberBehavior.Pause
+								}
 							});
-					break;
 
-					case 200.2:
-						collection.insertOne({
-							link: args[2]
-						})
+							const recursive = () => {
+								toolkit.mangoDatabase.collection("Christmas Playlist").aggregate([{"$sample":{size: 1}}]).next()
+								.then(song => {
+									if (ytdl.validateURL(song.link))
+									{
+										christmasPlayer.play(VC.createAudioResource(ytdl(song.link, {quality: 'highestaudio', filter: 'audioonly'})));
+									}
+									else
+									{
+										recursive();
+									}
+								});
+							}
 
-						message.channel.send("Your playlist has gone through :)");
-					break;
+							christmasPlayer.on(VC.AudioPlayerStatus.AutoPaused, () => christmasPlayer.stop(true));
+							christmasPlayer.on(VC.AudioPlayerStatus.Idle, () => {
+								recursive();
+							});
 
-					case 400:
-						message.channel.send("hmm this command does no exist. Maybe try srs christmas music upload?");
-					break;
+							christmasPlayer.on('error', error => {
+								console.error(error);
+							});
 
-					case 404:
-						message.channel.send("smh give me a youtube link to upload to the Christmas Playlist");
-					break;
+							dbRef.vcSubscription = dbRef.vcConnection.subscribe(christmasPlayer);
+							recursive();
+						});
 
-					default:
-						message.channel.send("hmm this isn't supposed to happen... maybe call Justin?");
-					break;
-				}
+						dbRef.vcConnection.on(VC.VoiceConnectionStatus.Disconnected, () => {
+							Promise.any([
+								VC.entersState(dbRef.connection, VC.VoiceConnectionStatus.Signalling, 5000),
+								VC.entersState(dbRef.connection, VC.VoiceConnectionStatus.Connecting, 5000),
+							]).catch(err => {
+								console.error(err);
+								destroyConnection(dbRef);
+							});
+						});
 
+						dbRef.vcConnection.on(VC.VoiceConnectionStatus.Destroyed, () => {
+							destroyConnection(dbRef);
+						});	
+					}
+					else
+					{
+						if (!dbRef.vcConnection || !dbRef.vcSubscription)
+						{
+							interaction.reply("buddy there is no active VC");
+							return;
+						}
+						
+						destroyConnection(dbRef);
+						interaction.reply("Disconnected!");
+					}					
+				}).catch(err => { 
+					//console.error(err)
+					interaction.reply("smh the channel doesn't exist");
+					return;
+				});
 			break;
 
-			case 200.4:
-				let currVc = serverArray[serverSearchIdx].vcConnection;
+			case "snapshot":
+				await interaction.deferReply();
+				https.get("https://www.reddit.com/r/christmas/new.json?limit=40", response => {
+					var packets = "";
 
-				if (currVc)
-				{
-					server.vcConnection.disconnect();
-					server.vcConnection = null;
-				}
-				else
-				{
-					message.channel.send("smh wym I'm not even in a vc");
-				}
-			break;
+					response.on("data", data => {
+						packets += data;
+					});
 
-			case 200.99:
-				let merryChristmas = new Date(2020, 11, 25);
+					response.on("end", () => {
+						let dataJSON = JSON.parse(packets);
+						let post;
 
-				message.channel.send(`${Helpy.dateDistance(new Date(), merryChristmas)} days until Christmas!`);
-				message.channel.send("when the time comes, we'll make this place more festive 😃");
-			break;
+						let redditImg;
+						while (!redditImg)
+						{
+							post = Helpy.randomResp(dataJSON.data.children);
+							if (post.data.url_overridden_by_dest && post.data.url_overridden_by_dest.includes("i.redd.it"))
+							{
+								redditImg = post.data.url_overridden_by_dest;
+							}
+							else if (post.data.thumbnail && /https|http/.test(post.data.thumbnail))
+							{
+								redditImg = post.data.thumbnail;
+							}
+						}
 
-			case 300:
-				message.channel.send("The srs christmas command! Without any arguments, it'll return a random Christmas surprise." + 
-					"Otherwise, try srs christmas [countdown|music|photo|playSong|stopSong]! Check out `srs command` for specifics!");
-			break;
-
-			case 404:
-				message.channel.send("whoops! Looks like what you want doesn't exist! Don't worry, try `srs christmas help`!");
+						var x = christmasRedditEmbed(post.data.title, post.data.author, redditImg);
+						interaction.editReply({embeds: [x]});
+					});
+				});
 			break;
 
 			default:
-				message.channel.send("woah it's not supposed to get here uh... @JC23#7458");
+				interaction.reply(Helpy.randomResp(christmasPlaylist));
 			break;
 		}
-	}*/
+	}
 }
 
+function destroyConnection(dbRef)
+{
+	try
+	{
+		dbRef.vcSubscription.removeAllListeners();
+		dbRef.vcSubscription.unsubscribe();
+		dbRef.vcSubscription.stop();
+		dbRef.vcSubscription = null;
+		dbRef.vcConnection.destroy(); //This is a known bug documented in discord.js issues; the command will work but it just throws an error for no reason. Ignore it.
+	}
+	catch(err)
+	{
+		//console.error(err);
+	}
+
+	dbRef.vcSubscription = null;
+	dbRef.vcConnection = null;
+}
+
+const christmasRedditEmbed = (text, author, image) =>
+{
+	let redditDisplay = new Discord.MessageEmbed();
+	redditDisplay.setAuthor("u/" + author);
+	redditDisplay.setDescription(text);
+	redditDisplay.setImage(image);
+	redditDisplay.setColor((Math.round(Math.random()) ? "GREEN" : "RED"));
+
+	return redditDisplay;
+}
+
+/*
 const christmasRedditLink = fetchDOM =>
 {
 	let document = fetchDOM.window.document;
@@ -424,4 +556,4 @@ const playSong = (vcConnection, csongDb, serverObj, messageChannel) => {
 				console.log(err);
 			})
 		});
-}
+}*/

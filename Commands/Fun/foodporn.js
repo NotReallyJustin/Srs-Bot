@@ -5,8 +5,8 @@ const Helpy = require("../Helpy.js");
 module.exports = {
 	name: "foodporn",
 	description: "Imma be frank with you - this is porn. Well, foodporn. Don't HOS me pls",
-	execute: async (interaction) => {
-		await interaction.deferReply();
+	execute: (interaction) => {
+		interaction.deferReply();
 		https.get("https://www.reddit.com/r/FoodPorn/new.json?limit=50", response => {
 
 			var packets = "";
