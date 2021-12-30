@@ -284,30 +284,41 @@ module.exports = {
 								}
 							});
 
+							let fetching = false;
 							const recursive = () => {
+								fetching = true;
 								toolkit.mangoDatabase.collection("Christmas Playlist").aggregate([{"$sample":{size: 1}}]).next()
-								.then(async song => {
-									if (ytdl.validateURL(song.link))
-									{
-										var dl = await ytdl(song.link, {quality: 'highestaudio'});
-										christmasPlayer.play(VC.createAudioResource(dl));
-									}
-									else
-									{
-										recursive();
-									}
-								});
+									.then(async song => {
+										if (await ytdl.validateURL(song.link))
+										{
+											//console.log(song.link)
+											const dl = await ytdl(song.link, {quality: 'highestaudio', fmt: "mp3"});
+											//console.log(dl)
+											const d2 = await VC.createAudioResource(dl);
+											christmasPlayer.play(d2);
+											fetching = false;
+										}
+										else
+										{
+											recursive();
+										}
+									}).catch(err => {
+										fetching = false;
+										console.error(err);
+									})
 							}
 
 							christmasPlayer.on(VC.AudioPlayerStatus.Idle, () => {
-								if (dbRef.vcSubscription)
+								if (dbRef.vcSubscription && !fetching)
 								{
 									recursive();
 								}
 							});
 
 							christmasPlayer.on('error', error => {
+								console.log("Error at ChristmasPlayer");
 								console.error(error);
+								christmasPlayer.stop();
 							});
 
 							dbRef.vcSubscription = dbRef.vcConnection.subscribe(christmasPlayer);
@@ -393,12 +404,11 @@ function destroyConnection(dbRef)
 	{
 		dbRef.christmasPlayer.removeAllListeners();
 		dbRef.vcSubscription.unsubscribe();
-		dbRef.vcSubscription.stop();
 		dbRef.vcConnection.destroy(); //This is a known bug documented in discord.js issues; the command will work but it just throws an error for no reason. Ignore it.
 	}
 	catch(err)
 	{
-		console.error(err);
+		//console.error(err);
 	}
 
 	dbRef.vcSubscription = null;
