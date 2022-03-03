@@ -14,5 +14,5 @@ srs-bot-testing runs guinea pig version of srs bot testing
 UWU Bot is very disgwaceful >:( <br />
 How does this have 2 stars illegal illegal illegal <br />
 <img src="https://i.imgur.com/8wRv5th.png" style="width: 60%"/>
-# Also if someone knows why these commits don't show up on main page lmk
+## Also if someone knows why these commits don't show up on main page lmk
 ![image](https://user-images.githubusercontent.com/60296568/156484549-4ba78c87-a427-459c-aa05-ca465270a7e9.png)
