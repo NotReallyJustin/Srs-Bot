@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "uwu",
 	description: "uwuify swomethwing uwu",
@@ -5,7 +7,7 @@ module.exports = {
 		{
 			name: "twext",
 			description: "the thwing you wwwant to uwu",
-			type: "STRING",
+			type: ApplicationCommandOptionType.String,
 			required: true
 		}
 	],
@@ -39,9 +41,3 @@ const uwuify = msgContent => {
 
 	return uwuMsg;
 }
-
-/*const uwuify = function(str) {
-	return {
-		efhufhiueywuifywfuiewyfiuweyfiuweyfueiwyfewiufye
-	}
-}*/

@@ -13,7 +13,7 @@ const phil = [
 
 module.exports = {
     name: "philip",
-    description: "Cmonnnnnn it's just an inside joke from the OG Gang days with Beesha 🥳",
+    description: "Cmonnnnnn it's just an inside joke with Bishaka 🥳",
     execute : (interaction) => {
         let x = Helpy.randomResp(phil);
         interaction.reply(x);

@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require("discord.js");
 const Helpy = require("../Helpy.js");
 const { autoExtract } = require("./Defense Arsenal/RelationExtraction.js");
 const SentimentAnalysis = require('./Defense Arsenal/SentimentAnalysis.js');
@@ -12,7 +13,7 @@ module.exports = {
 			name: "item",
             description: "Glory to light mode, and its everlasting reign!",
             required: true,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
 		} //Ok at this point we're not even hiding that this is light mode propaganda lmao
 	],
 	execute: async (interaction) => {

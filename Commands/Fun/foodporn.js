@@ -43,10 +43,10 @@ module.exports = {
 }
 
 const foodpornEmbed = (text, author, image) => {
-	let embed = new Discord.MessageEmbed();
+	let embed = new Discord.EmbedBuilder();
 	embed.setTitle(text);
 	embed.setDescription("u/" + author);
-	embed.setColor("BROWN");
+	embed.setColor("Brown");
 
 	embed.setImage(image);
 

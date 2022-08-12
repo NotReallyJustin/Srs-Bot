@@ -1,12 +1,14 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
     name: "ping",
     description: "pong!",
     options: [
         {
             name: "rainbow",
-            description: "The Linux rainbow table you want to use to calculate the TCP network ping delay derivative!",
+            description: "The Linux rainbow table you want to use to calculate the TCP network's integrand ping delay!", //Lmao gibberish
             required: false,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
         }
     ],
     execute : (interaction) => {
@@ -14,7 +16,7 @@ module.exports = {
     	{
     		interaction.reply("smh I'm not a ping pong ball");
     	}
-        else if (isNaN(+interaction))
+        else if (isNaN(+interaction.options.getString("rainbow")))
         {
             interaction.reply("smh that's not a rainbow table algorithm");
         }

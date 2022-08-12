@@ -9,7 +9,7 @@ module.exports = {
             name: "realtime",
             description: "Enables high-tech realtime forecast, brought to you by the r/WallStreetBets Chad Money show!",
             required: false,
-            type: "BOOLEAN"
+            type: Discord.ApplicationCommandOptionType.Boolean
         }
     ],
     execute : async (interaction) => {
@@ -49,9 +49,12 @@ const weatherFind = () => new Promise((resolve, yeet) => {
 });
 
 const weatherEmbed = (json) => {
-	let embed = new Discord.MessageEmbed();
-	embed.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
-	embed.setColor('AQUA');
+	let embed = new Discord.EmbedBuilder();
+	embed.setAuthor({
+		name: "Srs Bot",
+		iconURL: "https://i.imgur.com/Bnn7jox.png"
+	});
+	embed.setColor('Aqua');
 	embed.setTitle("Advanced Forecast");
 	embed.setDescription(`Current Temp: ${json.current.temperature} \n` +
 		`Feels like: ${json.current.feelslike} \n`+
@@ -59,7 +62,7 @@ const weatherEmbed = (json) => {
 		`Sky Text: ${json.current.skytext} \n` +
 		`Wind Speed: ${json.current.winddisplay} \n` +
 		`Recent Weather Bloon Launch Time: ${json.current.observationtime}`);
-	embed.setFooter("Does anyone even use this during quarantine");
+	embed.setFooter({text: "Congrats welcome to the oven that is NYC"});
 
 	return embed;
 }

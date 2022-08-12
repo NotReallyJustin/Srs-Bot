@@ -1,64 +1,64 @@
 const Discord = require("discord.js");
+const ClientConfig = require("../../clientConfig.js");
 const Helpy = require("../Helpy.js");
 const justinId = "348208769941110784";
 
 module.exports = {
 	name: "tasks",
 	description: "The go-to hub for srs tasks, which will keep track of your tasks!",
-	type: "SUB_COMMAND_GROUP",
 	options: [
 		{
 			name: "view",
-			type: "SUB_COMMAND",
+			type: Discord.ApplicationCommandOptionType.Subcommand,
 			description: "Stop playing your gameboy advance and fix that 2.85 😤"
 		},
 		{
 			name: "add",
-			type: "SUB_COMMAND",
+			type: Discord.ApplicationCommandOptionType.Subcommand,
 			description: "Add a task to your bucket list! Oh wait it's more homework? ew",
 			options: [
 				{
 				    name: "task",
 				    description: "The task to jot down on MongoDB cloud!",
 				    required: true,
-				    type: "STRING"
+				    type: Discord.ApplicationCommandOptionType.String
 				}
 			]
 		},
 		{	
 			name: "delete",
-			type: "SUB_COMMAND",
+			type: Discord.ApplicationCommandOptionType.Subcommand,
 			description: "Congrats! You just finished a task and are ready to yeet it!",
 			options: [
 				{
 				    name: "index",
 				    description: "The task index to yeet!",
 				    required: true,
-				    type: "INTEGER"
+				    type: Discord.ApplicationCommandOptionType.Integer
 				}
 			]
 		},
 		{
 			name: "yeet",
-			type: "SUB_COMMAND",
+			type: Discord.ApplicationCommandOptionType.Subcommand,
 			description: "Lady Ninguang shreds all her paper and woosh! The white paper sn- wait a min that's Genshin"
 		},
 		{
 			name: "destroy",
-			type: "SUB_COMMAND",
+			type: Discord.ApplicationCommandOptionType.Subcommand,
 			description: "Shut down MangoDb but if you need to wait that's cool with me",
 			defaultPermission: false,
 			permissions: [
 				{
 					id: justinId,
-					type: "USER",
+					type: Discord.ApplicationCommandOptionType.User,
 					permissions: true
 				}
 			],
 		}
 	],
-	execute: async (interaction, toolkit) => {
-		const collection = toolkit.mangoDatabase.collection("Tasks");
+	execute: async (interaction) => {
+		const collection = ClientConfig.mangoDatabase.collection("Tasks");
 		const userId = interaction.user.id;
 
 		//If database entry does not exist, make a JSON entry
@@ -173,9 +173,12 @@ module.exports = {
 }
 
 const taskEmbed = (taskArray) => {
-	let tDisplay = new Discord.MessageEmbed()
-		.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png")
-		.setColor('GREEN')
+	let tDisplay = new Discord.EmbedBuilder()
+		.setAuthor({
+			name: "Srs Bot",
+			iconURL: "https://i.imgur.com/Bnn7jox.png"
+		})
+		.setColor('Green')
 		.setTitle("Your Tasks:");
 
 	let description = "";

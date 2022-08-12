@@ -1,4 +1,4 @@
-const Helpy = require("../Helpy.js");
+const { ApplicationCommandOptionType } = require("discord.js");
 
 const justinId = "348208769941110784";
 const cmdDesc = "The executive privilege is the ability for someone to control srs bot into doing whatever they want it to do. It's a special power - " +
@@ -14,7 +14,7 @@ module.exports = {
             name: "blast",
             description: "Turn that Trumpet up to sfffz!",
             required: true,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
         }
 	],
 	execute: (interaction) => {
@@ -22,7 +22,7 @@ module.exports = {
 		{
 			var txt = interaction.options.getString('blast', true);
 			interaction.channel.send(txt);
-			//interaction.reply({content: 'Done!', ephemeral: true});
+			interaction.reply({content: 'Done!', ephemeral: true});
 		}
 		else
 		{

@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require("discord.js");
 const Helpy = require("../Helpy.js");
 const Discord = require("discord.js");
 
@@ -9,13 +10,13 @@ module.exports = {
 		    name: "snowflake",
 		    description: "The person you're warning for weebery",
 		    required: true,
-		    type: "USER"
+		    type: ApplicationCommandOptionType.User
 		},
 		{
 		    name: "reason",
 		    description: "Why are you warning them?",
 		    required: true,
-		    type: "STRING"
+		    type: ApplicationCommandOptionType.String
 		}
 	],
 	execute: async (interaction) => {
@@ -33,20 +34,38 @@ module.exports = {
 			return;
 		}
 
-		var x = warnMsg(interaction.user, reason);
-		user.send({embeds: [x]});
+		//Check for user perms
+		if (interaction.member.permissions.has(Discord.PermissionsBitField.Flags.ManageMessages))
+		{
+			var x = warnMsg(interaction.user, reason);
+			let sendPromise = user.send({embeds: [x]});
 
-		interaction.reply("If all goes well, it's sent!");
+			sendPromise.then(() => {
+				interaction.reply("If all goes well, it's sent!");
+			});
+			
+			sendPromise.catch(err => {
+				interaction.reply("Something went wrong with sent - check error logs. But likely, the user just blocked srs bot");
+				console.error(err);
+			})
+		}
+		else
+		{
+			interaction.reply("smh you don't have warn perms");
+		}
 	}
 }
 
 //Creates a fancy embembed to warn them
 const warnMsg = (messageAuthor, reason) => {
-	let warnMessage = new Discord.MessageEmbed()
-		.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png")
-		.setColor('GOLD')
+	let warnMessage = new Discord.EmbedBuilder()
+		.setAuthor({
+			name: "Srs Bot",
+			iconURL: "https://i.imgur.com/Bnn7jox.png"
+		})
+		.setColor('Gold')
 		.setTitle("Warn Message")
-		.setDescription(`You have been warned by ${messageAuthor.username}! Warn reason:\n${reason}`);
+		.setDescription(`_You have been warned by ${messageAuthor.username}!_ \n**Warn reason:** ${reason}`);
 
 	return warnMessage;
 }

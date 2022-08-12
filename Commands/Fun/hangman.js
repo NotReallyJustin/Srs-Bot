@@ -1,4 +1,8 @@
-const https = require("https");
+const { ApplicationCommandOptionType } = require("discord.js");
+const Discord = require("discord.js");
+const ClientConfig = require("../../clientConfig.js");
+const Helpy = require("../Helpy.js");
+const HANGMAN_PICS = ["https://i.imgur.com/g0a2WEa.png", "https://i.imgur.com/7fqxdVS.png", "https://i.imgur.com/oiSSmkW.png", "https://i.imgur.com/WtvSmD5.png"]
 
 module.exports = {
 	name: "hangman",
@@ -8,16 +12,17 @@ module.exports = {
 			name: "proto",
             description: "Are you gonna start or stop the game?",
             required: true,
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             choices: [
             	{name: "start", value: "start"},
             	{name: "stop", value: "stop"}
             ]
 		}
 	],
-	execute: (interaction, toolkit, currentChannel) => {
-		const collection = toolkit.mangoDatabase.collection("Hangman");
+	execute: (interaction) => {
+		const collection = ClientConfig.mangoDatabase.collection("Hangman");
 		const proto = interaction.options.getString("proto");
+		const currentChannel = ClientConfig.bot.database.searchMessageChannel(interaction);
 
 		if (proto == "start")
 		{
@@ -34,7 +39,7 @@ module.exports = {
 						{
 							if (letter == " ")
 							{
-								wordDisplay += "\t";
+								wordDisplay += "\u1CBC";
 							}
 							else
 							{
@@ -51,9 +56,23 @@ module.exports = {
 					let canStartGame = !currentChannel.hasValidMoves(interaction.user.id);
 					if (canStartGame)
 					{
+						const stopActionRow = hangmanBtn();
 						//Sends the initial message wave
-						interaction.reply({content: constructMessage(lives, wordDisplay, null, "", alreadyGuessed), fetchReply: true})
+						interaction.reply({
+							embeds: [hangmanEmbed(lives, wordDisplay, interaction.user.tag, "", alreadyGuessed)], 
+							fetchReply: true,
+							components: [stopActionRow]
+						})
 							.then(messageObj => {
+								//Event interact
+								Helpy.buttonInteract(messageObj, interaction.user.id, "hangmanStop", (i) => {
+									currentChannel.deleteMoves(i.user.id);
+									stopActionRow.components[0].setDisabled(true);
+									i.update({
+										embeds: [hangmanEmbed(lives, wordDisplay, interaction.user.tag, "", alreadyGuessed)], 
+										components: [stopActionRow]
+									});
+								});
 
 								//External function call route
 								const playMove = (messageContent, message) => {
@@ -77,8 +96,8 @@ module.exports = {
 										{
 											status = "You need to insert a one letter object you haven't guessed before.";
 										}
-
-										messageObj.edit(constructMessage(lives, wordDisplay, null, status, alreadyGuessed));
+										message.delete();
+										messageObj.edit({embeds: [hangmanEmbed(lives, wordDisplay, interaction.user.tag, status, alreadyGuessed)], components: [stopActionRow]});
 										return;
 									}
 
@@ -124,7 +143,7 @@ module.exports = {
 										currentChannel.deleteMoves(message.author.id);
 									}
 
-									messageObj.edit(constructMessage(lives, wordDisplay, null, status, alreadyGuessed));
+									messageObj.edit({embeds: [hangmanEmbed(lives, wordDisplay, interaction.user.tag, status, alreadyGuessed)], components: [stopActionRow]});
 
 									message.delete();
 								}
@@ -134,7 +153,7 @@ module.exports = {
 					}
 					else
 					{
-						interaction.reply("You have another game going on. You cannot statrt a new hangman game smh");
+						interaction.reply("You have another game going on. You cannot start a new hangman game smh");
 					}
 				});
 		}
@@ -155,13 +174,46 @@ module.exports = {
 	}
 }
 
-const constructMessage = (lives, word, definition, status, alrGuess) => {
-	var str = "__**Hangman**__";
-	str += `\n**Lives**: ${lives}\n`;
-	str += `**Already Guessed:** ${alrGuess}\n`;
-	//str += `**Hint Definition**: ${definition}\n`;
-	str += `**Status**: ${status}\n`
-	str += `**Word**: ${word}`;
-
-	return str;
+const hangmanEmbed = (lives, word, userName, status, alrGuess) => {
+	let embed = new Discord.EmbedBuilder();
+	embed.setTitle("Srs Hangman");
+	embed.setAuthor({name: userName});
+	embed.setImage(HANGMAN_PICS[lives]);
+	embed.addFields(
+		{
+			name: "Lives",
+			value: lives + ""
+		},
+		{
+			name: "Already Guessed",
+			value: alrGuess == "" ? "-" : alrGuess
+		},
+		{
+			name: "Status",
+			value: status == "" ? "-" : status
+		},
+		{
+			name: "Word",
+			value: word
+		}
+	);
+	return embed;
 }
+
+const hangmanBtn = () => new Discord.ActionRowBuilder()
+	.addComponents(Discord.ButtonBuilder.from({
+		custom_id: "hangmanStop",
+		label: "Stop Game",
+		style: Discord.ButtonStyle.Danger
+	}));
+
+// const constructMessage = (lives, word, definition, status, alrGuess) => {
+// 	var str = "__**Hangman**__";
+// 	str += `\n**Lives**: ${lives}\n`;
+// 	str += `**Already Guessed:** ${alrGuess}\n`;
+// 	//str += `**Hint Definition**: ${definition}\n`;
+// 	str += `**Status**: ${status}\n`
+// 	str += `**Word**: ${word}`;
+
+// 	return str;
+// }

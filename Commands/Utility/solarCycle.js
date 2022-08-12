@@ -1,6 +1,6 @@
 /* API Attribution: https://sunrise-sunset.org/api 
    Hey cat look! I'm using an api for once lmao     */
-const https = require("https");
+const http = require("http");
 const Helpy = require("../Helpy.js")
 const Discord = require("discord.js");
 
@@ -16,22 +16,24 @@ module.exports = {
             name: "latitude",
             description: "I'm bad at geography, but it'll default to NYC if not specified",
             required: false,
-            type: "NUMBER"
+            type: Discord.ApplicationCommandOptionType.Number
         },
         {
             name: "longitude",
             description: "This should be the vertical meridian thingy",
             required: false,
-            type: "NUMBER"
+            type: Discord.ApplicationCommandOptionType.Number
         },
         {
             name: "intl",
             description: "INTL Timezone Conventions to display time in! Defaults to America/New_York if smth goes wrong",
             required: false,
-            type: "STRING"
+            type: Discord.ApplicationCommandOptionType.String
         }
 	],
-	execute: (interaction) => {
+	execute: async (interaction) => {
+		await interaction.deferReply();
+
 		let lat = interaction.options.getNumber('latitude');
 		let long = interaction.options.getNumber('longitude');
 		let tmz = interaction.options.getString('intl');
@@ -46,10 +48,8 @@ module.exports = {
 		{
 			tmz = 'America/New_York';
 		}
-
-		interaction.deferReply();
 		
-		https.get(`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${long}&date=today&formatted=0`, response => {
+		http.get(`http://api.sunrise-sunset.org/json?lat=${lat}&lng=${long}&date=today&formatted=0`, response => {
 			var blob = "";
 			response.on("data", data => {
 				blob += data;
@@ -70,9 +70,12 @@ module.exports = {
 
 //Precondition: data is formatted via the http request
 const solarEmbed = (data, lat, long, tmz) => {
-	let embed = new Discord.MessageEmbed();
-	embed.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png");
-	embed.setColor('DARK_BLUE');
+	let embed = new Discord.EmbedBuilder();
+	embed.setAuthor({
+		name: "Srs Bot",
+		iconURL: "https://i.imgur.com/Bnn7jox.png"
+	});
+	embed.setColor('DarkBlue');
 	embed.setTitle("Solar Cycle");
 
 	embed.setDescription(`Solar data of Latitude: ${lat} - Longitude: ${long}\n` +

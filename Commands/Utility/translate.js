@@ -39,13 +39,13 @@ module.exports = {
             name: "translatetext",
             description: "The parola che vuoi traddure 🗿 Grazie my 3 years of italian in middle school paid off",
             required: true,
-            type: "STRING"
+            type: Discord.ApplicationCommandOptionType.String
         },
 		{
             name: "preset",
             description: "✨ elige un preset especial que hay from y to pre-selected para ti ✨",
             required: false,
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             choices: [
             	{name: "Help", value: "help"},
             	{name: "English", value: "english"},
@@ -56,7 +56,7 @@ module.exports = {
             name: "from",
             description: "ℹ️ ❌️ 🗣️ 😀",
             required: false,
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             choices: [
             	{name: 'en', value: 'en'},
             	{name: 'es', value: 'es'},
@@ -80,7 +80,7 @@ module.exports = {
             name: "to",
             description: "你想翻译成哪个语言 蛋布丁 汤饺子🥟 饭蛋糕 王朋是垃圾",
             required: false,
-            type: "STRING",
+            type: Discord.ApplicationCommandOptionType.String,
             choices: [
             	{name: 'en', value: 'en'},
             	{name: 'es', value: 'es'},
@@ -175,9 +175,12 @@ module.exports = {
 }
 
 const translateHelpEmbed = (jsonArray) => {
-	let langMessage = new Discord.MessageEmbed()
-		.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png")
-		.setColor('GREEN')
+	let langMessage = new Discord.EmbedBuilder()
+		.setAuthor({
+			name: "Srs Bot",
+			iconURL: "https://i.imgur.com/Bnn7jox.png"
+		})
+		.setColor('Green')
 		.setTitle("Translate Syntax");
 
 	let returnString = jsonArray.reduce((cummL, input) => cummL + `${input.lang}: '${input.shortcut}' \n`, "");
@@ -199,9 +202,12 @@ const translateEmbed = (response) => {
 	//Corrects a very important chinese translation yes (hi Cat I know you're snooping here)
 	response.text = response.text.includes("egg tart") ? "something about egg pudding" : response.text;
 
-	let translateMessage = new Discord.MessageEmbed()
-		.setAuthor("Srs Bot", "https://i.imgur.com/Bnn7jox.png")
-		.setColor('RANDOM')
+	let translateMessage = new Discord.EmbedBuilder()
+		.setAuthor({
+			name: "Srs Bot",
+			iconURL: "https://i.imgur.com/Bnn7jox.png"
+		})
+		.setColor('Random')
 		.setTitle("Translation");
 								
 	var descriptionString = response.text;

@@ -1,4 +1,6 @@
+const { ApplicationCommandOptionType } = require("discord.js");
 const Helpy = require("../Helpy.js");
+const { bot } = require("../../clientConfig.js");
 const bdayId = "";
 const justinId = "348208769941110784";
 const channelId = "701858995299942482";
@@ -21,18 +23,16 @@ module.exports = {
             name: "snowflake",
             description: "Le person you're sending",
             required: true,
-            type: "USER"
+            type: ApplicationCommandOptionType.User
         },
         {
             name: "message",
             description: "Super secret message - we promise this is totally hashed and encrypted by RapidSSL",
             required: true,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
         }
     ],
-	execute: async (interaction, toolbox) => {
-		const bot = toolbox.bot;
-
+	execute: async (interaction) => {
 		//Discord *should* be parsing the arguments normally but Justin Case we'll do something
 		let username;
 		let message;
@@ -57,7 +57,7 @@ module.exports = {
 		switch(interaction.user.id)
 		{
 			case bdayId:
-				bot.channels.fetch(bdayId)
+				bot.channels.fetch(channelId)
 					.then(channel => {
 						channel.send(`Birthday user <@${bdayId}> has sent "${message}" to <@${username}> !`)
 					});

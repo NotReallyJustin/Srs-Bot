@@ -1,4 +1,6 @@
+const { ApplicationCommandOptionType } = require("discord.js");
 const Discord = require("discord.js");
+const { bot } = require("../../clientConfig.js");
 const Helpy = require("../Helpy.js");
 
 const emotePhotos = [
@@ -385,7 +387,7 @@ const moves = [
 			"https://qph.fs.quoracdn.net/main-qimg-876d0524109bdb9343648e40616c6d5a"
 		],
 		use: (you, opponent, log) => {
-			if (opponent.hp >= 100)
+			if (opponent.hp >= 90)
 			{
 				log.push("Order 66 executed. Light Mode must be baby yoda because it survived this attack.");
 			}
@@ -393,7 +395,7 @@ const moves = [
 			{
 				log.push("Commander Cody, the time has come. Execute Order 66.");
 			}
-			opponent.hp = Math.max(0, opponent.hp - 99);
+			opponent.hp = Math.max(0, opponent.hp - 89);
 		}
 	}
 ];
@@ -402,36 +404,54 @@ const moves = [
 module.exports = {
 	name: "combat",
 	description: "Light mode vs Dark Mode. I swear it's not rigged.\nSyntax: `srs combat <start | end | rules>`",
-	type: "SUB_COMMAND_GROUP",
 	options: [
 		{
 			name: "start",
-			type: "SUB_COMMAND",
+			type: ApplicationCommandOptionType.Subcommand,
 			description: "Starts a game of srs combat!"
 		},
 		{
 			name: "dark",
-			type: "SUB_COMMAND",
+			type: ApplicationCommandOptionType.Subcommand,
 			description: "You either die a hero, or you live to become the villain. Difficulty: Expert"
 		},
 		{
 			name: "end",
-			type: "SUB_COMMAND",
+			type: ApplicationCommandOptionType.Subcommand,
 			description: "End the srs combat game! Remember you can only have 1 minigame at a time."
 		},
 		{
 			name: "help",
-			type: "SUB_COMMAND",
+			type: ApplicationCommandOptionType.Subcommand,
 			description: "Stuck on how to play the minigame? Use this command for instructions."
 		}
 	],
-	execute: (interaction, toolkit, currentChannel) => {
+	execute: (interaction) => {
+		const currentChannel = bot.database.searchMessageChannel(interaction);
 		const subCmd = interaction.options.getSubcommand(true);
 		switch (subCmd)
 		{
 			case "start":
 			case "dark":
+				//Check bot channel perms
 				let hasOtherGame = currentChannel.hasValidMoves(interaction.user.id);
+				if (hasOtherGame)
+				{
+					interaction.reply("You have other games going on. You can't start this new game.");
+					return;
+				}
+				if (!Helpy.hasChannelPerm(interaction, [Discord.PermissionsBitField.Flags.ManageMessages, Discord.PermissionsBitField.Flags.SendMessages]))
+				{
+					interaction.reply("enable manage and send message perms first you won't");
+					return;
+				}
+				if (!Helpy.hasChannelPerm(interaction, [Discord.PermissionsBitField.Flags.EmbedLinks, Discord.PermissionsBitField.Flags.AttachFiles]))
+				{
+					interaction.reply("pls enable attach file and embed link perms. if this is too annoying, you can always turn on admin perms");
+					return;
+				}
+
+				//Game start
 				let gameTrack = [{hp: 100, defense: 0, attack: 1, name: "Light Mode", blocked: 0}, {hp: 100, defense: 0, attack: 1, name: "Dark Mode", blocked: 0, tdf: 0, tof: 0, baal: 0}];
 
 				//These 4 variables determine light mode/dark mode
@@ -440,12 +460,6 @@ module.exports = {
 				let player = isLight ? gameTrack[0] : gameTrack[1];
 				let bot = isLight ? gameTrack[1] : gameTrack[0];
 				let pRef = !isLight; //This is more just for QOL and for me to understand that this actually refers to pRef, which is only possible when opponent is dark mode
-
-				if (hasOtherGame)
-				{
-					interaction.reply("You have other games going on. You can't start this new game.");
-					return;
-				}
 
 				//Rig battle for dark mode ig
 				if (isLight)
@@ -458,6 +472,7 @@ module.exports = {
 				interaction.reply({embeds: [combatEmbed(gameTrack, "N/A", Helpy.randomResp(emotePhotos), isLight)], fetchReply: true})
 					.then(msgObj => {
 						//Do your magic!
+						//PlayMove is a move item
 						function playMove(messageContent, message)
 						{
 							var gameEnd = false;
@@ -608,8 +623,8 @@ const combatEmbed = (gameTrack, gameLog, img, isLight) => {
 		"7. ??? - Commander Cody, the time has come."
 	}
 
-	let embed = new Discord.MessageEmbed();
-	embed.setColor("GOLD");
+	let embed = new Discord.EmbedBuilder();
+	embed.setColor("Gold");
 	embed.setTitle("Light Mode vs Dark Mode Combat");
 	embed.setDescription("Help light mode defeat dark mode! Type the move name to attack!\nIf you're unfamiliar with the rules, end combat and use /combat help !");
 	embed.addFields(
@@ -659,7 +674,7 @@ const combatEmbed = (gameTrack, gameLog, img, isLight) => {
 }
 
 const gameHelp = () => {
-	let embed = new Discord.MessageEmbed();
+	let embed = new Discord.EmbedBuilder();
 	embed.setTitle("Light Mode Combat Help");
 	embed.setDescription("If dark mode wins, you're doing something wrong.");
 
@@ -695,11 +710,11 @@ function lightModeAI(playerObj, botObj, log)
 	//The pretense is that we're guessing these moves exist, which they do
 	var atk;
 
-	if (Math.floor(Math.random() * 3) == 0)
+	if (Math.floor(Math.random() * 4) == 0)
 	{
 		atk = "Star Platinum";
 	}
-	else if (botObj.hp < 45 || Math.floor(Math.random() * 6) == 0)
+	else if (botObj.hp < 45 || Math.floor(Math.random() * 5) == 0)
 	{
 		//Use seal team 6 to clutch win if needed
 		atk = "Seal Team 6";

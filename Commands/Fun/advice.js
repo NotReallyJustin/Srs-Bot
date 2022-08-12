@@ -1,4 +1,5 @@
-const Helpy = require("../Helpy.js");
+const { ApplicationCommandOptionType } = require("discord.js");
+const Helpy = require("../Helpy.js"); 
 const { autoExtract } = require("./Defense Arsenal/RelationExtraction.js");
 const SentimentAnalysis = require('./Defense Arsenal/SentimentAnalysis.js');
 const POS = require('./Defense Arsenal/POS.js');
@@ -19,12 +20,14 @@ module.exports = {
 	options: [
 		{
 			name: "request",
-			description: "Remember light theme best theme and no illegal chars!",
-			type: "STRING",
+			description: "If you forget light theme best theme, the Defenders would be too happy to remind you ;)",
+			type: ApplicationCommandOptionType.String,
 			required: true
 		}
 	],
 	execute: async (interaction) => {
+
+		//Error checks before
 		let request = interaction.options.getString("request", true);
 		if (!request)
 		{
@@ -40,6 +43,8 @@ module.exports = {
 
 		await interaction.deferReply();
 
+		//HERE WE GOOOOOOOO
+		//Literal https://www.youtube.com/watch?v=Ge-eSFgKLkY moment
 		POS.calculate(request)
 			.then(arr => {
 				POS.chunk(arr)
@@ -66,7 +71,7 @@ module.exports.chatDefender = function(message, currChanRepMsg) {
 		.then(arr => {
 			POS.chunk(arr)
 				.then(chunkRay => {
-					let root = autoExtract(chunkRay);
+					//let root = autoExtract(chunkRay);
 					let sentNum = SentimentAnalysis(autoExtract(chunkRay));
 					if (sentNum != 0)
 					{

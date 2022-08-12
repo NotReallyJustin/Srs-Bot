@@ -2,6 +2,7 @@
 const Discord = require("discord.js");
 const https = require("https");
 const Helpy = require("../Helpy.js");
+const { ApplicationCommandOptionType } = require("discord.js");
 
 // Credit to Ashley Ngo - ango8101@bths.edu and Alvin Xu (and becc)\nSyntax: `srs jobs <filter type> <filter query>`. If not provided, srs will default to...well.. default.
 module.exports = {
@@ -12,25 +13,25 @@ module.exports = {
             name: "name",
             description: "The name of the job position you're looking for",
             required: false,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
         },
         {
             name: "provider",
             description: "Who's you're employer? Gordon Ramsay? Julia Child? Bill Nye the Science Guy?",
             required: false,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
         },
         {
             name: "categories",
             description: "Jobs are split up by categories. List one to look for",
             required: false,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
         },
         {
             name: "deadline",
             description: "How long can you procrasinate that application? Use MM/DD/YY. This defaults to ongoing.",
             required: false,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
         }
 	],
 	execute: async (interaction) => {
@@ -217,15 +218,15 @@ const dataSnapshot = async (start, end, data) => {
 
 //More efficient embeds
 const jobEmbed = (fields, filters) => {
-	let embed = new Discord.MessageEmbed();
-	embed.fields = fields;
-
+	//console.log(fields)
+	let embed = new Discord.EmbedBuilder();
+	embed.addFields(fields);
 	embed.setTitle("Job Listings!");
 	embed.setDescription(
 		"https://docs.google.com/spreadsheets/d/1l97Q-9_HMcvcxslNsG8XfWKkC4ehBYecvE7x_cqTRPs/edit#gid=0" +
 		`\n${filters}`
 	);
-	embed.setFooter("Job hunting :snore:");
+	embed.setFooter({text: "Prolly outdated cuz yk we're in college now"});
 
 	return embed;
 }

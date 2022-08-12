@@ -1,34 +1,74 @@
-/*	Srs Bot's helpful toolkit that's carried around!
-	Except this one is more dynamic than Pure.js where we just lumped all the pure functions together.
-	All functions here are still pure, but it's a utility js file now. .
+/*	
+	Srs Bot's helpful toolkit that's carried around!
+	All functions here are still pure, but it's a utility js file now.
 	Also fun fact, did you know Helpy is a cute animatronic in FNAF 6? 
 	Don't worry too much abt it lmao, we're not forcing him to jump off a plank here
 	While you're here, watch this funny video:
-	https://www.youtube.com/watch?v=v9M55TfKzcQ */
+	https://www.youtube.com/watch?v=v9M55TfKzcQ 
+*/
+const Discord = require("Discord.js");
 
-//Damn I got sick of writing comments after being forced to write javadocs in CSA.
-
-//Takes an array and yeets a random thing from that
+/**
+ * Takes a random array and yeets something from it
+ * @param {Array} arr arr you ready? Aye aye captain! Who lives in a pineapple under the sea? Spongebob [Rectangular Prism] pants!(He's not a square)
+ * @returns A bird? A plane? Anything probably!
+ */
 module.exports.randomResp = (arr) => {
 	return arr[Math.floor(Math.random() * arr.length)];
 }
 
-//Capitalize the first letter of a thing
+/**
+ * @param {String} str I want a stracciatella ice cream rn
+ * @returns {String} The exact same thing that went in but we just passed the SAT grammar section
+ */
 module.exports.capFirst = (str) => str.substring(0, 1).toUpperCase() + str.substring(1);
 
-//Returns the arguments inside the bot command that is not bounded to a specific argument index - a bounded argument is stuck to a specific array idx
-//Usually happens when the user can write any message they like (ie. a message to dm to another discord user)
-//Message param requires you to input message.content usually
-//Hey don't judge, it's a good way to get rid of all the srs advice etc etc.. stuff
-module.exports.returnUnbound = (message, lastBoundArg) => message.substring(message.indexOf(lastBoundArg) + lastBoundArg.length);
+/**
+ * Defunct function from pre-v13 days.
+ * Returns the arguments inside the bot command that is not bounded to a specific argument index - a bounded argument is stuck to a specific array idx
+ * Usually happens when the user can write any message they like (ie. me spamming Discord HQ with srs dm to give me free nitro)
+ * @param {String} msgContent message.content
+ * @param {String} lastBoundArg It *was* the last bound argument name but noone knows what that means anymore because slash commands
+ * @returns {String} Unbound section of string
+ */
+module.exports.returnUnbound = (msgContent, lastBoundArg) => msgContent.substring(msgContent.indexOf(lastBoundArg) + lastBoundArg.length);
 
-//Combines discord attachments and the message content to form one huge msg blob that we can just send a once o.o
+/**
+ * Combines discord attachments and the message content to form one huge msg blob that we can just send a once o.o
+ * @param {String} msgContent 
+ * @param {Discord.Attachment[]} attachArray 
+ * @returns https://plantsvszombies.fandom.com/wiki/Zom-Blob
+ */
 module.exports.messageCompile = (msgContent, attachArray) => attachArray.reduce((acc, attachment) => acc + attachment.url + "\n", msgContent).replace("@everyone", "No you can't tag everyone.");
 
-//Date 1 is current date, date 2 is target date - 1000ms in a sec, 3600s in an hr, 24hr in a day
+/**
+ * Date 1 is current date, date 2 is target date - 1000ms in a sec, 3600s in an hr, 24hr in a day
+ * @param {Date} date1 Current Date
+ * @param {Date} date2 Target Date
+ * @returns {Number} How long away Date1 is from Date2 in days
+ */
 module.exports.dateDistance = (date1, date2) => Math.floor((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
 
-//Adjusts the timezones. Time is in UTC. TMZ follows the INTL Conventions
+/**
+ * @param {(Discord.Interaction | Discord.Message)} identifier The event you're responding to
+ * @param {(Discord.PermissionsBitField.Flags | Discord.PermissionsBitField.Flags[])} permission Permission(s) to check
+ * @returns Whether bot has permission in said channel (also known as "day 5432252 of asking Gabe to give Srs Bot admin perms")
+ */
+module.exports.hasChannelPerm = (identifier, permission) => identifier.guild.members.me.permissionsIn(identifier.channel).has(...([permission].flat()));
+
+/**
+ * @param {(Discord.Interaction | Discord.Message)} identifier The event you're responding to
+ * @param {(Discord.PermissionsBitField.Flags | Discord.PermissionsBitField.Flags[])} permission Permission(s) to check
+ * @returns Gabe pls enable admin perms
+ */
+module.exports.hasGuildPerm = (identifier, permission) => identifier.guild.members.me.permissions.has(...([permission].flat()));
+
+/**
+ * Adjusts the timezones after user gives us the time
+ * @param {String} time UTC formatted time. Don't worry abt this because the bot does that 
+ * @param {String} tmz INTL convention timezone. If you oof up this defaults to `America/New_York` because New York #1 (hey that's our news channel!)
+ * @returns New time
+ */
 module.exports.tmzConvert = (time, tmz) => {
 	try
 	{
@@ -40,10 +80,13 @@ module.exports.tmzConvert = (time, tmz) => {
 	}
 };
 
-//Merge sort, but it's non-traditional because we don't keep track of indexes and just arr.slice over 9000 arrays
-//This will still sort arr without setting it to another new array though
-// comparison = (a, b) => {return boolean with a or b}
-//Ye so comparison(a, b) determines what you want to put in the front
+/**
+ * I don't think this is how you're supposed to write a merge sort but I haven't taken Data Structures & Algorithms so mald harder 🤡
+ * This thing doesn't track indexes and just arr.slice over 9000 times
+ * @param {Array} arr I wonder what this stands for
+ * @param {Function} comparison Callback. (a, b) => {return boolean with a or b, depending on what you want to put in the front}. Oh yea Helpy has presets
+ * @returns {Array} VSC won't gimme function autocomplete if I don't use JSDocs 😭
+ */
 module.exports.mergeSort = (arr, comparison) => {
 	if (arr.length == 1)
 	{
@@ -75,6 +118,12 @@ module.exports.mergeSort = (arr, comparison) => {
 	return arr;
 }
 
+/**
+ * 
+ * @param {*} arr 
+ * @param {*} item 
+ * @returns Index of thingy you wanna find 
+ */
 module.exports.binarySearch = (arr, item) => {
 	var found = -1;
 	for (var left = 0, right = arr.length, middle = Math.floor(arr.length / 2); left <= right; middle = Math.floor((left + right) /2))
@@ -145,6 +194,22 @@ module.exports.binArr = (arr, comparison) => {
 	}
 	
 	return toOut;
+}
+
+//Creates a button that performs a simple interaction that checks only for and userID, customID
+//Will expire after like 5 minutes. Also pls provide a callback
+module.exports.buttonInteract = (message, userID, customID, callback) => {
+	const filter = interaction => interaction.customId == customID && interaction.user.id == userID;
+	let eventListener = message.createMessageComponentCollector({
+		filter,
+		time: 300000
+	});
+
+	eventListener.on("collect", i => {
+		callback(i);
+	});
+	eventListener.once("end", () => {
+	});
 }
 
 //-----------------------------------------Comparison Shortcut Codes---------------------------------

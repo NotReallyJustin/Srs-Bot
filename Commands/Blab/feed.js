@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
     name: "feed",
     description: "smh couldn't you have invited me to boba or smth",
@@ -6,7 +8,7 @@ module.exports = {
             name: "food",
             description: "what are you feeding srs bot",
             required: false,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
         }
     ],
     execute : (interaction) => {

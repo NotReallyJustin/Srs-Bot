@@ -1,4 +1,6 @@
-//Christmas 2020
+const { ApplicationCommandOptionType } = require("discord.js");
+const Helpy = require("../Helpy.js");
+/*//Christmas 2021
 //YES WE ARE MAKING STEVEN ANGRY BY ... WEB SCRAPING OFF REDDIT!
 const Discord = require("discord.js");
 const VC = require("@discordjs/voice");
@@ -184,44 +186,45 @@ return;*/
 module.exports = {
 	name: "christmas",
 	description: "IT'S A 2021 CHRISTMAS!!! Access the go-to Christmas hub here!",
-	type: "SUB_COMMAND_GROUP",
 	options: [
 		{
 			name: "greeting",
-			type: "SUB_COMMAND",
+			type: ApplicationCommandOptionType.Subcommand,
 			description: "WE WISH YOU A MERRY CHRISTMAS!"
 		},
 		{
 			name: "countdown",
-			type: "SUB_COMMAND",
+			type: ApplicationCommandOptionType.Subcommand,
 			description: "🎄 START THE CHRISTMAS COUNTDOWN!!! 🎄"
 		},
 		{
 			name: "radio",
-			type: "SUB_COMMAND",
+			type: ApplicationCommandOptionType.Subcommand,
 			description: "Designate a Christmas radio channel where Srs Bot will play forever. Only accessible by Justin 🔔",
 			options: [
 				{
 				    name: "snowflake",
 				    description: "Channel snowflake",
 				    required: true,
-				    type: "STRING"
+				    type: ApplicationCommandOptionType.String
 				},
 				{
 					name: "toggle",
 					description: "Are you turning the radio on or off?",
 					required: true,
-					type: "BOOLEAN"
+					type: ApplicationCommandOptionType.Boolean
 				}
 			]
 		},
 		{
 			name: "snapshot",
-			type: "SUB_COMMAND",
+			type: ApplicationCommandOptionType.Subcommand,
 			description: "❄️ It's the most wonderful time of the year ❄️"
 		}
 	],
 	execute: async (interaction, toolkit) => {
+		interaction.reply(`Sorry Christmas is over - but on the bright side, this event will open again in ${Helpy.dateDistance(new Date(), new Date(2022, 11, 25))} days!`);
+		return;
 		const subName = interaction.options.getSubcommand(true);
 		if (!subName)
 		{

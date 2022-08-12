@@ -36,10 +36,10 @@ module.exports = {
 }
 
 const headpatEmbed = (text, author, image) => {
-	let embed = new Discord.MessageEmbed();
+	let embed = new Discord.EmbedBuilder();
 	embed.setTitle(text);
 	embed.setDescription("u/" + author);
-	embed.setColor("GREEN");
+	embed.setColor("Green");
 
 	embed.setImage(image);
 

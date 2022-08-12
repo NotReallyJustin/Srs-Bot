@@ -38,10 +38,10 @@ module.exports = {
 }
 
 const sealEmbed = (text, author, image) => {
-	let embed = new Discord.MessageEmbed();
+	let embed = new Discord.EmbedBuilder();
 	embed.setTitle(text);
 	embed.setDescription("u/" + author);
-	embed.setColor("AQUA");
+	embed.setColor("Aqua");
 
 	embed.setImage(image);
 

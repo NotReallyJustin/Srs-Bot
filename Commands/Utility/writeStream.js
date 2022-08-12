@@ -1,4 +1,6 @@
 const Discord = require("discord.js");
+const { bot } = require("../../clientConfig.js");
+
 module.exports = {
 	name: "writestream",
 	description: "Creates a write stream to a specific channel! Why does this feel like Node.js?",
@@ -6,19 +8,19 @@ module.exports = {
 		{
 			name: "id",
 			description: "The channel id you're writing to - requires MANAGE_MESSAGES perms there",
-			type: "STRING",
+			type: Discord.ApplicationCommandOptionType.String,
 			required: true
 		},
 		{
 			name: "toggle",
 			description: "Whether you're toggling the writestream on or off",
-			type: "BOOLEAN",
+			type: Discord.ApplicationCommandOptionType.Boolean,
 			required: true
 		}
 	],
-	execute: async (interaction, toolkit, currentChannel) => {
+	execute: async (interaction) => {
+		const currentChannel = bot.database.searchMessageChannel(interaction);
 		const toggle = interaction.options.getBoolean("toggle", true);
-		const bot = toolkit.bot;
 
 		let channel;
 		let guildUser;
@@ -30,14 +32,16 @@ module.exports = {
 				if (!id) throw "smh give me a channel id";
 
 				channel = await bot.channels.fetch(id);
-				if (!channel.isText() || !channel.guild) throw "smh this isn't a text channel";
+				if (!channel.type == Discord.ChannelType.GuildText || !channel.guild) throw "smh this isn't a text channel";
 				if (!channel.viewable) throw "smh I can't view this channel";
-				if (!channel.permissionsFor(bot.user.id).has(Discord.Permissions.FLAGS.SEND_MESSAGES)) throw "smh I don't have write perms";
 
+				//Bot perm check
+				if (!channel.permissionsFor(bot.user.id).has(Discord.PermissionsBitField.Flags.SendMessages)) throw "smh I don't have write perms";
+
+				//User perm check
 				guildUser = await channel.guild.members.fetch(interaction.user.id);
 				if (!guildUser) throw "smh you're not even in that guild";
-
-				if (!guildUser.permissions.has(Discord.Permissions.FLAGS.MANAGE_MESSAGES)) throw "smh you don't have writeStream perms";
+				if (!guildUser.permissions.has(Discord.PermissionsBitField.Flags.ManageMessages)) throw "smh you don't have writeStream perms";
 			}
 			catch(err)
 			{

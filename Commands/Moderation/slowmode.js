@@ -1,46 +1,48 @@
 const Helpy = require("../Helpy.js");
 const Discord = require("discord.js");
+const { bot } = require("../../clientConfig.js");
 /*const slowmodeDesc = "Smart slowmode - A moderator customizable alternative to slowmode en masse\
 	\nIf the chat has a certain number of messages in an alloted time frame, turn on slowmode to prevent it from getting hectic\
 	\n`srs slowmode <start|stop> <time check interval> <message limit>`";*/
 
+//Also see - messageRegister.js
 module.exports = {
 	name: "slowmode",
 	description: "yeet",
-	type: "SUB_COMMAND_GROUP",
 	options: [
 		{
 			name: "start",
-			type: "SUB_COMMAND",
+			type: Discord.ApplicationCommandOptionType.Subcommand,
 			description: "Smart slowmode auto-toggle based on user activity!",
 			options: [
 				{
 				    name: "interval",
 				    description: "How often srs does a interval check/assesses the chat (>= 10s)",
 				    required: true,
-				    type: "INTEGER"
+				    type: Discord.ApplicationCommandOptionType.Integer
 				},
 				{
 				    name: "limit",
 				    description: "The acceptable message limit you'll allow in the interval check (>= 5 messages)",
 				    required: true,
-				    type: "INTEGER"
+				    type: Discord.ApplicationCommandOptionType.Integer
 				},
 				{
 				    name: "ratelimit",
 				    description: "If we do turn on slowmode, how long should it be? (>= 5 sec)",
 				    required: true,
-				    type: "INTEGER"
+				    type: Discord.ApplicationCommandOptionType.Integer
 				}
 			]
 		},
 		{
 			name: "stop",
-			type: "SUB_COMMAND",
+			type: Discord.ApplicationCommandOptionType.Subcommand,
 			description: "Is your server complaining? Great! Stop the slowmode here!"
 		}
 	],
-	execute: async (interaction, toolkit, currentChannel) => {
+	execute: async (interaction) => {
+		const currentChannel = bot.database.searchMessageChannel(interaction);
 		const commandName = interaction.options.getSubcommand(true);
 		const subCmd = interaction.options.data[0];
 
@@ -72,7 +74,7 @@ module.exports = {
 						throw "ok I know you're probably going to disappoint me with a < 1520 SAT but at least try to read the command before sending it";
 					}
 
-					if (!interaction.member.permissions.has(Discord.Permissions.FLAGS.MANAGE_MESSAGES))
+					if (!interaction.member.permissions.has(Discord.PermissionsBitField.Flags.ManageMessages))
 					{
 						throw "smh you don't have perms to unleash the WMD. Come back when you have manage message perms";
 					}
@@ -148,6 +150,27 @@ module.exports = {
 			case "stop":
 				if (currentChannel.inSlowmode)
 				{
+					try
+					{
+						if (!interaction.member.permissions.has(Discord.PermissionsBitField.Flags.ManageMessages))
+						{
+							throw "smh you don't have perms to fix the WMD. Come back when you have manage message perms";
+						}
+					}
+					catch(err)
+					{
+						if (typeof err == 'string')
+						{
+							interaction.reply(err);
+						}
+						else
+						{
+							console.error(err);
+							interaction.reply("Something went wrong with your discord bot perms. If this persists, ping Justin");
+						}
+						return;
+					}
+					
 					//Resets the interval and all the channel stats
 					clearInterval(currentChannel.slowmodeId); //Uses the stored backend intervalID to clear the slowmode
 					currentChannel.discordChannel.setRateLimitPerUser(0);

@@ -1,3 +1,5 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
 module.exports = {
 	name: "mention",
 	description: "Mention a group and unleash the mass ping! We don't cover deaths by riots 🐸",
@@ -6,7 +8,7 @@ module.exports = {
             name: "group",
             description: "which poor soul is getting a ping blast today?",
             required: true,
-            type: "STRING"
+            type: ApplicationCommandOptionType.String
         }
 	],
 	execute: (interaction) => {

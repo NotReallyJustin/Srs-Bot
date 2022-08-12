@@ -20,7 +20,7 @@ module.exports.response = [
 	"Go kermit palpitate",
 	"smh go kermit pure.js",
 	"smh go kermit old rate algorithm",
-	"Go kermit old tech"
+	"Go kermit old tech",
 ];
 
 module.exports.darkMode = [
@@ -37,9 +37,9 @@ module.exports.darkMode = [
 module.exports.slightLM = [
 	"Praise the lord!",
 	"Light theme best theme!",
-	"Cheers!",
+	"😎",
 	"Take this gold award",
-	"\"Let us commence!\" - Totally not stolen from BTD6",
+	"🥳",
 	"POGCHAMP",
 	"LETS GET THIS BREAD",
 	"I rate that 10/10",
@@ -47,7 +47,7 @@ module.exports.slightLM = [
 	"Agreed",
 	"^^^",
 	"Absolutely!",
-	"A man of culture, I see",
+	"A man of culture I see",
 	"Someone give this person a ticket to Harvard",
 	"This is a story of light mode's redemption. So sit back, take off your protective eyewear, and convert.",
 	"Respect 100",
@@ -58,8 +58,6 @@ module.exports.slightLM = [
 ];
 
 module.exports.slightDM = [
-	"You will be inlaid upon this statue",
-	"Heathens... the enemy of eternity",
 	"Shut",
 	"Be quiet heathen",
 	"Downvote",
@@ -79,10 +77,14 @@ module.exports.slightDM = [
 	":shut: your ability to speak does not make you intelligent",
 	"see no evil",
 	"no, no, bad, bad",
-	"go speedrun bulletin board fall down any %",
-	"smh at least he can see in the sun",
 	"giving a new meaning to *dark* humor I see",
-	"same applies for ur mom",
-	"smh go study for your 1520",
-	"I'll make you see the light eventually"
+	"Touch snow",
+	"It's let there be light, not let there be heathens",
+	"Maybe if you embraced the light a little bit more, you can grow some grass to touch",
+	"You have yeed your last haw",
+	"There are 10 reasons Europe emerged from the Dark Ages; using AMOLED is not one of them",
+	`You just earned a one way ticket to the Hall of Shame`,
+	"Ding Dong your opinion is wrong",
+	"Go turn yourself into a JavaDerp function",
+	"Go commit the NRG command"
 ];
